@@ -1,0 +1,11 @@
+{
+  "name": "graphite",
+  "ignore": [
+    "**/.*",
+    "external"
+  ],
+  "dependencies": {
+    "eventEmitter": "~4.2.11",
+    "requirejs": "~2.1.18"
+  }
+}
