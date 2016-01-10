@@ -22,12 +22,16 @@
 
 define([
     'external/genetic/genetic',
+    'graphite/view/system/GraphiteShell',
     './Rectangular',
-    './Structural'
+    './Structural',
+    './SvgWidget'
 ], function (
     genetic,
+    GraphiteShell,
     Rectangular,
-    Structural
+    Structural,
+    SvgWidget
 ) {
     'use strict';
 
@@ -47,6 +51,24 @@ define([
          */
         getTagName: function () {
             return 'svg';
+        },
+
+        /**
+         * Sets this Widget's parent.
+         * @param {Widget} parent
+         * @override 
+         */
+        setParent: function (parent) {
+            this.desc('setParent', parent);
+            SvgWidget.prototype.setParent.call(this, parent);
+            if (parent instanceof Structural) {
+                parent.getElement().appendChild(this.getElement());
+            } else if (parent instanceof GraphiteShell.RootWidget) {
+                var upman = this.getUpdateManager();
+                var context = upman.getGraphicContext();
+                var root = context.getSVG();;
+                root.appendChild(this.getElement());
+            }
         },
 
         /**
