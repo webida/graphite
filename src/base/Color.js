@@ -29,6 +29,55 @@ define([
 ) {
     'use strict';
 
+    var singleton = {};
+
+    function isAllNumber(arr) {
+        for (var i = 0; i < arr.length; i++) {
+            if (typeof arr[i] !== 'number') {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function getColor(args) {
+        if (args.length === 1) {
+            var rgb, hex, str;
+            if (args[0] instanceof Color) {
+                return args[0];
+            } else if (typeof args[0] === 'string') {
+                str = args[0].toLowerCase();
+                if (args[0] === 'transparent') {
+                    return {css: 'transparent'};
+                }
+                hex = Color[str];
+                if (typeof hex === 'string') {
+                    str = hex;
+                }
+                if (Color.isValid(str)) {
+                    rgb = Color.hex2rgb(str);
+                    return {
+                        r: rgb.r,
+                        g: rgb.g,
+                        b: rgb.b,
+                        css: 'rgb(' + rgb.join(',') + ')'
+                    };
+                } else {
+                    console.warn('Invalid color argument');
+                }
+            }
+        } else if (arr.length > 2 && isAllNumber(args)) {
+            return {
+                r: args[0],
+                g: args[1],
+                b: args[2],
+                a: args[3],
+                css: 'rgba(' + ([]).join.call(args, ',') + ')'
+            };
+        }
+        return {css: 'transparent'};
+    }
+
     /**
      * A Color.
      * @constructor
@@ -44,29 +93,35 @@ define([
      * @param {Color} color
      */
     function Color(r, g, b, a) {
-        Base.apply(this, arguments);
-        var args = arguments;
-        if (args.length === 1) {
-            var rgb, hexByName, str;
-            if (args[0] instanceof Color) {
-                return args[0];
-            } else if (typeof args[0] === 'string') {
-                str = args[0].toLowerCase();
-                if (str === 'transparent') {
-                    this.setTransparent();
-                } else {
-                    hexByName = Color[str];
-                    if (typeof hexByName === 'string') {
-                        str = hexByName;
-                    }
-                    if (str.indexOf('#') > -1) {
-                        rgb = Color.hex2rgb(str);
-                        this.setColor(rgb.r, rgb.g, rgb.b);
-                    }
+        var color = getColor(arguments);
+        if (singleton[color.css]) {
+            return singleton[color.css];
+        } else {
+            Base.apply(this, arguments);
+            //configurable: false, writable: false
+            Object.defineProperties(this, {
+                r: {
+                    enumerable: true,
+                    value: color.r
+                },
+                g: {
+                    enumerable: true,
+                    value: color.g
+                },
+                b: {
+                    enumerable: true,
+                    value: color.b
+                },
+                a: {
+                    enumerable: true,
+                    value: color.a
+                },
+                css: {
+                    enumerable: true,
+                    value: color.css
                 }
-            }
-        } else if (args.length > 2 && typeof args[0] === 'number') {
-            this.setColor(r, g, b, a);
+            });
+            singleton[color.css] = this;
         }
     }
 
@@ -78,37 +133,6 @@ define([
          * @member {string}
          */
         css: 'transparent',
-
-        setTransparent: function () {
-            this.css = 'transparent';
-            this.r = undefined;
-            this.g = undefined;
-            this.b = undefined;
-            this.a = undefined;
-        },
-
-        /**
-         * Sets rgba for this color instance.
-         * @param {number} r - 0 ~ 255
-         * @param {number} g - 0 ~ 255
-         * @param {number} b - 0 ~ 255
-         * @param {number} a - 0 ~ 1.0
-         */
-        setColor: function (r, g, b, a) {
-            if (typeof r === 'number' 
-                    && typeof g === 'number'
-                    && typeof b === 'number') {
-                this.r = r;
-                this.g = g;
-                this.b = b;
-                if ( typeof a === 'number') {
-                    this.a = a;
-                    this.css = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
-                } else {
-                    this.css = 'rgb(' + r + ',' + g + ',' + b + ')';
-                }
-            }
-        },
 
         /**
          * Returns css for this color for convenience.
@@ -138,11 +162,26 @@ define([
     });
 
     /**
-     * Sets rgba for this color instance.
+     * Tells whether the given string is hex code or not.
      * @static
      * @param {string} hexCode - '#fff', '#fff000', 'fff', 'fff000'
+     * @return {boolean}
+     */
+    Color.isValid = function (hexCode) {
+        if (hexCode.length === 3 || hexCode.length === 6) {
+            hexCode = '#' + hexCode;
+        }
+        return /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(hexCode);
+    }
+
+    /**
+     * Returns r,g,b value for the given hex code.
+     * @static
+     * @param {string} hexCode - '#fff', '#fff000', 'fff', 'fff000'
+     * @return {Object} array like object
      */
     Color.hex2rgb = function (hexCode) {
+        var result = [];
         var hex = hexCode.trim().replace(/ |#/g, '');
         if (hex.length !== 3 && hex.length !== 6) {
             throw new Error('Color hex code length should be 3 or 6');
@@ -151,11 +190,13 @@ define([
             hex = hex.replace(/(.)/g, '$1$1');
         }
         hex = hex.match(/../g);
-        return {
-            r: parseInt(hex[0], 16),
-            g: parseInt(hex[1], 16),
-            b: parseInt(hex[2], 16)
-        };
+        result.push(parseInt(hex[0], 16));
+        result.push(parseInt(hex[1], 16));
+        result.push(parseInt(hex[2], 16));
+        result['r'] = result[0];
+        result['g'] = result[1];
+        result['b'] = result[2];
+        return result;
     }
 
     /** @static */
