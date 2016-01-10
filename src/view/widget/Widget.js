@@ -586,6 +586,7 @@ define([
          * @param {Color} color
          */
         setBgColor: function (color) {
+            this.desc('setBgColor', color);
             this._bgColor = new Color(color);
         },
 
@@ -611,6 +612,7 @@ define([
          * @param {Color} color
          */
         setBorderColor: function (color) {
+            this.desc('setBorderColor', color);
             this._borderColor = new Color(color);
         },
 
@@ -627,6 +629,7 @@ define([
          * @param {number} width
          */
         setBorderWidth: function (width) {
+            this.desc('setBorderWidth', width);
             this._borderWidth = width;
         },
 

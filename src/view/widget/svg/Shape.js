@@ -118,7 +118,6 @@ define([
          * @param {number} width
          */
         setBorderWidth: function (width) {
-            this.desc('setBorderWidth', width);
             Widget.prototype.setBorderWidth.call(this, width);
             dom.setAttributes(this.getElement(), {
                 'stroke-width': this.getBorderWidth()
