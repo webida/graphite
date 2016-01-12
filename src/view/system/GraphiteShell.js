@@ -170,16 +170,15 @@ define([
          */
         getUpdateManager: function () {
             var upman = this.shell.getUpdateManager();
-            this.desc('getUpdateManager', [], upman + '');
             return upman;
         },
 
         /**
-         * @see Widget#_renderWidget
+         * @see Widget#_drawWidget
          * @param {GraphicContext} context
          */
-        _renderWidget: function (context) {
-            this.desc('_renderWidget', context, 'does nothing');
+        _drawWidget: function (context) {
+            this.desc('_drawWidget', context, 'does nothing');
         }
     });
 
