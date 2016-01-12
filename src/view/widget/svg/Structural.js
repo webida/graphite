@@ -22,11 +22,9 @@
 
 define([
     'external/genetic/genetic',
-    'graphite/view/system/GraphiteShell',
     './SvgWidget'
 ], function (
     genetic,
-    GraphiteShell,
     SvgWidget
 ) {
     'use strict';
@@ -54,11 +52,8 @@ define([
             SvgWidget.prototype.setParent.call(this, parent);
             if (parent instanceof Structural) {
                 parent.getElement().appendChild(this.getElement());
-            } else if (parent instanceof GraphiteShell.RootWidget) {
-                var upman = this.getUpdateManager();
-                var context = upman.getGraphicContext();
-                var root = context.getSVG();;
-                root.appendChild(this.getElement());
+            } else {
+                throw new Error('Only Structural can be a parent for Structural');
             }
         },
     });

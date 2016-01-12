@@ -24,7 +24,7 @@ define([
     'external/genetic/genetic',
     'external/map/Map',
     'graphite/view/geometry/Rectangle',
-    'graphite/view/update-manager/UpdateManager'
+    './UpdateManager'
 ], function (
     genetic,
     Map,
@@ -36,7 +36,7 @@ define([
     function AsyncUpdateManager() {
         UpdateManager.apply(this, arguments);
         this._invalidWidgets = [];
-        this._dirtyRegions = new Map();
+        this._updateQueued = false;
     }
 
     genetic.inherits(AsyncUpdateManager, UpdateManager, {
@@ -44,16 +44,34 @@ define([
         /**
          * Adds the given widget to the update queue.
          * Invalid widgets will be validated before
-         * the damaged regions are repainted.
+         * the drawing of invalid widgets again.
          * @param {Widget} widget - Invalid widget
          */
         addInvalidWidget: function (widget) {
-            this.desc('addInvalidWidget', widget);
-            if (this._invalidWidgets.indexOf(widget) > -1) {
+            var invalidWiz, invalidWidgets = this._invalidWidgets;
+            var index = invalidWidgets.indexOf(widget);
+            this.desc('addInvalidWidget', arguments, undefined, 'salmon');
+            if (index > -1) {
+                this.info('invalidWidgets has the given widget');
                 return;
             }
+            if (invalidWidgets[0] === this.getRoot()) {
+                this.info('invalidWidgets has RootWidget');
+                return;
+            }
+            for (var i in invalidWidgets) {
+                invalidWiz = invalidWidgets[i];
+                if (invalidWiz.hasDescendant(widget)) {
+                    this.info('invalidWidgets\'s descendant has the given widget');
+                    return;
+                }
+                if (widget.hasDescendant(invalidWiz)) {
+                    this.info('The given widget\'s descendant has some invalidWiz');
+                    invalidWidgets.splice(i, 1);
+                }
+            }
             this._queueJob();
-            this._invalidWidgets.push(widget);
+            invalidWidgets.push(widget);
         },
 
         /**
@@ -63,7 +81,13 @@ define([
          * @protected
          */
         _queueJob: function () {
-            this.desc('_queueJob');
+            var status;
+            if (!this._updateQueued) {
+                status = 'run _asyncUpdate()';
+            } else {
+                status = 'does nothing';
+            }
+            this.desc('_queueJob', [], status);
             if (!this._updateQueued) {
                 this._asyncUpdate();
                 this._updateQueued = true;
@@ -85,7 +109,7 @@ define([
         /**
          * Performs the update.
          * 1. Validates the invalid widgets.
-         * 2. Repaints the dirty regions.
+         * 2. Redraws the invalid widgets.
          */
         update: function () {
             this.desc('update');
@@ -96,7 +120,7 @@ define([
             try {
                 this.validate();
                 this._updateQueued = false;
-                this._repairDamage();
+                this._drawInvalidWidgets();
                 if (this._afterUpdate) {
                     var chain = this._afterUpdate;
                     this._afterUpdate = null;
@@ -119,6 +143,7 @@ define([
         validate: function () {
             this.desc('validate');
             var invalids = this._invalidWidgets;
+            console.log('invalids = ', invalids);
             if (invalids.length === 0 || this._validating)
                 return;
             try {
@@ -136,50 +161,21 @@ define([
                     wiz.validate();
                 });
             } finally {
-                invalids = [];
                 this._validating = false;
             }
         },
 
         /**
-         * Repaints the dirty regions on the update queue and calls
-         * UpdateManager#firePainting(Rectangle, Map)
+         * Repaints the invalid widgets on the update queue.
+         * @protected
          */
-        _repairDamage: function () {
-            this.warn('_repairDamage()');
-            //TODO
-            if (1) {
-                var context = this.getGraphicContext();
-                this.getRoot().render(context);
-            }
-        },
-
-        /**
-         * Adds a dirty region to the update queue.
-         * If this isn't visible or either the width or height
-         * are 0, the method returns without queueing the dirty region.
-         * 
-         * @param {Widget} widget - the widget that contains the dirty region
-         * @param {number} x - the x coordinate of the dirty region
-         * @param {number} y - the y coordinate of the dirty region
-         * @param {number} w - the width of the dirty region
-         * @param {number} h - the height of the dirty region
-         */
-        addDirtyRegion: function (widget, x, y, w, h) {
-            this.desc('addDirtyRegion', arguments);
-            if (w === 0 || h === 0 || !widget.isShowing()) {
-                return;
-            }
-            var rect = this._dirtyRegions.get(widget);
-            if (rect === undefined) {
-                rect = new Rectangle(x, y, w, h);
-                this._dirtyRegions.set(widget, rect);
-            } else {
-                this.info('%cbefore: ' + rect, 'color:blue');
-                rect.union(x, y, w, h);
-                this.info('%cafter: ' + rect, 'color:blue');
-            }
-            this._queueJob();
+        _drawInvalidWidgets: function () {
+            this.desc('_drawInvalidWidgets', [], undefined, 'tomato');
+            var context = this.getGraphicContext();
+            this._invalidWidgets.forEach(function (widget) {
+                widget.draw(context);
+            });
+            this._invalidWidgets = [];
         }
     });
 

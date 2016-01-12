@@ -75,7 +75,8 @@ define([
          */
         getElement: function () {
             return this._element;
-        }
+        },
+
     });
 
     return DomWidget;

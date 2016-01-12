@@ -42,11 +42,11 @@ define([
     genetic.inherits(Rectangular, SvgWidget, {
 
         /**
-         * @see Widget#_renderWidget
+         * @see Widget#_drawWidget
          * @param {GraphicContext} context
          */
-        _renderWidget: function (context) {
-            this.desc('_renderWidget', context);
+        _drawWidget: function (context) {
+            this.desc('_drawWidget', context, undefined, 'green');
             var bounds = this.getBounds();
             var svg = this.getElement();
             dom.setAttributes(svg, {
