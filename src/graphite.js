@@ -15,6 +15,7 @@
  */
 
 define([
+    'graphite/base/Color',
     'graphite/view/geometry/Rectangle',
     'graphite/view/layout/XYLayout',
     'graphite/view/system/GraphiteShell',
@@ -22,6 +23,7 @@ define([
     'graphite/view/widget/svg/Svg',
     'graphite/view/widget/Widget'
 ], function (
+    Color,
     Rectangle,
     XYLayout,
     GraphiteShell,
@@ -32,6 +34,9 @@ define([
     'use strict';
 
     var graphite = {
+        base: {
+            Color: Color
+        },
         view: {
             geometry: {
                 Rectangle: Rectangle
