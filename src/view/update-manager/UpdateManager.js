@@ -55,11 +55,22 @@ define([
          * Performs a partial update if supported (validation only). Fires
          * validating event to listeners that validation has been started.
          * this method calls {@link #update()}. Subclasses should override
-         * this method to support validation without repainting.
+         * this method to support validation without redrawing.
          */
         validate: function () {
             this.log('validate()');
             this.update();
+        },
+
+        /**
+         * Forces an update to occur. Update managers will perform updates
+         * automatically, but may do so asynchronously. Calling this method
+         * forces a synchronous update.
+         * @abstract
+         */
+        update: function () {
+            throw new Error('update() should be implemented by '
+                    + this.constructor.name);
         },
 
         /**
