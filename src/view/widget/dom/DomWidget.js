@@ -46,7 +46,7 @@ define([
          * @abstract
          */
         getTagName: function () {
-            throw new Error('getTagName() should be'
+            throw new Error('getTagName() should be '
                     + 'implemented by ' + this.constructor.name);
         },
 
@@ -57,7 +57,7 @@ define([
          * @protected
          */
         _createElement: function () {
-            throw new Error('_createElement() should be'
+            throw new Error('_createElement() should be '
                     + 'implemented by ' + this.constructor.name);
         },
 
