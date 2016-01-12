@@ -142,7 +142,7 @@ define([
             if (this.getFlag(Widget.FLAG_REALIZED)) {
                 child.onAdded();
             }
-            child.repaint();
+            child.redraw();
         },
 
         /**
@@ -255,11 +255,11 @@ define([
          * @return {UpdateManager}
          */
         getUpdateManager: function () {
-            this.desc('getUpdateManager');
             var manager = null;
             if (this.getParent()) {
                 manager = this.getParent().getUpdateManager();
             }
+            this.desc('getUpdateManager', [], manager + '');
             return manager;
         },
 
@@ -267,7 +267,7 @@ define([
          * Invalidates this Widget and revalidates its parent.
          * If a Widget is a root (ie. does not have a parent),
          * it will request a validation from it UpdateManager.
-         * Calling this method does not guarantee a repaint.
+         * Calling this method does not guarantee a redraw.
          */
         revalidate: function () {
             this.desc('revalidate');
@@ -392,7 +392,7 @@ define([
         /**
          * Sets the bounds of this Widget to the Rectangle <i>rect</i>. Note that
          * <i>rect</i> is compared to the Figure's current bounds to determine what
-         * needs to be repainted and/or exposed and if validation is required. Since
+         * needs to be rendered again and/or exposed and if validation is required. Since
          * {@link #getBounds()} may return the current bounds by reference, it is
          * not safe to modify that Rectangle and then call setBounds() after making
          * modifications. The widget would assume that the bounds are unchanged, and
@@ -422,11 +422,9 @@ define([
             var isMoved = dx || dy;
             var isResized = dw || dh;
             var isChanged = isMoved || isResized;
+            this.info('isMoved = ' + Boolean(isMoved),
+                    ', isResized = ', Boolean(isResized));
 
-            if (isChanged && this.isVisible()) {
-                /* TODO check repaint, addDirtyRegion then remove if needless */
-                this.erase();
-            }
             if (isMoved) {
                 this.translate(dx, dy);
             }
@@ -436,40 +434,32 @@ define([
                 this.invalidate();
             }
             if (isChanged) {
-                this.repaint();
+                var parent = this.getParent();
+                if (parent) {
+                    var layoutManager = parent.getLayoutManager();
+                    if (layoutManager) {
+                        layoutManager.setConstraint(this, bounds);
+                    }
+                }
+                this.redraw();
             }
         },
 
         /**
          * Repaints this Widget.
+         * 
+         * @param {Rectangle} newBounds
+         *//**
+         * @param {number} x
+         * @param {number} y
+         * @param {number} w
+         * @param {number} h
+         * @override
          */
-        repaint: function () {
-            this.desc('repaint', arguments);
-            if (arguments.length === 0) {
-                this.repaint(this.getBounds());
-            } else if (arguments[0] instanceof Rectangle) {
-                var r = arguments[0];
-                this.repaint(r.x, r.y, r.w, r.h);
-            } else if (arguments.length === 4) {
-                var a = arguments;
-                var man = this.getUpdateManager();
-                if (man) {
-                    man.addDirtyRegion(this, a[0], a[1], a[2], a[3]);
-                }
-            }
-        },
-
-        /**
-         * Erases this Widget's bounds.
-         */
-        erase: function () {
-            this.desc('erase');
-            if (!this.getParent() || !this.isVisible()) {
-                return;
-            }
-            var r = new Rectangle(this.getBounds());
-            this.getParent().translateToParent(r);
-            this.getParent().repaint(r.x, r.y, r.w, r.h);
+        redraw: function () {
+            this.desc('redraw', arguments);
+            var man = this.getUpdateManager();
+            man.addInvalidWidget(this);
         },
 
         /**
@@ -536,24 +526,24 @@ define([
          * Renders this Widget and its children.
          * @param {GraphicContext} context
          */
-        render: function (context) {
-            this.desc('render', context, undefined, 'tomato');
+        draw: function (context) {
+            this.desc('draw', context, undefined, 'tomato');
             this.setBgColor(this.getBgColor());
             this.setBorderColor(this.getBorderColor());
             this.setBorderWidth(this.getBorderWidth());
-            this._renderWidget(context);
-            this._renderChildren(context);
+            this._drawWidget(context);
+            this._drawChildren(context);
         },
 
         /**
          * Renders the Widget itself.
-         * Each widget should know how to render itself.
+         * Each widget should know how to draw itself.
          * @param {GraphicContext} context
          * @abstract
          * @protected
          */
-        _renderWidget: function (context) {
-            throw new Error('_renderWidget(' + context + ') should be'
+        _drawWidget: function (context) {
+            throw new Error('_drawWidget(' + context + ') should be'
                     + 'implemented by ' + this.constructor.name);
         },
 
@@ -562,12 +552,12 @@ define([
          * @param {GraphicContext} context
          * @protected
          */
-        _renderChildren: function (context) {
-            this.desc('_renderChildren', context);
+        _drawChildren: function (context) {
+            this.desc('_drawChildren', context);
             //TODO clippingStrategy
             this.getChildren().forEach(function (child) {
                 if (child.isVisible()) {
-                    child.render(context);
+                    child.draw(context);
                 }
             });
         },
@@ -663,6 +653,32 @@ define([
          */
         getPadding: function () {
             return this._padding;
+        },
+
+        /**
+         * Returns whether this Widget has the given widget as a child.
+         * @return {boolean}
+         */
+        hasChild: function (widget) {
+            return this.getChildren().indexOf(widget) > -1;
+        },
+
+        /**
+         * Returns whether the given widget is
+         * in this Widget's descendant.
+         * @return {boolean}
+         */
+        hasDescendant: function (widget) {
+            var children = this.getChildren();
+            if (this.hasChild(widget)) {
+                return true;
+            }
+            for (var i in children) {
+                if (children[i].hasDescendant(widget)) {
+                    return true;
+                }
+            }
+            return false;
         }
     });
 
