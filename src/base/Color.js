@@ -42,7 +42,7 @@ define([
 
     function getColor(args) {
         if (args.length === 1) {
-            var rgb, hex, str;
+            var rgb, hex, str, prefix;
             if (args[0] instanceof Color) {
                 return args[0];
             } else if (typeof args[0] === 'string') {
@@ -66,13 +66,18 @@ define([
                     console.warn('Invalid color argument');
                 }
             }
-        } else if (arr.length > 2 && isAllNumber(args)) {
+        } else if (args.length > 2 && isAllNumber(args)) {
+            if (args.length === 3) {
+                prefix = 'rgb';
+            } else if (args.length === 4) {
+                prefix = 'rgba';
+            }
             return {
                 r: args[0],
                 g: args[1],
                 b: args[2],
                 a: args[3],
-                css: 'rgba(' + ([]).join.call(args, ',') + ')'
+                css: prefix + '(' + ([]).join.call(args, ',') + ')'
             };
         }
         return {css: 'transparent'};
