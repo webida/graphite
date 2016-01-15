@@ -32,51 +32,46 @@ define([
     'use strict';
 
     /**
-     * A Rect.
+     * A Ellipse.
      * @constructor
      */
-    function Rect() {
+    function Ellipse() {
         Shape.apply(this, arguments);
+        this.setProperty({
+            'shape-rendering': 'auto'
+        });
     }
 
-    genetic.inherits(Rect, Shape, {
+    genetic.inherits(Ellipse, Shape, {
 
         /**
          * Returns tagName for this Widget's element.
          * @return {string}
          */
         getTagName: function () {
-            return 'rect';
+            return 'ellipse';
         },
 
         /**
-         * Draws the svg rect with it's bounds.
+         * Draws the svg ellipse with it's bounds.
          * @param {GraphicContext} context
          * @protected
          */
         _drawShape: function (context) {
             this.desc('_drawShape', context);
             var r = this._getRevisedBounds();
+            var rx = r.w / 2;
+            var ry = r.h / 2;
+            var cx = r.x + rx;
+            var cy = r.y + ry;
             dom.setAttributes(this.getElement(), {
-                'x': r.x,
-                'y': r.y,
-                'width': r.w,
-                'height': r.h
+                'cx': cx,
+                'cy': cy,
+                'rx': rx,
+                'ry': ry
             });
-        },
-
-        /**
-         * For convenience, this tells position for
-         * x,y,w,h of this Rectangle.
-         * @return {string}
-         */
-        toString: function () {
-            var bounds = this.getBounds();
-            return Shape.prototype.toString.call(this) + 
-                    '(' + bounds.x + ',' + bounds.y + ',' +
-                            bounds.w + ',' + bounds.h + ')';
         }
     });
 
-    return Rect;
+    return Ellipse;
 });

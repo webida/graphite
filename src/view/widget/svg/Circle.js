@@ -32,51 +32,44 @@ define([
     'use strict';
 
     /**
-     * A Rect.
+     * A Circle.
      * @constructor
      */
-    function Rect() {
+    function Circle() {
         Shape.apply(this, arguments);
+        this.setProperty({
+            'shape-rendering': 'auto'
+        });
     }
 
-    genetic.inherits(Rect, Shape, {
+    genetic.inherits(Circle, Shape, {
 
         /**
          * Returns tagName for this Widget's element.
          * @return {string}
          */
         getTagName: function () {
-            return 'rect';
+            return 'circle';
         },
 
         /**
-         * Draws the svg rect with it's bounds.
+         * Draws the svg circle with it's bounds.
          * @param {GraphicContext} context
          * @protected
          */
         _drawShape: function (context) {
             this.desc('_drawShape', context);
             var r = this._getRevisedBounds();
+            var radius = Math.min(r.w, r.h) / 2.0;
+            var cx = r.x + radius;
+            var cy = r.y + radius;
             dom.setAttributes(this.getElement(), {
-                'x': r.x,
-                'y': r.y,
-                'width': r.w,
-                'height': r.h
+                'cx': cx,
+                'cy': cy,
+                'r': radius
             });
         },
-
-        /**
-         * For convenience, this tells position for
-         * x,y,w,h of this Rectangle.
-         * @return {string}
-         */
-        toString: function () {
-            var bounds = this.getBounds();
-            return Shape.prototype.toString.call(this) + 
-                    '(' + bounds.x + ',' + bounds.y + ',' +
-                            bounds.w + ',' + bounds.h + ')';
-        }
     });
 
-    return Rect;
+    return Circle;
 });

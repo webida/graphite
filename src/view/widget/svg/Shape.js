@@ -23,12 +23,14 @@
 define([
     'external/dom/dom',
     'external/genetic/genetic',
+    'graphite/view/geometry/Rectangle',
     'graphite/view/widget/Widget',
     './Structural',
     './SvgWidget'
 ], function (
     dom,
     genetic,
+    Rectangle,
     Widget,
     Structural,
     SvgWidget
@@ -71,6 +73,49 @@ define([
         },
 
         /**
+         * @see Widget#_drawWidget
+         * @param {GraphicContext} context
+         */
+        _drawWidget: function (context) {
+            this.desc('_drawWidget', context, undefined, 'green');
+            if (!this.isEnabled()) {
+                //TODO
+            }
+            this._drawShape(context);
+        },
+
+        /**
+         * Draws the shape with it's bounds.
+         * @param {GraphicContext} context
+         * @abstract
+         * @protected
+         */
+        _drawShape: function (context) {
+            this.isInterface('_drawShape', context);
+        },
+
+        /**
+         * Returns compensated bounds for border.
+         * Svg shapes does not support muliple values
+         * for different sides. So getMonoSize used.
+         * @see #setBorderWidth
+         * @return {Rectangle}
+         * @protected
+         */
+        _getRevisedBounds: function () {
+            var border = this.getBorderWidth();
+            var sizeFix = border.getMonoSize()/2;
+            var r = new Rectangle(this.getBounds());
+            if (!border.isEmpty()) {
+                r.x += sizeFix;
+                r.y += sizeFix;
+                r.w -= sizeFix*2;
+                r.h -= sizeFix*2;
+            }
+            return r;
+        },
+
+        /**
          * Sets this widget's background color.
          * @see Widget#setBgColor
          * @param {number} r - 0 ~ 255
@@ -85,7 +130,7 @@ define([
          * @param {Color} color
          */
         setBgColor: function (color) {
-            Widget.prototype.setBgColor.call(this, color);
+            SvgWidget.prototype.setBgColor.call(this, color);
             dom.setAttributes(this.getElement(), {
                 'fill': this.getBgColor()
             });
@@ -114,13 +159,18 @@ define([
 
         /**
          * Sets this widget's border width.
+         * Svg shapes does not support muliple values
+         * for different sides. So getMonoSize used.
          * @see Widget#setBorderWidth
          * @param {number} width
          */
         setBorderWidth: function (width) {
-            Widget.prototype.setBorderWidth.call(this, width);
+            Widget.prototype.setBorderWidth.apply(this, arguments);
+            if (typeof width === 'number') {
+                this.getBorderWidth().setMonoSize(width);
+            }
             dom.setAttributes(this.getElement(), {
-                'stroke-width': this.getBorderWidth()
+                'stroke-width': this.getBorderWidth().getMonoSize()
             });
         }
     });

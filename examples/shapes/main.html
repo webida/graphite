@@ -9,10 +9,29 @@
 			body {
 				margin: 20px;
 				padding: 20px;
-				border: 1px dotted #ccc;
 			}
-			svg {
+			#info {
+				background-color: #eee;
 				position: absolute;
+				left: 5%;
+				width: 70%;
+				font-size: 8pt;
+				font-family: consolas;
+			}
+			#info ul {
+				line-height: 11pt;
+				padding-left: 30px;
+			}
+			#info span {
+				background-color: #fff;
+				padding: 0px 3px;
+			}
+			#control {
+				background-color: #eee;
+				position: absolute;
+				left: 80%;
+				font-size: 8pt;
+				font-family: consolas;
 			}
 			#container {
 				background-color: #A2E2F1;
@@ -46,12 +65,12 @@
 				width: 100%;
 				height: 100%;
 			}
-			#eventMask {
+			#mask {
 				position: absolute;
 				background-color: salmon;
 				width: 100%;
 				height: 100%;
-				opacity: 0.5;
+				opacity: 0;
 			}
 			.graphite .Layer {
 				position: absolute;
@@ -84,6 +103,27 @@
 		</style>
 	</head>
 	<body>
+		<div id='info'>
+			<ul>
+				<li>
+					layerX,Y <span id='layerXY'>n/a</span>
+				</li>
+				<li>
+					dragStartPos <span id='dragStartPos'>n/a</span>
+				</li>
+				<li>
+					dragDelta <span id='dragDelta'>n/a</span>
+				</li>
+				<li>
+					dragStopPos <span id='dragStopPos'>n/a</span>
+				</li>
+			</ul>
+		</div>
+		<div id='control'>
+			<button id='btnRun'>
+				run
+			</button>
+		</div>
 		<div id='container' class='graphite'>
 			<div id='scrollable' class='Layer'>
 				<div id='scalable' class='Layer'>
@@ -97,11 +137,9 @@
 					<svg id='feedback' class='FeedbackLayer'></svg>
 				</div>
 				<svg id='handle' class='Layer'></svg>
+				<div id='mask' class='Layer'></div>
 			</div>
 		</div>
-		<button id='btnRun'>
-			run
-		</button>
 
 		<script src="../../external/requirejs/require.js"></script>
 		<script src="configs/requirejs-config.js"></script>

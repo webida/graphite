@@ -40,6 +40,7 @@ define([
     /** @constant {number} */
     var FLAG_VALID = 1;
     var FLAG_VISIBLE = 1 << 2;
+    var FLAG_ENABLED = 1 << 4;
 
     /**
      * An abstract class for all Graphite Widgets.
@@ -50,19 +51,14 @@ define([
         this._parent = null;
         this._children = [];
         this._bounds = new Rectangle(0, 0, 0, 0);
-        this._padding = new Spaces(0, 0, 0, 0);
         this._bgColor = new Color('transparent');
         this._borderColor = new Color('black');
+        this._borderWidth = new Spaces(0, 0, 0, 0);
         this.setFlag(FLAG_VISIBLE, true);
+        this.setFlag(FLAG_ENABLED, true);
     }
 
     var proto = genetic.mixin(BaseEmitter.prototype, FlagSupport.prototype, {
-
-        _borderWidth: 0,
-
-        _borderColor: null,
-
-        _bgColor: null,
 
         /**
          * Adds the given Widget as a child of this Widget with the given
@@ -156,6 +152,14 @@ define([
         },
 
         /**
+         * Returns true if this IFigure is enabled.
+         * @return {boolean}
+         */
+        isEnabled: function () {
+            return this.getFlag(Widget.FLAG_ENABLED);
+        },
+
+        /**
          * Called after this Widget is added to its parent.
          */
         onAdded: function () {
@@ -188,7 +192,14 @@ define([
          */
         _onMoved: function (dx, dy) {
             this.desc('_onMoved', arguments);
-            this.emit('widgetMoved', {
+            /**
+             * moved event.
+             * @event Widget#moved
+             * @type {object}
+             * @dx {number} dx
+             * @dy {number} dy
+             */
+            this.emit('moved', {
                 dx: dx,
                 dy: dy
             });
@@ -352,7 +363,10 @@ define([
         },
 
         /**
-         * @param {Rectangle} rect
+         * Returns the rectangular area within this Widget's bounds
+         * in which children will be placed via LayoutManager and
+         * the drawing of children will be clipped.
+         * @param {Rectangle} [rect]
          * @return {Rectangle}
          */
         getClientArea: function (rect) {
@@ -361,7 +375,7 @@ define([
                 rect = new Rectangle();
             }
             rect.setBounds(this.getBounds());
-            rect.shrink(this.getPadding());
+            rect.shrink(this.getBorderWidth());
             if (this.useLocalCoordinates()) {
                 rect.setLocation(0, 0);
             }
@@ -445,6 +459,12 @@ define([
             }
         },
 
+        setSize: function (w, h) {
+            this.desc('setSize', arguments);
+            var bounds = this.getBounds();
+            this.setBounds(bounds.x, bounds.y, w, h);
+        },
+
         /**
          * Repaints this Widget.
          * 
@@ -459,7 +479,9 @@ define([
         redraw: function () {
             this.desc('redraw', arguments);
             var man = this.getUpdateManager();
-            man.addInvalidWidget(this);
+            if (man) {
+                man.addInvalidWidget(this);
+            }
         },
 
         /**
@@ -496,10 +518,14 @@ define([
             bounds.x += dx;
             bounds.y += dy;
             if (this.useLocalCoordinates()) {
-                //TODO
-                this.emit('coordinateSystemChanged', {
-                    
-                });
+                /**
+                 * moved event.
+                 * @event Widget#moved
+                 * @type {object}
+                 * @dx {number} dx
+                 * @dy {number} dy
+                 */
+                this.emit('coordinateSystemChanged', this);
                 return;
             }
             this.getChildren().forEach(function (child) {
@@ -507,8 +533,27 @@ define([
             });
         },
 
-        translateToParent: function () {
-            this.warn('translateToParent(' + this.explain(arguments) + ') //todo');
+        /**
+         * Translates a Translatable from this Widget's coordinates
+         * to its parent's coordinates.
+         * Translates coordinates that are relative to this Widget
+         * into coordinates relative to its parent.
+         * @param {Translatable} t
+         */
+        translateToParent: function (t) {
+            var bounds = this.getBounds();
+            if (this.useLocalCoordinates()) {
+                t.performTranslate(bounds.x + getInsets().left, bounds.y + getInsets().top);
+            }
+        },
+
+        /**
+         * Translates coordinates that are relative to this Widget
+         * into coordinates that are relative to the root.
+         * @param {Translatable} t
+         */
+        translateToAbsolute: function (t) {
+            //TODO : Calculate bounds from this Widget's settings and environment
         },
 
         /**
@@ -615,44 +660,28 @@ define([
         },
 
         /**
-         * Sets this widget's border width.
-         * @param {number} width
-         */
-        setBorderWidth: function (width) {
-            this.desc('setBorderWidth', width);
-            this._borderWidth = width;
-        },
-
-        /**
-         * Returns this widget's border width.
-         * @return {number}
-         */
-        getBorderWidth: function () {
-            return this._borderWidth;
-        },
-
-        /**
-         * Sets this widget's padding value.
+         * Sets this widget's border's spaces.
          * @param {number} top
-         * @param {number} left
-         * @param {number} bottom
          * @param {number} right
+         * @param {number} bottom
+         * @param {number} left
          *//**
          * @param {Spaces} spaces
          *//**
          * @param {number} number - If same values for each sides
          */
-        setPadding: function (padding) {
-            var FnBind = Function.prototype.bind;
-            this._padding = new (FnBind.apply(Spaces, arguments));
+        setBorderWidth: function () {
+            this.desc('setBorderWidth', arguments);
+            this._borderWidth = this.getInstanceOf(Spaces, arguments);
         },
 
         /**
-         * Returns this widget's padding value.
-         * @return {Spaces}
+         * Returns this widget's border's spaces.
+         * @param {Spaces}
          */
-        getPadding: function () {
-            return this._padding;
+        getBorderWidth: function () {
+            this.desc('getBorderWidth', [], this._borderWidth);
+            return this._borderWidth;
         },
 
         /**

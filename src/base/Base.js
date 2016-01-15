@@ -43,13 +43,18 @@ define([
 
     genetic.inherits(Base, Object, {
 
-        desc: function (fnName, args, result, color) {
+        _filterArgs: function (args) {
             if (typeof args === 'object' && 'length' in args) {
                 args = this.explain(args);
             }
             if ( typeof args === 'undefined') {
                 args = '';
             }
+            return args;
+        },
+
+        desc: function (fnName, args, result, color) {
+            args = this._filterArgs(args);
             var msgs = [this + '.' + fnName + '(' + args + ')'];
             if (result) {
                 msgs[0] += ' =>';
@@ -95,6 +100,18 @@ define([
                 }
             }
             return arr.join(', ');
+        },
+
+        isInterface: function (method, args) {
+            args = this._filterArgs(args);
+            throw new Error(method + '(' + args + ') should be '
+                    + 'implemented by ' + this.constructor.name);
+        },
+
+        getInstanceOf: function (cst, args) {
+            var arr = ([]).slice.call(args);
+            arr = [null].concat(arr);
+            return new (Function.prototype.bind.apply(cst, arr));
         },
 
         toString: function () {

@@ -19,6 +19,9 @@ define([
     'graphite/view/geometry/Rectangle',
     'graphite/view/layout/XYLayout',
     'graphite/view/system/GraphiteShell',
+    'graphite/view/widget/html/Div',
+    'graphite/view/widget/svg/Circle',
+    'graphite/view/widget/svg/Ellipse',
     'graphite/view/widget/svg/Rect',
     'graphite/view/widget/svg/Svg',
     'graphite/view/widget/Widget'
@@ -27,6 +30,9 @@ define([
     Rectangle,
     XYLayout,
     GraphiteShell,
+    Div,
+    Circle,
+    Ellipse,
     Rect,
     Svg,
     Widget
@@ -48,7 +54,12 @@ define([
                 GraphiteShell: GraphiteShell
             },
             widget: {
+                html: {
+                    Div: Div
+                },
                 svg: {
+                    Circle: Circle,
+                    Ellipse: Ellipse,
                     Rect: Rect,
                     Svg: Svg
                 },
