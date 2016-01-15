@@ -22,9 +22,11 @@
 
 define([
     'external/genetic/genetic',
+    'external/math/math',
     'graphite/base/Base'
 ], function (
     genetic,
+    math,
     Base
 ) {
     'use strict';
@@ -38,38 +40,39 @@ define([
         var args = arguments;
         if (args.length === 4) {
             this.top = args[0];
-            this.left = args[1];
+            this.right = args[1];
             this.bottom = args[2];
-            this.right = args[3];
+            this.left = args[3];
         } else if (args.length === 1) {
             if (args[0] instanceof Spaces) {
                 var insets = args[0];
                 this.top = insets.top;
-                this.left = insets.left;
-                this.bottom = insets.bottom;
                 this.right = insets.right;
-            } else if ( typeof args[0] === 'number') {
+                this.bottom = insets.bottom;
+                this.left = insets.left;
+                this._monoSize = insets._monoSize;
+            } else if (typeof args[0] === 'number') {
                 this.top = args[0];
-                this.left = args[0];
-                this.bottom = args[0];
                 this.right = args[0];
+                this.bottom = args[0];
+                this.left = args[0];
             }
         }
     }
 
     genetic.inherits(Spaces, Base, {
 
-        /** distance from left */
-        left : 0,
-        
         /** distance from top */
         top : 0,
-        
-        /** distance from bottom */
-        bottom : 0,
-        
+
         /** distance from right */
         right : 0,
+
+        /** distance from bottom */
+        bottom : 0,
+
+        /** distance from left */
+        left : 0,
 
         /**
          * Returns the width for this Insets, equal to <code>left</code> +
@@ -89,6 +92,26 @@ define([
             return this.top + this.bottom;
         },
 
+        /**
+         * Returns whether this space is empty or not.
+         * @return {boolean}
+         */
+        isEmpty: function () {
+            if (math.isZeroAll(this.top, this.right, this.bottom, this.left)) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+
+        setMonoSize: function (monoSize) {
+            this.desc('setMonoSize', monoSize);
+            this._monoSize = monoSize;
+        },
+
+        getMonoSize: function () {
+            return this._monoSize;
+        }
     });
 
     return Spaces;
