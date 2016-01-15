@@ -23,10 +23,12 @@
 define([
     'external/dom/dom',
     'external/genetic/genetic',
+    'graphite/view/layout/XYLayout',
     'graphite/view/widget/dom/DomWidget'
 ], function (
     dom,
     genetic,
+    XYLayout,
     DomWidget
 ) {
     'use strict';
@@ -48,6 +50,60 @@ define([
          */
         _createElement: function () {
             return dom.makeElement(this.getTagName());
+        },
+
+        /**
+         * Sets position CSS property for this Widget's element.
+         * @param {string} property - static, relative, absolute, fixed
+         */
+        setPosition: function (property) {
+            dom.setStyles(this.getElement(), {
+                'position': property
+            });
+        },
+
+        /**
+         * Returns true if this Widget uses local coordinates.
+         * This means its children are placed relative to
+         * this Widget's top-left corner.
+         * @return {boolean}
+         */
+        useLocalCoordinates: function () {
+            this.desc('useLocalCoordinates', [], true);
+            return true;
+        },
+
+        /**
+         * @param {LayoutManager} manager
+         * @override
+         */
+        setLayoutManager: function (manager) {
+            this.desc('setLayoutManager', arguments);
+            DomWidget.prototype.setLayoutManager.call(this, manager);
+            if (manager instanceof XYLayout) {
+                this.setPosition('absolute');
+            }
+        },
+
+        /**
+         * Sets this widget's background color.
+         * @see Widget#setBgColor
+         * @param {number} r - 0 ~ 255
+         * @param {number} g - 0 ~ 255
+         * @param {number} b - 0 ~ 255
+         * @param {number} a - 0 ~ 1.0
+         *//**
+         * @param {string} colorName - 'skyblue', 'transparent'
+         *//**
+         * @param {string} hexCode - '#ff0', '#ffff00', 'ff0', 'ffff00'
+         *//**
+         * @param {Color} color
+         */
+        setBgColor: function (color) {
+            DomWidget.prototype.setBgColor.call(this, color);
+            dom.setStyles(this.getElement(), {
+                'background-color': color
+            });
         },
     });
 
