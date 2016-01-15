@@ -23,25 +23,19 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         r1.setBorderWidth(10);
         svg.addChild(r1, new Rectangle(0, 0, 100, 100));
 
-        setTimeout(function () {
-            console.log('r1.getClientArea() --> ', r1.getClientArea());
-        }, 2000);
-
-        return;
-
         var r2 = new Rect();
         r2.setBgColor('salmon');
         svg.addChild(r2, new Rectangle(100, 100, 100, 100));
 
         var ellipse = new Ellipse();
-        ellipse.setBorderColor(new Color(132, 45, 123));
-        ellipse.setBorderWidth(10);
-        ellipse.setBgColor(new Color(135, 206, 235));
+        ellipse.setBorderColor('green');
+        ellipse.setBgColor('white');
         ellipse.setBounds(new Rectangle(200, 200, 150, 100));
         svg.addChild(ellipse);
 
         setTimeout(function () {
             console.log('root --> ', svg, r1.getBounds().toString());
+            console.log('r1.getClientArea() --> ', r1.getClientArea());
         }, 2000);
 
         return;
