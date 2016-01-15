@@ -21,9 +21,11 @@
  */
 
 define([
+    'external/dom/dom',
     'external/genetic/genetic',
     'graphite/view/widget/Widget'
 ], function (
+    dom,
     genetic,
     Widget
 ) {
@@ -77,6 +79,27 @@ define([
             return this._element;
         },
 
+        /**
+         * Sets property for this HtmlWidget's element.
+         * @param {Object} propSet - pairs of key and value 
+         */
+        setProperty: function (propSet) {
+            var element = this.getElement();
+            if (element) {
+                dom.setAttributes(element, propSet);
+            }
+        },
+
+        /**
+         * Sets property for this HtmlWidget's element.
+         * @param {Object} propSet - pairs of key and value 
+         */
+        setStyle: function (propSet) {
+            var element = this.getElement();
+            if (element) {
+                dom.setStyles(element, propSet);
+            }
+        }
     });
 
     return DomWidget;
