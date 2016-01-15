@@ -23,12 +23,14 @@
 define([
     'external/dom/dom',
     'external/genetic/genetic',
+    'graphite/view/geometry/Rectangle',
     'graphite/view/widget/Widget',
     './Structural',
     './SvgWidget'
 ], function (
     dom,
     genetic,
+    Rectangle,
     Widget,
     Structural,
     SvgWidget
@@ -71,6 +73,48 @@ define([
         },
 
         /**
+         * @see Widget#_drawWidget
+         * @param {GraphicContext} context
+         */
+        _drawWidget: function (context) {
+            this.desc('_drawWidget', context, undefined, 'green');
+            if (!this.isEnabled()) {
+                //TODO
+            }
+            this._drawShape(context);
+        },
+
+        /**
+         * Draws the shape with it's bounds.
+         * @param {GraphicContext} context
+         * @abstract
+         * @protected
+         */
+        _drawShape: function (context) {
+            this.isInterface('_drawShape', context);
+        },
+
+        /**
+         * Returns compensated bounds for border.
+         * @return {Rectangle}
+         * @protected
+         */
+        _getRevisedBounds: function () {
+            var border = this.getBorderWidth();
+            var r = new Rectangle(this.getBounds());
+            if (border > 0) {
+                var half = Math.max(1.0, border) / 2.0;
+                var inset1 = parseInt(Math.floor(half));
+                var inset2 = parseInt(Math.ceil(half));                
+                r.x += inset1;
+                r.y += inset1;
+                r.w -= inset1 + inset2;
+                r.h -= inset1 + inset2;
+            }
+            return r;
+        },
+
+        /**
          * Sets this widget's background color.
          * @see Widget#setBgColor
          * @param {number} r - 0 ~ 255
@@ -85,7 +129,7 @@ define([
          * @param {Color} color
          */
         setBgColor: function (color) {
-            Widget.prototype.setBgColor.call(this, color);
+            SvgWidget.prototype.setBgColor.call(this, color);
             dom.setAttributes(this.getElement(), {
                 'fill': this.getBgColor()
             });
