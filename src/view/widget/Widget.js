@@ -40,6 +40,7 @@ define([
     /** @constant {number} */
     var FLAG_VALID = 1;
     var FLAG_VISIBLE = 1 << 2;
+    var FLAG_ENABLED = 1 << 4;
 
     /**
      * An abstract class for all Graphite Widgets.
@@ -50,10 +51,12 @@ define([
         this._parent = null;
         this._children = [];
         this._bounds = new Rectangle(0, 0, 0, 0);
+        this._border = new Spaces(0, 0, 0, 0);
         this._padding = new Spaces(0, 0, 0, 0);
         this._bgColor = new Color('transparent');
         this._borderColor = new Color('black');
         this.setFlag(FLAG_VISIBLE, true);
+        this.setFlag(FLAG_ENABLED, true);
     }
 
     var proto = genetic.mixin(BaseEmitter.prototype, FlagSupport.prototype, {
@@ -156,6 +159,14 @@ define([
         },
 
         /**
+         * Returns true if this IFigure is enabled.
+         * @return {boolean}
+         */
+        isEnabled: function () {
+            return this.getFlag(Widget.FLAG_ENABLED);
+        },
+
+        /**
          * Called after this Widget is added to its parent.
          */
         onAdded: function () {
@@ -188,7 +199,14 @@ define([
          */
         _onMoved: function (dx, dy) {
             this.desc('_onMoved', arguments);
-            this.emit('widgetMoved', {
+            /**
+             * moved event.
+             * @event Widget#moved
+             * @type {object}
+             * @dx {number} dx
+             * @dy {number} dy
+             */
+            this.emit('moved', {
                 dx: dx,
                 dy: dy
             });
@@ -352,7 +370,10 @@ define([
         },
 
         /**
-         * @param {Rectangle} rect
+         * Returns the rectangular area within this Widget's bounds
+         * in which children will be placed via LayoutManager and
+         * the drawing of children will be clipped.
+         * @param {Rectangle} [rect]
          * @return {Rectangle}
          */
         getClientArea: function (rect) {
@@ -445,6 +466,12 @@ define([
             }
         },
 
+        setSize: function (w, h) {
+            this.desc('setSize', arguments);
+            var bounds = this.getBounds();
+            this.setBounds(bounds.x, bounds.y, w, h);
+        },
+
         /**
          * Repaints this Widget.
          * 
@@ -459,7 +486,9 @@ define([
         redraw: function () {
             this.desc('redraw', arguments);
             var man = this.getUpdateManager();
-            man.addInvalidWidget(this);
+            if (man) {
+                man.addInvalidWidget(this);
+            }
         },
 
         /**
@@ -496,10 +525,14 @@ define([
             bounds.x += dx;
             bounds.y += dy;
             if (this.useLocalCoordinates()) {
-                //TODO
-                this.emit('coordinateSystemChanged', {
-                    
-                });
+                /**
+                 * moved event.
+                 * @event Widget#moved
+                 * @type {object}
+                 * @dx {number} dx
+                 * @dy {number} dy
+                 */
+                this.emit('coordinateSystemChanged', this);
                 return;
             }
             this.getChildren().forEach(function (child) {
@@ -507,8 +540,27 @@ define([
             });
         },
 
-        translateToParent: function () {
-            this.warn('translateToParent(' + this.explain(arguments) + ') //todo');
+        /**
+         * Translates a Translatable from this Widget's coordinates
+         * to its parent's coordinates.
+         * Translates coordinates that are relative to this Widget
+         * into coordinates relative to its parent.
+         * @param {Translatable} t
+         */
+        translateToParent: function (t) {
+            var bounds = this.getBounds();
+            if (this.useLocalCoordinates()) {
+                t.performTranslate(bounds.x + getInsets().left, bounds.y + getInsets().top);
+            }
+        },
+
+        /**
+         * Translates coordinates that are relative to this Widget
+         * into coordinates that are relative to the root.
+         * @param {Translatable} t
+         */
+        translateToAbsolute: function (t) {
+            //TODO : Calculate bounds from this Widget's settings and environment
         },
 
         /**
@@ -621,6 +673,7 @@ define([
         setBorderWidth: function (width) {
             this.desc('setBorderWidth', width);
             this._borderWidth = width;
+            this.setBorder(new Spaces(width));
         },
 
         /**
@@ -629,6 +682,22 @@ define([
          */
         getBorderWidth: function () {
             return this._borderWidth;
+        },
+
+        /**
+         * Sets this widget's border's spaces.
+         * @param {Spaces}
+         */
+        setBorder: function (spaces) {
+            this._border = spaces;
+        },
+
+        /**
+         * Returns this widget's border's spaces.
+         * @param {Spaces}
+         */
+        getBorder: function () {
+            return this._border;
         },
 
         /**
