@@ -23,11 +23,13 @@
 define([
     'external/dom/dom',
     'external/genetic/genetic',
+    'graphite/view/geometry/Spaces',
     'graphite/view/layout/XYLayout',
     'graphite/view/widget/dom/DomWidget'
 ], function (
     dom,
     genetic,
+    Spaces,
     XYLayout,
     DomWidget
 ) {
@@ -39,6 +41,7 @@ define([
      */
     function HtmlWidget() {
         DomWidget.apply(this, arguments);
+        this._padding = new Spaces(0, 0, 0, 0);
     }
 
     genetic.inherits(HtmlWidget, DomWidget, {
@@ -104,6 +107,52 @@ define([
             dom.setStyles(this.getElement(), {
                 'background-color': color
             });
+        },
+
+        /**
+         * Sets this widget's padding value.
+         * @param {number} top
+         * @param {number} right
+         * @param {number} bottom
+         * @param {number} left
+         *//**
+         * @param {Spaces} spaces
+         *//**
+         * @param {number} number - If same values for each sides
+         */
+        setPadding: function () {
+            this.desc('setPadding', arguments);
+            this._padding = this.getInstanceOf(Spaces, arguments);
+        },
+
+        /**
+         * Returns this widget's padding value.
+         * @return {Spaces}
+         */
+        getPadding: function () {
+            return this._padding;
+        },
+
+        /**
+         * Returns compensated bounds for border.
+         * @return {Rectangle}
+         * @protected
+         */
+        _getRevisedBounds: function () {
+            var border = this.getBorderWidth();
+            var r = new Rectangle(this.getBounds());
+            var hTop, hRight, hBottom, hLeft;
+            if (!border.isEmpty()) {
+                hTop = border.top/2,
+                hRight = border.right/2;
+                hBottom = border.bottom/2;
+                hLeft = border.left/2;
+                r.x += hLeft;
+                r.y += hTop;
+                r.w -= hLeft + hRight;
+                r.h -= hTop + hBottom;
+            }
+            return r;
         },
     });
 

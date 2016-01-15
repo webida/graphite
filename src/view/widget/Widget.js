@@ -51,21 +51,14 @@ define([
         this._parent = null;
         this._children = [];
         this._bounds = new Rectangle(0, 0, 0, 0);
-        this._border = new Spaces(0, 0, 0, 0);
-        this._padding = new Spaces(0, 0, 0, 0);
         this._bgColor = new Color('transparent');
         this._borderColor = new Color('black');
+        this._borderWidth = new Spaces(0, 0, 0, 0);
         this.setFlag(FLAG_VISIBLE, true);
         this.setFlag(FLAG_ENABLED, true);
     }
 
     var proto = genetic.mixin(BaseEmitter.prototype, FlagSupport.prototype, {
-
-        _borderWidth: 0,
-
-        _borderColor: null,
-
-        _bgColor: null,
 
         /**
          * Adds the given Widget as a child of this Widget with the given
@@ -382,7 +375,7 @@ define([
                 rect = new Rectangle();
             }
             rect.setBounds(this.getBounds());
-            rect.shrink(this.getPadding());
+            rect.shrink(this.getBorderWidth());
             if (this.useLocalCoordinates()) {
                 rect.setLocation(0, 0);
             }
@@ -667,61 +660,28 @@ define([
         },
 
         /**
-         * Sets this widget's border width.
-         * @param {number} width
-         */
-        setBorderWidth: function (width) {
-            this.desc('setBorderWidth', width);
-            this._borderWidth = width;
-            this.setBorder(new Spaces(width));
-        },
-
-        /**
-         * Returns this widget's border width.
-         * @return {number}
-         */
-        getBorderWidth: function () {
-            return this._borderWidth;
-        },
-
-        /**
          * Sets this widget's border's spaces.
-         * @param {Spaces}
+         * @param {number} top
+         * @param {number} right
+         * @param {number} bottom
+         * @param {number} left
+         *//**
+         * @param {Spaces} spaces
+         *//**
+         * @param {number} number - If same values for each sides
          */
-        setBorder: function (spaces) {
-            this._border = spaces;
+        setBorderWidth: function () {
+            this.desc('setBorderWidth', arguments);
+            this._borderWidth = this.getInstanceOf(Spaces, arguments);
         },
 
         /**
          * Returns this widget's border's spaces.
          * @param {Spaces}
          */
-        getBorder: function () {
-            return this._border;
-        },
-
-        /**
-         * Sets this widget's padding value.
-         * @param {number} top
-         * @param {number} left
-         * @param {number} bottom
-         * @param {number} right
-         *//**
-         * @param {Spaces} spaces
-         *//**
-         * @param {number} number - If same values for each sides
-         */
-        setPadding: function (padding) {
-            var FnBind = Function.prototype.bind;
-            this._padding = new (FnBind.apply(Spaces, arguments));
-        },
-
-        /**
-         * Returns this widget's padding value.
-         * @return {Spaces}
-         */
-        getPadding: function () {
-            return this._padding;
+        getBorderWidth: function () {
+            this.desc('getBorderWidth', [], this._borderWidth);
+            return this._borderWidth;
         },
 
         /**

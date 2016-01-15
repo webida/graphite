@@ -96,20 +96,21 @@ define([
 
         /**
          * Returns compensated bounds for border.
+         * Svg shapes does not support muliple values
+         * for different sides. So getMonoSize used.
+         * @see #setBorderWidth
          * @return {Rectangle}
          * @protected
          */
         _getRevisedBounds: function () {
             var border = this.getBorderWidth();
+            var sizeFix = border.getMonoSize()/2;
             var r = new Rectangle(this.getBounds());
-            if (border > 0) {
-                var half = Math.max(1.0, border) / 2.0;
-                var inset1 = parseInt(Math.floor(half));
-                var inset2 = parseInt(Math.ceil(half));                
-                r.x += inset1;
-                r.y += inset1;
-                r.w -= inset1 + inset2;
-                r.h -= inset1 + inset2;
+            if (!border.isEmpty()) {
+                r.x += sizeFix;
+                r.y += sizeFix;
+                r.w -= sizeFix*2;
+                r.h -= sizeFix*2;
             }
             return r;
         },
@@ -158,13 +159,18 @@ define([
 
         /**
          * Sets this widget's border width.
+         * Svg shapes does not support muliple values
+         * for different sides. So getMonoSize used.
          * @see Widget#setBorderWidth
          * @param {number} width
          */
         setBorderWidth: function (width) {
-            Widget.prototype.setBorderWidth.call(this, width);
+            Widget.prototype.setBorderWidth.apply(this, arguments);
+            if (typeof width === 'number') {
+                this.getBorderWidth().setMonoSize(width);
+            }
             dom.setAttributes(this.getElement(), {
-                'stroke-width': this.getBorderWidth()
+                'stroke-width': this.getBorderWidth().getMonoSize()
             });
         }
     });
