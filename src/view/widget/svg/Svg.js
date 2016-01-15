@@ -23,12 +23,14 @@
 define([
     'external/genetic/genetic',
     'graphite/view/system/GraphiteShell',
+    'graphite/view/widget/html/Container',
     './Rectangular',
     './Structural',
     './SvgWidget'
 ], function (
     genetic,
     GraphiteShell,
+    Container,
     Rectangular,
     Structural,
     SvgWidget
@@ -41,6 +43,9 @@ define([
      */
     function Svg() {
         Structural.apply(this, arguments);
+        this.setProperty({
+            'shape-rendering': 'crispEdges'
+        });
     }
 
     var proto = genetic.mixin(Rectangular.prototype, {
@@ -61,7 +66,7 @@ define([
         setParent: function (parent) {
             this.desc('setParent', parent);
             SvgWidget.prototype.setParent.call(this, parent);
-            if (parent instanceof Structural) {
+            if (parent instanceof Structural || parent instanceof Container) {
                 parent.getElement().appendChild(this.getElement());
             } else if (parent instanceof GraphiteShell.RootWidget) {
                 var upman = this.getUpdateManager();
