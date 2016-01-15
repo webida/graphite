@@ -108,6 +108,12 @@ define([
                     + 'implemented by ' + this.constructor.name);
         },
 
+        getInstanceOf: function (cst, args) {
+            var arr = ([]).slice.call(args);
+            arr = [null].concat(arr);
+            return new (Function.prototype.bind.apply(cst, arr));
+        },
+
         toString: function () {
             return '<' + this.constructor.name + '>#' + this._uid_;
         }
