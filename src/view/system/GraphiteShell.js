@@ -15,15 +15,11 @@
  */
 
 /**
- * Constructor
- * GraphiteShell
- *
- * @see
- * @since: 2015.12.30
+ * @file GraphiteShell
+ * @since: 1.0.0
  * @author: hw.shim@samsung.com
  */
 
-// @formatter:off
 define([
     'external/eventEmitter/EventEmitter',
     'external/genetic/genetic',
@@ -44,7 +40,6 @@ define([
     Widget
 ) {
     'use strict';
-// @formatter:on
 
     /**
      * The GraphiteShell is the link between browser and GraphiteView.
