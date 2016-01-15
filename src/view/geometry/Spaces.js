@@ -74,6 +74,8 @@ define([
         /** distance from left */
         left : 0,
 
+        _monoSize: 0,
+
         /**
          * Returns the width for this Insets, equal to <code>left</code> +
          * <code>right</code>.
