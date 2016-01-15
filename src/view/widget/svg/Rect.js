@@ -21,12 +21,12 @@
  */
 
 define([
+    'external/dom/dom',
     'external/genetic/genetic',
-    './Rectangular',
     './Shape'
 ], function (
+    dom,
     genetic,
-    Rectangular,
     Shape
 ) {
     'use strict';
@@ -39,7 +39,7 @@ define([
         Shape.apply(this, arguments);
     }
 
-    var proto = genetic.mixin(Rectangular.prototype, {
+    genetic.inherits(Rect, Shape, {
 
         /**
          * Returns tagName for this Widget's element.
@@ -47,6 +47,22 @@ define([
          */
         getTagName: function () {
             return 'rect';
+        },
+
+        /**
+         * Draws the svg rect with it's bounds.
+         * @param {GraphicContext} context
+         * @protected
+         */
+        _drawShape: function (context) {
+            this.desc('_drawShape', context);
+            var r = this._getRevisedBounds();
+            dom.setAttributes(this.getElement(), {
+                'x': r.x,
+                'y': r.y,
+                'width': r.w,
+                'height': r.h
+            });
         },
 
         /**
@@ -61,8 +77,6 @@ define([
                             bounds.w + ',' + bounds.h + ')';
         }
     });
-
-    genetic.inherits(Rect, Shape, proto);
 
     return Rect;
 });
