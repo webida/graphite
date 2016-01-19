@@ -130,7 +130,7 @@ define([
             }
             child.setParent(this);
             /* constraint */
-            var layoutManager = this.getLayoutManager();
+            var layoutManager = this.getLayout();
             if (constraint && layoutManager) {
                 layoutManager.setConstraint(child, constraint);
             }
@@ -246,19 +246,19 @@ define([
         },
 
         /**
-         * @param {LayoutManager} manager
+         * @param {Layout} layout
          */
-        setLayoutManager: function (manager) {
-            this.desc('setLayoutManager', arguments);
-            this._layoutManager = manager;    
+        setLayout: function (layout) {
+            this.desc('setLayout', arguments);
+            this._layout = layout;
             this.revalidate();
         },
 
         /**
-         * @return {LayoutManager}
+         * @return {Layout}
          */
-        getLayoutManager: function () {
-            return this._layoutManager;
+        getLayout: function () {
+            return this._layout;
         },
 
         /**
@@ -295,13 +295,13 @@ define([
         },
 
         /**
-         * Invalidates this Widget. If this widget has a LayoutManager,
+         * Invalidates this Widget. If this widget has a Layout,
          * then layoutManager.invalidate() should be called.
          */
         invalidate: function () {
             this.desc('invalidate');
-            if (this.getLayoutManager()){
-                this.getLayoutManager().invalidate();
+            if (this.getLayout()){
+                this.getLayout().invalidate();
             }
             this.setValid(false);
         },
@@ -334,7 +334,7 @@ define([
 
         /**
          * Indicates that this widget should make itself valid. Validation includes
-         * invoking layout on a LayoutManager if present, and then validating all
+         * invoking layout on a Layout if present, and then validating all
          * children widgets. Default validation uses pre-order, depth-first
          * ordering.
          */
@@ -351,11 +351,11 @@ define([
         },
 
         /**
-         * Lays out this Widget using its LayoutManager.
+         * Lays out this Widget using its Layout.
          */
         layout: function () {
             this.desc('layout');
-            var layoutManager = this.getLayoutManager();
+            var layoutManager = this.getLayout();
             this.info('layoutManager --> ' + layoutManager);
             if (layoutManager) {
                 layoutManager.layout(this);
@@ -364,7 +364,7 @@ define([
 
         /**
          * Returns the rectangular area within this Widget's bounds
-         * in which children will be placed via LayoutManager and
+         * in which children will be placed via Layout and
          * the drawing of children will be clipped.
          * @param {Rectangle} [rect]
          * @return {Rectangle}
@@ -450,7 +450,7 @@ define([
             if (isChanged) {
                 var parent = this.getParent();
                 if (parent) {
-                    var layoutManager = parent.getLayoutManager();
+                    var layoutManager = parent.getLayout();
                     if (layoutManager) {
                         layoutManager.setConstraint(this, bounds);
                     }

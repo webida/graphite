@@ -77,12 +77,12 @@ define([
         },
 
         /**
-         * @param {LayoutManager} manager
+         * @param {Layout} layout
          * @override
          */
-        setLayoutManager: function (manager) {
-            this.desc('setLayoutManager', arguments);
-            DomWidget.prototype.setLayoutManager.call(this, manager);
+        setLayout: function (layout) {
+            this.desc('setLayout', arguments);
+            DomWidget.prototype.setLayout.call(this, layout);
             if (manager instanceof XYLayout) {
                 this.setPosition('absolute');
             }

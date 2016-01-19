@@ -23,11 +23,11 @@
 define([
     'external/genetic/genetic',
     'external/map/Map',
-    'graphite/view/layout/LayoutManager'
+    'graphite/view/layout/Layout'
 ], function (
     genetic,
     Map,
-    LayoutManager
+    Layout
 ) {
     'use strict';
 
@@ -36,15 +36,15 @@ define([
      * @constructor
      */
     function XYLayout() {
-        LayoutManager.apply(this, arguments);
+        Layout.apply(this, arguments);
         this._constraints = new Map();
     }
 
-    genetic.inherits(XYLayout, LayoutManager, {
+    genetic.inherits(XYLayout, Layout, {
 
         /**
          * Lays out the given widget.
-         * @see LayoutManager#layout(Widget)
+         * @see Layout#layout(Widget)
          */
         layout: function (widget) {
             this.desc('layout', widget);
@@ -87,7 +87,7 @@ define([
          */
         setConstraint: function (widget, constraint) {
             this.desc('setConstraint', arguments);
-            LayoutManager.prototype.setConstraint.apply(this, arguments);
+            Layout.prototype.setConstraint.apply(this, arguments);
             if (typeof constraint !== 'undefined'
                     && constraint !== null) {
                 this._constraints.set(widget, constraint);

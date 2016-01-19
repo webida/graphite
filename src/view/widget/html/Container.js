@@ -51,7 +51,7 @@ define([
             HtmlWidget.prototype.setParent.call(this, parent);
             if (parent instanceof Container) {
                 parent.getElement().appendChild(this.getElement());
-                if (parent.getLayoutManager() instanceof XYLayout) {
+                if (parent.getLayout() instanceof XYLayout) {
                     this.setPosition('absolute');
                 }
             } else {

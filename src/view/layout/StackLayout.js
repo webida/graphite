@@ -22,10 +22,10 @@
 
 define([
     'external/genetic/genetic',
-    'graphite/view/layout/LayoutManager'
+    'graphite/view/layout/Layout'
 ], function (
     genetic,
-    LayoutManager
+    Layout
 ) {
     'use strict';
 
@@ -34,10 +34,10 @@ define([
      * @constructor
      */
     function StackLayout() {
-        LayoutManager.apply(this, arguments);
+        Layout.apply(this, arguments);
     }
 
-    genetic.inherits(StackLayout, LayoutManager, {
+    genetic.inherits(StackLayout, Layout, {
 
         /**
          * ...
@@ -48,7 +48,7 @@ define([
 
         /**
          * Lays out the given widget.
-         * @see LayoutManager#layout(Widget)
+         * @see Layout#layout(Widget)
          */
         layout: function(widget) {
             this.desc('layout', widget);

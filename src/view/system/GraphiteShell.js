@@ -90,7 +90,7 @@ define([
             this.desc('createRootWidget');
             var widget = new RootWidget(this);
             widget.onAdded();
-            widget.setLayoutManager(new StackLayout());
+            widget.setLayout(new StackLayout());
             return widget;
         },
 

@@ -14,7 +14,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         var shell = new GraphiteShell('container');
 
         var svg = new Svg();
-        svg.setLayoutManager(new XYLayout());
+        svg.setLayout(new XYLayout());
         shell.setContents(svg);
 
         var r1 = new Rect();
@@ -41,7 +41,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         return;
 
         var svg = new Svg();
-        svg.setLayoutManager(new XYLayout());
+        svg.setLayout(new XYLayout());
         shell.setContents(svg);
 
         var r1 = new Rect();
@@ -106,11 +106,11 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         return;
 
         var r3 = new Div();
-        r3.setLayoutManager(new XYLayout());
+        r3.setLayout(new XYLayout());
         shell.setContents(r3);
 
         var r4 = new Div();
-        r4.setLayoutManager(new XYLayout());
+        r4.setLayout(new XYLayout());
         r4.setBgColor('salmon');
         r3.addChild(r4, new Rectangle(230, 230, 50, 50));
 
@@ -121,13 +121,13 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         return;
 
         var svg = new Svg();
-        svg.setLayoutManager(new XYLayout());
+        svg.setLayout(new XYLayout());
         shell.setContents(svg);
-        svg.setLayoutManager(new XYLayout());
+        svg.setLayout(new XYLayout());
         r3.addChild(svg, new Rectangle(0, 0, 500, 500));
 
         var r1 = new Rect();
-        r1.setLayoutManager(new XYLayout());
+        r1.setLayout(new XYLayout());
         r1.setBgColor('salmon');
         r1.setBorderColor('white');
         r1.setBorderWidth(5);
