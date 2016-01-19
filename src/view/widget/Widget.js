@@ -620,9 +620,9 @@ define([
          *//**
          * @param {Color} color
          */
-        setBgColor: function (color) {
-            this.desc('setBgColor', color);
-            this._bgColor = new Color(color);
+        setBgColor: function () {
+            this.desc('setBgColor', arguments);
+            this._bgColor = genetic.getInstanceOf(Color, arguments);
         },
 
         /**
@@ -646,9 +646,9 @@ define([
          *//**
          * @param {Color} color
          */
-        setBorderColor: function (color) {
-            this.desc('setBorderColor', color);
-            this._borderColor = new Color(color);
+        setBorderColor: function () {
+            this.desc('setBorderColor', arguments);
+            this._borderColor = genetic.getInstanceOf(Color, arguments);
         },
 
         /**
