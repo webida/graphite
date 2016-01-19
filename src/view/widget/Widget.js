@@ -459,10 +459,28 @@ define([
             }
         },
 
-        setSize: function (w, h) {
-            this.desc('setSize', arguments);
-            var bounds = this.getBounds();
-            this.setBounds(bounds.x, bounds.y, w, h);
+        /**
+         * Sets this Widget's size.
+         * @param {number} w
+         * @param {number} h
+         */
+        /**
+         * Returns this Widget's size.
+         * @return {Object}
+         * @property {number} w
+         * @property {number} h
+         */
+        size: function (w, h) {
+            this.desc('size', arguments);
+            if (arguments.length) {
+                var bounds = this.getBounds();
+                this.setBounds(bounds.x, bounds.y, w, h);
+            } else {
+                return {
+                    w: w,
+                    h: h
+                };
+            }
         },
 
         /**

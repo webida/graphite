@@ -65,12 +65,12 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
 /*
         var div1 = new Div();
         div1.bgColor('orange');
-        div1.setSize(50, 50);
+        div1.size(50, 50);
         root.addChild(div1);
 
         var div2 = new Div();
         div2.bgColor('yellow');
-        div2.setSize(20, 20);
+        div2.size(20, 20);
         div1.addChild(div2);
 
         setTimeout(function () {
@@ -82,7 +82,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
 
         var div1 = new Div();
         div1.bgColor('orange');
-        div1.setSize(50, 50);
+        div1.size(50, 50);
         div1.setStyle({'float': 'left'});
         root.addChild(div1);
 
@@ -93,7 +93,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
             'float': 'left',
             'margin': '10px'
         });
-        //div2.setSize(100, 100);
+        //div2.size(100, 100);
         div2.setBounds(50, 50, 100, 100);
         root.addChild(div2);
 
