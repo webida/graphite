@@ -117,61 +117,107 @@ define([
 
         /**
          * Sets this widget's background color.
-         * @see Widget#bgColor
+         * Returns this widget for method chaining.
+         * @override
          * @param {number} r - 0 ~ 255
          * @param {number} g - 0 ~ 255
          * @param {number} b - 0 ~ 255
          * @param {number} a - 0 ~ 1.0
+         * @return {Widget}
          *//**
+         * @override
          * @param {string} colorName - 'skyblue', 'transparent'
+         * @return {Widget}
          *//**
+         * @override
          * @param {string} hexCode - '#ff0', '#ffff00', 'ff0', 'ffff00'
+         * @return {Widget}
          *//**
+         * @override
          * @param {Color} color
+         * @return {Widget}
+         */
+        /**
+         * Returns this widget's background color.
+         * @return {Color}
          */
         bgColor: function () {
-            SvgWidget.prototype.bgColor.apply(this, arguments);
-            dom.setAttributes(this.getElement(), {
-                'fill': this.bgColor()
-            });
+            if (arguments.length) {
+                SvgWidget.prototype.bgColor.apply(this, arguments);
+                dom.setAttributes(this.getElement(), {
+                    'fill': this.bgColor()
+                });
+                return this;
+            } else {
+                return this._bgColor;
+            }
         },
 
         /**
          * Sets this widget's border color.
+         * @override
          * @see Widget#borderColor
          * @param {number} r - 0 ~ 255
          * @param {number} g - 0 ~ 255
          * @param {number} b - 0 ~ 255
          * @param {number} a - 0 ~ 1.0
+         * @return {Widget}
          *//**
+         * @override
          * @param {string} colorName - 'skyblue', 'transparent'
+         * @return {Widget}
          *//**
+         * @override
          * @param {string} hexCode - '#ff0', '#ffff00', 'ff0', 'ffff00'
+         * @return {Widget}
          *//**
+         * @override
          * @param {Color} color
+         * @return {Widget}
+         */
+        /**
+         * Returns this widget's border color.
+         * @override
+         * @return {Color}
          */
         borderColor: function () {
-            Widget.prototype.borderColor.apply(this, arguments);
-            dom.setAttributes(this.getElement(), {
-                'stroke': this.borderColor()
-            });
+            if (arguments.length) {
+                Widget.prototype.borderColor.apply(this, arguments);
+                dom.setAttributes(this.getElement(), {
+                    'stroke': this.borderColor()
+                });
+                return this;
+            } else {
+                return this._borderColor;
+            }
         },
 
         /**
          * Sets this widget's border width.
          * Svg shapes does not support muliple values
          * for different sides. So getMonoSize used.
+         * @override
          * @see Widget#borderWidth
          * @param {number} width
          */
+        /**
+         * Returns this widget's border's spaces.
+         * @override
+         * @return {Spaces}
+         */
         borderWidth: function (width) {
-            Widget.prototype.borderWidth.call(this, width);
-            if (typeof width === 'number') {
-                this.borderWidth().setMonoSize(width);
+            if (arguments.length) {
+                Widget.prototype.borderWidth.call(this, width);
+                if (typeof width === 'number') {
+                    this.borderWidth().setMonoSize(width);
+                }
+                dom.setAttributes(this.getElement(), {
+                    'stroke-width': this.borderWidth().getMonoSize()
+                });
+                return this;
+            } else {
+                return this._borderWidth;
             }
-            dom.setAttributes(this.getElement(), {
-                'stroke-width': this.borderWidth().getMonoSize()
-            });
         }
     });
 

@@ -18,10 +18,8 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         shell.setContents(svg);
 
         var r1 = new Rect();
-        r1.bgColor('salmon');
-        r1.borderColor(new Color(132, 45, 123));
-        r1.borderWidth(10);
-        svg.a(r1, new Rectangle(0, 0, 100, 100));
+        r1.bgColor('salmon').borderColor('purple').borderWidth(10);
+        svg.addChild(r1, new Rectangle(0, 0, 100, 100));
 
         var r2 = new Rect();
         r2.bgColor('salmon');

@@ -609,16 +609,21 @@ define([
 
         /**
          * Sets this widget's background color.
+         * Returns this widget for method chaining.
          * @param {number} r - 0 ~ 255
          * @param {number} g - 0 ~ 255
          * @param {number} b - 0 ~ 255
          * @param {number} a - 0 ~ 1.0
+         * @return {Widget}
          *//**
          * @param {string} colorName - 'skyblue', 'transparent'
+         * @return {Widget}
          *//**
          * @param {string} hexCode - '#ff0', '#ffff00', 'ff0', 'ffff00'
+         * @return {Widget}
          *//**
          * @param {Color} color
+         * @return {Widget}
          */
         /**
          * Returns this widget's background color.
@@ -628,6 +633,7 @@ define([
             this.desc('bgColor', arguments);
             if (arguments.length) {
                 this._bgColor = genetic.getInstanceOf(Color, arguments);
+                return this;
             } else {
                 return this._bgColor;
             }
@@ -635,16 +641,21 @@ define([
 
         /**
          * Sets this widget's border color.
+         * Returns this widget for method chaining.
          * @param {number} r - 0 ~ 255
          * @param {number} g - 0 ~ 255
          * @param {number} b - 0 ~ 255
          * @param {number} a - 0 ~ 1.0
+         * @return {Widget}
          *//**
          * @param {string} colorName - 'skyblue', 'transparent'
+         * @return {Widget}
          *//**
          * @param {string} hexCode - '#ff0', '#ffff00', 'ff0', 'ffff00'
+         * @return {Widget}
          *//**
          * @param {Color} color
+         * @return {Widget}
          */
         /**
          * Returns this widget's border color.
@@ -654,6 +665,7 @@ define([
             this.desc('borderColor', arguments);
             if (arguments.length) {
                 this._borderColor = genetic.getInstanceOf(Color, arguments);
+                return this;
             } else {
                 return this._borderColor;
             }
@@ -661,23 +673,28 @@ define([
 
         /**
          * Sets this widget's border's spaces.
+         * Returns this widget for method chaining.
          * @param {number} top
          * @param {number} right
          * @param {number} bottom
          * @param {number} left
+         * @return {Widget}
          *//**
          * @param {Spaces} spaces
+         * @return {Widget}
          *//**
          * @param {number} number - If same values for each sides
+         * @return {Widget}
          */
         /**
          * Returns this widget's border's spaces.
-         * @param {Spaces}
+         * @return {Spaces}
          */
         borderWidth: function () {
             this.desc('borderWidth', arguments);
             if (arguments.length) {
                 this._borderWidth = genetic.getInstanceOf(Spaces, arguments);
+                return this;
             } else {
                 return this._borderWidth;
             }
