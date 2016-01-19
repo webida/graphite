@@ -105,7 +105,7 @@ define([
         _getRevisedBounds: function () {
             var border = this.borderWidth();
             var sizeFix = border.uniSize()/2;
-            var r = new Rectangle(this.getBounds());
+            var r = new Rectangle(this.bounds());
             if (!border.isEmpty()) {
                 r.x += sizeFix;
                 r.y += sizeFix;

@@ -140,7 +140,7 @@ define([
          */
         _getRevisedBounds: function () {
             var border = this.borderWidth();
-            var r = new Rectangle(this.getBounds());
+            var r = new Rectangle(this.bounds());
             var hTop, hRight, hBottom, hLeft;
             if (!border.isEmpty()) {
                 hTop = border.top/2,

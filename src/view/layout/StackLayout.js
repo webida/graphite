@@ -54,7 +54,7 @@ define([
             this.desc('layout', widget);
             var r = widget.getClientArea();
             widget.getChildren().forEach(function (child) {
-                child.setBounds(r);
+                child.bounds(r);
             });
         }
     });

@@ -78,7 +78,7 @@ define([
                 this._container = c;
                 this.getUpdateManager().setGraphicContext(
                         new GraphicContext(c));
-                this.getRootWidget().setBounds(c.getClientArea());
+                this.getRootWidget().bounds(c.getClientArea());
             }
         },
 

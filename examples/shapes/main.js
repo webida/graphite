@@ -28,11 +28,11 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         var ellipse = new Ellipse();
         ellipse.borderColor('green');
         ellipse.bgColor('white');
-        ellipse.setBounds(new Rectangle(200, 200, 150, 100));
+        ellipse.bounds(new Rectangle(200, 200, 150, 100));
         svg.append(ellipse);
 
         setTimeout(function () {
-            console.log('root --> ', svg, r1.getBounds().toString());
+            console.log('root --> ', svg, r1.bounds().toString());
             console.log('r1.getClientArea() --> ', r1.getClientArea());
         }, 2000);
 
@@ -54,7 +54,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         svg.append(r2, new Rectangle(100, 100, 100, 100));
 
         setTimeout(function () {
-            console.log('root --> ', svg, r1.getBounds().toString());
+            console.log('root --> ', svg, r1.bounds().toString());
         }, 2000);
 
         return;
@@ -94,7 +94,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
             'margin': '10px'
         });
         //div2.size(100, 100);
-        div2.setBounds(50, 50, 100, 100);
+        div2.bounds(50, 50, 100, 100);
         root.append(div2);
 
         setTimeout(function () {
@@ -141,8 +141,8 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
             console.log(svg);
             //console.clear();
             r1.bgColor('seagreen');
-            r1.setBounds(100, 100, 200, 200);
-            r2.setBounds(320, 300, 70, 70);
+            r1.bounds(100, 100, 200, 200);
+            r2.bounds(320, 300, 70, 70);
             r2.borderWidth(20);
         }, 1000);
 

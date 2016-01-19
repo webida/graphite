@@ -152,7 +152,7 @@ define([
         },
 
         /**
-         * Returns true if this IFigure is enabled.
+         * Returns true if this Widget is enabled.
          * @return {boolean}
          */
         isEnabled: function () {
@@ -374,7 +374,7 @@ define([
             if (!(rect instanceof Rectangle)) {
                 rect = new Rectangle();
             }
-            rect.setBounds(this.getBounds());
+            rect.setBounds(this.bounds());
             rect.shrink(this.borderWidth());
             if (this.isLocalCoordinates()) {
                 rect.setLocation(0, 0);
@@ -405,57 +405,71 @@ define([
 
         /**
          * Sets the bounds of this Widget to the Rectangle <i>rect</i>. Note that
-         * <i>rect</i> is compared to the Figure's current bounds to determine what
+         * rect is compared to the Widget's current bounds to determine what
          * needs to be rendered again and/or exposed and if validation is required. Since
-         * {@link #getBounds()} may return the current bounds by reference, it is
-         * not safe to modify that Rectangle and then call setBounds() after making
+         * {@link #bounds()} may return the current bounds by reference, it is
+         * not safe to modify that Rectangle and then call bounds() after making
          * modifications. The widget would assume that the bounds are unchanged, and
          * no layout or paint would occur. For proper behavior, always use a copy.
          * 
          * @param {Rectangle|Object} newBounds - Rectangle or Rectangle like Object
+         * @return {Widget}
          *//**
          * @param {number} x
          * @param {number} y
          * @param {number} w
          * @param {number} h
+         * @return {Widget}
          */
-        setBounds: function (newBounds) {
-            this.desc('setBounds', arguments);
-            if (arguments.length === 4) {
-                var a = arguments;
-                this.setBounds(new Rectangle(a[0], a[1], a[2], a[3]));
-                return;
-            }
-
-            var bounds = this.getBounds();
-            var dx = newBounds.x - bounds.x;
-            var dy = newBounds.y - bounds.y;
-            var dw = newBounds.w - bounds.w;
-            var dh = newBounds.h - bounds.h;
-
-            var isMoved = dx || dy;
-            var isResized = dw || dh;
-            var isChanged = isMoved || isResized;
-            this.info('isMoved = ' + Boolean(isMoved),
-                    ', isResized = ', Boolean(isResized));
-
-            if (isMoved) {
-                this.translate(dx, dy);
-            }
-            if (isResized) {
-                bounds.w = newBounds.w;
-                bounds.h = newBounds.h;
-                this.invalidate();
-            }
-            if (isChanged) {
-                var parent = this.getParent();
-                if (parent) {
-                    var layoutManager = parent.getLayout();
-                    if (layoutManager) {
-                        layoutManager.setConstraint(this, bounds);
-                    }
+        /**
+         * Returns the smallest rectangle completely enclosing the widget.
+         * Rectangle might be returned by reference. So, users should not
+         * modify the returned Rectangle.
+         * @return {Rectangle}
+         */
+        bounds: function () {
+            if (arguments.length) {
+                this.desc('bounds', arguments);
+                if (arguments.length === 4) {
+                    var a = arguments;
+                    return this.bounds(new Rectangle(a[0], a[1], a[2], a[3]));
+                } else if (arguments.length === 1) {
+                    var newBounds = arguments[0];
                 }
-                this.redraw();
+
+                var bounds = this.bounds();
+                var dx = newBounds.x - bounds.x;
+                var dy = newBounds.y - bounds.y;
+                var dw = newBounds.w - bounds.w;
+                var dh = newBounds.h - bounds.h;
+
+                var isMoved = dx || dy;
+                var isResized = dw || dh;
+                var isChanged = isMoved || isResized;
+                this.info('isMoved = ' + Boolean(isMoved),
+                        ', isResized = ', Boolean(isResized));
+
+                if (isMoved) {
+                    this.translate(dx, dy);
+                }
+                if (isResized) {
+                    bounds.w = newBounds.w;
+                    bounds.h = newBounds.h;
+                    this.invalidate();
+                }
+                if (isChanged) {
+                    var parent = this.getParent();
+                    if (parent) {
+                        var layoutManager = parent.getLayout();
+                        if (layoutManager) {
+                            layoutManager.setConstraint(this, bounds);
+                        }
+                    }
+                    this.redraw();
+                }
+                return this;
+            } else {
+                return this._bounds;
             }
         },
 
@@ -473,8 +487,8 @@ define([
         size: function (w, h) {
             this.desc('size', arguments);
             if (arguments.length) {
-                var bounds = this.getBounds();
-                this.setBounds(bounds.x, bounds.y, w, h);
+                var bounds = this.bounds();
+                this.bounds(bounds.x, bounds.y, w, h);
             } else {
                 return {
                     w: w,
@@ -532,7 +546,7 @@ define([
          * @protected
          */
         _primTranslate: function (dx, dy) {
-            var bounds = this.getBounds();
+            var bounds = this.bounds();
             bounds.x += dx;
             bounds.y += dy;
             if (this.isLocalCoordinates()) {
@@ -559,7 +573,7 @@ define([
          * @param {Translatable} t
          */
         translateToParent: function (t) {
-            var bounds = this.getBounds();
+            var bounds = this.bounds();
             if (this.isLocalCoordinates()) {
                 t.performTranslate(bounds.x + getInsets().left, bounds.y + getInsets().top);
             }
@@ -572,17 +586,6 @@ define([
          */
         translateToAbsolute: function (t) {
             //TODO : Calculate bounds from this Widget's settings and environment
-        },
-
-        /**
-         * Returns the smallest rectangle completely enclosing the widget.
-         * Rectangle might be returned by reference. So, users should not
-         * modify the returned Rectangle.
-         * @return {Rectangle}
-         */
-        getBounds: function () {
-            //this.desc('getBounds', arguments, this._bounds + '');
-            return this._bounds;
         },
 
         /**

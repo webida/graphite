@@ -64,7 +64,7 @@ define([
                         }
                     }
                     bounds = bounds.getTranslated(offset);
-                    child.setBounds(bounds);
+                    child.bounds(bounds);
                 }
             }, this);
         },
