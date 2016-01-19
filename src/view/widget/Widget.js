@@ -375,7 +375,7 @@ define([
                 rect = new Rectangle();
             }
             rect.setBounds(this.getBounds());
-            rect.shrink(this.getBorderWidth());
+            rect.shrink(this.borderWidth());
             if (this.isLocalCoordinates()) {
                 rect.setLocation(0, 0);
             }
@@ -575,7 +575,7 @@ define([
             this.desc('draw', context, undefined, 'tomato');
             this.bgColor(this.bgColor());
             this.borderColor(this.borderColor());
-            this.setBorderWidth(this.getBorderWidth());
+            this.borderWidth(this.borderWidth());
             this._drawWidget(context);
             this._drawChildren(context);
         },
@@ -670,18 +670,17 @@ define([
          *//**
          * @param {number} number - If same values for each sides
          */
-        setBorderWidth: function () {
-            this.desc('setBorderWidth', arguments);
-            this._borderWidth = genetic.getInstanceOf(Spaces, arguments);
-        },
-
         /**
          * Returns this widget's border's spaces.
          * @param {Spaces}
          */
-        getBorderWidth: function () {
-            this.desc('getBorderWidth', [], this._borderWidth);
-            return this._borderWidth;
+        borderWidth: function () {
+            this.desc('borderWidth', arguments);
+            if (arguments.length) {
+                this._borderWidth = genetic.getInstanceOf(Spaces, arguments);
+            } else {
+                return this._borderWidth;
+            }
         },
 
         /**

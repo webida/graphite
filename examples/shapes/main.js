@@ -20,8 +20,8 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         var r1 = new Rect();
         r1.bgColor('salmon');
         r1.borderColor(new Color(132, 45, 123));
-        r1.setBorderWidth(10);
-        svg.addChild(r1, new Rectangle(0, 0, 100, 100));
+        r1.borderWidth(10);
+        svg.a(r1, new Rectangle(0, 0, 100, 100));
 
         var r2 = new Rect();
         r2.bgColor('salmon');
@@ -47,12 +47,12 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         var r1 = new Rect();
         r1.bgColor('salmon');
         r1.borderColor(new Color(132, 45, 123));
-        r1.setBorderWidth(10);
+        r1.borderWidth(10);
         svg.addChild(r1, new Rectangle(0, 0, 100, 100));
 
         var r2 = new Rect();
         r2.bgColor('salmon');
-        r2.setBorderWidth(0);
+        r2.borderWidth(0);
         svg.addChild(r2, new Rectangle(100, 100, 100, 100));
 
         setTimeout(function () {
@@ -130,13 +130,13 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         r1.setLayout(new XYLayout());
         r1.bgColor('salmon');
         r1.borderColor('white');
-        r1.setBorderWidth(5);
+        r1.borderWidth(5);
         svg.addChild(r1, new Rectangle(30, 30, 100, 100));
 
         var r2 = new Rect();
         r2.bgColor('orange');
         r2.borderColor('white');
-        r2.setBorderWidth(5);
+        r2.borderWidth(5);
         svg.addChild(r2, new Rectangle(330, 330, 50, 50));
 
         setTimeout(function () {
@@ -145,7 +145,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
             r1.bgColor('seagreen');
             r1.setBounds(100, 100, 200, 200);
             r2.setBounds(320, 300, 70, 70);
-            r2.setBorderWidth(20);
+            r2.borderWidth(20);
         }, 1000);
 
         console.log('------ end of main ------');

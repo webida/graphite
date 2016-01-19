@@ -139,7 +139,7 @@ define([
          * @protected
          */
         _getRevisedBounds: function () {
-            var border = this.getBorderWidth();
+            var border = this.borderWidth();
             var r = new Rectangle(this.getBounds());
             var hTop, hRight, hBottom, hLeft;
             if (!border.isEmpty()) {
