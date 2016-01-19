@@ -284,7 +284,7 @@ define([
             this.desc('revalidate');
             var updateManager = null;
             this.invalidate();
-            if (this.getParent() === null || !this.isRevalidateParent()) {
+            if (this.getParent() === null || !this.revalidateParent()) {
                 updateManager = this.getUpdateManager();
                 if (updateManager) {
                     updateManager.addInvalidWidget(this);
@@ -311,7 +311,7 @@ define([
          * its parent's revalidation.
          * @return {boolean}
          */
-        isRevalidateParent: function () {
+        revalidateParent: function () {
             return true;
         },
 
