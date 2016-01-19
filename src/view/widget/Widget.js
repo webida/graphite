@@ -672,7 +672,7 @@ define([
          */
         setBorderWidth: function () {
             this.desc('setBorderWidth', arguments);
-            this._borderWidth = this.getInstanceOf(Spaces, arguments);
+            this._borderWidth = genetic.getInstanceOf(Spaces, arguments);
         },
 
         /**

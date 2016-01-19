@@ -122,7 +122,7 @@ define([
          */
         setPadding: function () {
             this.desc('setPadding', arguments);
-            this._padding = this.getInstanceOf(Spaces, arguments);
+            this._padding = genetic.getInstanceOf(Spaces, arguments);
         },
 
         /**
