@@ -30,14 +30,14 @@ define([
     'use strict';
 
     /**
-     * A LayoutManager.
+     * A Layout.
      * @constructor
      */
-    function LayoutManager() {
+    function Layout() {
         Base.apply(this, arguments);
     }
 
-    genetic.inherits(LayoutManager, Base, {
+    genetic.inherits(Layout, Base, {
 
         /**
          * Removes any cached information about the given widget.
@@ -68,5 +68,5 @@ define([
         }
     });
 
-    return LayoutManager;
+    return Layout;
 });

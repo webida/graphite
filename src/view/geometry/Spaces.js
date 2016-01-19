@@ -45,12 +45,12 @@ define([
             this.left = args[3];
         } else if (args.length === 1) {
             if (args[0] instanceof Spaces) {
-                var insets = args[0];
-                this.top = insets.top;
-                this.right = insets.right;
-                this.bottom = insets.bottom;
-                this.left = insets.left;
-                this._monoSize = insets._monoSize;
+                var spaces = args[0];
+                this.top = spaces.top;
+                this.right = spaces.right;
+                this.bottom = spaces.bottom;
+                this.left = spaces.left;
+                this._uniSize = spaces._uniSize;
             } else if (typeof args[0] === 'number') {
                 this.top = args[0];
                 this.right = args[0];
@@ -74,7 +74,7 @@ define([
         /** distance from left */
         left : 0,
 
-        _monoSize: 0,
+        _uniSize: 0,
 
         /**
          * Returns the width for this Insets, equal to <code>left</code> +
@@ -106,13 +106,13 @@ define([
             }
         },
 
-        setMonoSize: function (monoSize) {
-            this.desc('setMonoSize', monoSize);
-            this._monoSize = monoSize;
-        },
-
-        getMonoSize: function () {
-            return this._monoSize;
+        uniSize: function (uniSize) {
+            this.desc('uniSize', uniSize);
+            if (arguments.length) {
+                this._uniSize = uniSize;
+            } else {
+                return this._uniSize;
+            }
         }
     });
 

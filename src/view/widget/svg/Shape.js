@@ -97,15 +97,15 @@ define([
         /**
          * Returns compensated bounds for border.
          * Svg shapes does not support muliple values
-         * for different sides. So getMonoSize used.
-         * @see #setBorderWidth
+         * for different sides. So uniSize used.
+         * @see #borderWidth
          * @return {Rectangle}
          * @protected
          */
         _getRevisedBounds: function () {
-            var border = this.getBorderWidth();
-            var sizeFix = border.getMonoSize()/2;
-            var r = new Rectangle(this.getBounds());
+            var border = this.borderWidth();
+            var sizeFix = border.uniSize()/2;
+            var r = new Rectangle(this.bounds());
             if (!border.isEmpty()) {
                 r.x += sizeFix;
                 r.y += sizeFix;
@@ -117,61 +117,107 @@ define([
 
         /**
          * Sets this widget's background color.
-         * @see Widget#setBgColor
+         * Returns this widget for method chaining.
+         * @override
          * @param {number} r - 0 ~ 255
          * @param {number} g - 0 ~ 255
          * @param {number} b - 0 ~ 255
          * @param {number} a - 0 ~ 1.0
+         * @return {Widget}
          *//**
+         * @override
          * @param {string} colorName - 'skyblue', 'transparent'
+         * @return {Widget}
          *//**
+         * @override
          * @param {string} hexCode - '#ff0', '#ffff00', 'ff0', 'ffff00'
+         * @return {Widget}
          *//**
+         * @override
          * @param {Color} color
+         * @return {Widget}
          */
-        setBgColor: function (color) {
-            SvgWidget.prototype.setBgColor.call(this, color);
-            dom.setAttributes(this.getElement(), {
-                'fill': this.getBgColor()
-            });
+        /**
+         * Returns this widget's background color.
+         * @return {Color}
+         */
+        bgColor: function () {
+            if (arguments.length) {
+                SvgWidget.prototype.bgColor.apply(this, arguments);
+                dom.setAttributes(this.getElement(), {
+                    'fill': this.bgColor()
+                });
+                return this;
+            } else {
+                return this._bgColor;
+            }
         },
 
         /**
          * Sets this widget's border color.
-         * @see Widget#setBorderColor
+         * @override
+         * @see Widget#borderColor
          * @param {number} r - 0 ~ 255
          * @param {number} g - 0 ~ 255
          * @param {number} b - 0 ~ 255
          * @param {number} a - 0 ~ 1.0
+         * @return {Widget}
          *//**
+         * @override
          * @param {string} colorName - 'skyblue', 'transparent'
+         * @return {Widget}
          *//**
+         * @override
          * @param {string} hexCode - '#ff0', '#ffff00', 'ff0', 'ffff00'
+         * @return {Widget}
          *//**
+         * @override
          * @param {Color} color
+         * @return {Widget}
          */
-        setBorderColor: function (color) {
-            Widget.prototype.setBorderColor.call(this, color);
-            dom.setAttributes(this.getElement(), {
-                'stroke': this.getBorderColor()
-            });
+        /**
+         * Returns this widget's border color.
+         * @override
+         * @return {Color}
+         */
+        borderColor: function () {
+            if (arguments.length) {
+                Widget.prototype.borderColor.apply(this, arguments);
+                dom.setAttributes(this.getElement(), {
+                    'stroke': this.borderColor()
+                });
+                return this;
+            } else {
+                return this._borderColor;
+            }
         },
 
         /**
          * Sets this widget's border width.
          * Svg shapes does not support muliple values
-         * for different sides. So getMonoSize used.
-         * @see Widget#setBorderWidth
+         * for different sides. So uniSize used.
+         * @override
+         * @see Widget#borderWidth
          * @param {number} width
          */
-        setBorderWidth: function (width) {
-            Widget.prototype.setBorderWidth.apply(this, arguments);
-            if (typeof width === 'number') {
-                this.getBorderWidth().setMonoSize(width);
+        /**
+         * Returns this widget's border's spaces.
+         * @override
+         * @return {Spaces}
+         */
+        borderWidth: function (width) {
+            if (arguments.length) {
+                Widget.prototype.borderWidth.call(this, width);
+                if (typeof width === 'number') {
+                    this.borderWidth().uniSize(width);
+                }
+                dom.setAttributes(this.getElement(), {
+                    'stroke-width': this.borderWidth().uniSize()
+                });
+                return this;
+            } else {
+                return this._borderWidth;
             }
-            dom.setAttributes(this.getElement(), {
-                'stroke-width': this.getBorderWidth().getMonoSize()
-            });
         }
     });
 

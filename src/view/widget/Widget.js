@@ -64,24 +64,24 @@ define([
          * Adds the given Widget as a child of this Widget with the given
          * index and constraint.
          * 
-         * addChild(widget, index, constraint)
+         * append(widget, index, constraint)
          * @param {Widget} widget - The Widget to add
          * @param {number} index - Where the new Widget should be added
          * @param {Object} constraint - The added Widget's constraint
          *//**
-         * addChild(widget)
+         * append(widget)
          * @param {Widget} widget - The Widget to add
          *//**
-         * addChild(widget, index)
+         * append(widget, index)
          * @param {Widget} widget - The Widget to add
          * @param {number} index - Where the new Widget should be added
          *//**
-         * addChild(widget, constraint)
+         * append(widget, constraint)
          * @param {Widget} widget - The Widget to add
          * @param {Object} constraint - The added Widget's constraint
          */
-        addChild: function () {
-            this.desc('addChild', arguments);
+        append: function () {
+            this.desc('append', arguments);
             if (!this.isContainer()) {
                 throw new Error(this.constructor.name
                         + ' is not container widget');
@@ -130,7 +130,7 @@ define([
             }
             child.setParent(this);
             /* constraint */
-            var layoutManager = this.getLayoutManager();
+            var layoutManager = this.getLayout();
             if (constraint && layoutManager) {
                 layoutManager.setConstraint(child, constraint);
             }
@@ -152,7 +152,7 @@ define([
         },
 
         /**
-         * Returns true if this IFigure is enabled.
+         * Returns true if this Widget is enabled.
          * @return {boolean}
          */
         isEnabled: function () {
@@ -246,19 +246,19 @@ define([
         },
 
         /**
-         * @param {LayoutManager} manager
+         * @param {Layout} layout
          */
-        setLayoutManager: function (manager) {
-            this.desc('setLayoutManager', arguments);
-            this._layoutManager = manager;    
+        setLayout: function (layout) {
+            this.desc('setLayout', arguments);
+            this._layout = layout;
             this.revalidate();
         },
 
         /**
-         * @return {LayoutManager}
+         * @return {Layout}
          */
-        getLayoutManager: function () {
-            return this._layoutManager;
+        getLayout: function () {
+            return this._layout;
         },
 
         /**
@@ -284,7 +284,7 @@ define([
             this.desc('revalidate');
             var updateManager = null;
             this.invalidate();
-            if (this.getParent() === null || !this.isRevalidateParent()) {
+            if (this.getParent() === null || !this.revalidateParent()) {
                 updateManager = this.getUpdateManager();
                 if (updateManager) {
                     updateManager.addInvalidWidget(this);
@@ -295,13 +295,13 @@ define([
         },
 
         /**
-         * Invalidates this Widget. If this widget has a LayoutManager,
+         * Invalidates this Widget. If this widget has a Layout,
          * then layoutManager.invalidate() should be called.
          */
         invalidate: function () {
             this.desc('invalidate');
-            if (this.getLayoutManager()){
-                this.getLayoutManager().invalidate();
+            if (this.getLayout()){
+                this.getLayout().invalidate();
             }
             this.setValid(false);
         },
@@ -311,7 +311,7 @@ define([
          * its parent's revalidation.
          * @return {boolean}
          */
-        isRevalidateParent: function () {
+        revalidateParent: function () {
             return true;
         },
 
@@ -334,7 +334,7 @@ define([
 
         /**
          * Indicates that this widget should make itself valid. Validation includes
-         * invoking layout on a LayoutManager if present, and then validating all
+         * invoking layout on a Layout if present, and then validating all
          * children widgets. Default validation uses pre-order, depth-first
          * ordering.
          */
@@ -351,11 +351,11 @@ define([
         },
 
         /**
-         * Lays out this Widget using its LayoutManager.
+         * Lays out this Widget using its Layout.
          */
         layout: function () {
             this.desc('layout');
-            var layoutManager = this.getLayoutManager();
+            var layoutManager = this.getLayout();
             this.info('layoutManager --> ' + layoutManager);
             if (layoutManager) {
                 layoutManager.layout(this);
@@ -364,7 +364,7 @@ define([
 
         /**
          * Returns the rectangular area within this Widget's bounds
-         * in which children will be placed via LayoutManager and
+         * in which children will be placed via Layout and
          * the drawing of children will be clipped.
          * @param {Rectangle} [rect]
          * @return {Rectangle}
@@ -374,9 +374,9 @@ define([
             if (!(rect instanceof Rectangle)) {
                 rect = new Rectangle();
             }
-            rect.setBounds(this.getBounds());
-            rect.shrink(this.getBorderWidth());
-            if (this.useLocalCoordinates()) {
+            rect.setBounds(this.bounds());
+            rect.shrink(this.borderWidth());
+            if (this.isLocalCoordinates()) {
                 rect.setLocation(0, 0);
             }
             this.info('getClientArea() --> ' + rect);
@@ -405,64 +405,96 @@ define([
 
         /**
          * Sets the bounds of this Widget to the Rectangle <i>rect</i>. Note that
-         * <i>rect</i> is compared to the Figure's current bounds to determine what
+         * rect is compared to the Widget's current bounds to determine what
          * needs to be rendered again and/or exposed and if validation is required. Since
-         * {@link #getBounds()} may return the current bounds by reference, it is
-         * not safe to modify that Rectangle and then call setBounds() after making
+         * {@link #bounds()} may return the current bounds by reference, it is
+         * not safe to modify that Rectangle and then call bounds() after making
          * modifications. The widget would assume that the bounds are unchanged, and
          * no layout or paint would occur. For proper behavior, always use a copy.
          * 
          * @param {Rectangle|Object} newBounds - Rectangle or Rectangle like Object
+         * @return {Widget}
          *//**
          * @param {number} x
          * @param {number} y
          * @param {number} w
          * @param {number} h
+         * @return {Widget}
          */
-        setBounds: function (newBounds) {
-            this.desc('setBounds', arguments);
-            if (arguments.length === 4) {
-                var a = arguments;
-                this.setBounds(new Rectangle(a[0], a[1], a[2], a[3]));
-                return;
-            }
-
-            var bounds = this.getBounds();
-            var dx = newBounds.x - bounds.x;
-            var dy = newBounds.y - bounds.y;
-            var dw = newBounds.w - bounds.w;
-            var dh = newBounds.h - bounds.h;
-
-            var isMoved = dx || dy;
-            var isResized = dw || dh;
-            var isChanged = isMoved || isResized;
-            this.info('isMoved = ' + Boolean(isMoved),
-                    ', isResized = ', Boolean(isResized));
-
-            if (isMoved) {
-                this.translate(dx, dy);
-            }
-            if (isResized) {
-                bounds.w = newBounds.w;
-                bounds.h = newBounds.h;
-                this.invalidate();
-            }
-            if (isChanged) {
-                var parent = this.getParent();
-                if (parent) {
-                    var layoutManager = parent.getLayoutManager();
-                    if (layoutManager) {
-                        layoutManager.setConstraint(this, bounds);
-                    }
+        /**
+         * Returns the smallest rectangle completely enclosing the widget.
+         * Rectangle might be returned by reference. So, users should not
+         * modify the returned Rectangle.
+         * @return {Rectangle}
+         */
+        bounds: function () {
+            if (arguments.length) {
+                this.desc('bounds', arguments);
+                if (arguments.length === 4) {
+                    var a = arguments;
+                    return this.bounds(new Rectangle(a[0], a[1], a[2], a[3]));
+                } else if (arguments.length === 1) {
+                    var newBounds = arguments[0];
                 }
-                this.redraw();
+
+                var bounds = this.bounds();
+                var dx = newBounds.x - bounds.x;
+                var dy = newBounds.y - bounds.y;
+                var dw = newBounds.w - bounds.w;
+                var dh = newBounds.h - bounds.h;
+
+                var isMoved = dx || dy;
+                var isResized = dw || dh;
+                var isChanged = isMoved || isResized;
+                this.info('isMoved = ' + Boolean(isMoved),
+                        ', isResized = ', Boolean(isResized));
+
+                if (isMoved) {
+                    this.translate(dx, dy);
+                }
+                if (isResized) {
+                    bounds.w = newBounds.w;
+                    bounds.h = newBounds.h;
+                    this.invalidate();
+                }
+                if (isChanged) {
+                    var parent = this.getParent();
+                    if (parent) {
+                        var layoutManager = parent.getLayout();
+                        if (layoutManager) {
+                            layoutManager.setConstraint(this, bounds);
+                        }
+                    }
+                    this.redraw();
+                }
+                return this;
+            } else {
+                return this._bounds;
             }
         },
 
-        setSize: function (w, h) {
-            this.desc('setSize', arguments);
-            var bounds = this.getBounds();
-            this.setBounds(bounds.x, bounds.y, w, h);
+        /**
+         * Sets this Widget's size.
+         * @param {number} w
+         * @param {number} h
+         */
+        /**
+         * Returns this Widget's size.
+         * @return {Object}
+         * @property {number} w
+         * @property {number} h
+         */
+        size: function (w, h) {
+            this.desc('size', arguments);
+            if (arguments.length) {
+                var bounds = this.bounds();
+                this.bounds(bounds.x, bounds.y, w, h);
+            } else {
+                return {
+                    w: w,
+                    h: h
+                };
+            }
         },
 
         /**
@@ -490,8 +522,8 @@ define([
          * this Widget's top-left corner.
          * @return {boolean}
          */
-        useLocalCoordinates: function () {
-            this.desc('useLocalCoordinates', [], false);
+        isLocalCoordinates: function () {
+            this.desc('isLocalCoordinates', [], false);
             return false;
         },
 
@@ -514,10 +546,10 @@ define([
          * @protected
          */
         _primTranslate: function (dx, dy) {
-            var bounds = this.getBounds();
+            var bounds = this.bounds();
             bounds.x += dx;
             bounds.y += dy;
-            if (this.useLocalCoordinates()) {
+            if (this.isLocalCoordinates()) {
                 /**
                  * moved event.
                  * @event Widget#moved
@@ -541,8 +573,8 @@ define([
          * @param {Translatable} t
          */
         translateToParent: function (t) {
-            var bounds = this.getBounds();
-            if (this.useLocalCoordinates()) {
+            var bounds = this.bounds();
+            if (this.isLocalCoordinates()) {
                 t.performTranslate(bounds.x + getInsets().left, bounds.y + getInsets().top);
             }
         },
@@ -557,25 +589,14 @@ define([
         },
 
         /**
-         * Returns the smallest rectangle completely enclosing the widget.
-         * Rectangle might be returned by reference. So, users should not
-         * modify the returned Rectangle.
-         * @return {Rectangle}
-         */
-        getBounds: function () {
-            //this.desc('getBounds', arguments, this._bounds + '');
-            return this._bounds;
-        },
-
-        /**
          * Renders this Widget and its children.
          * @param {GraphicContext} context
          */
         draw: function (context) {
             this.desc('draw', context, undefined, 'tomato');
-            this.setBgColor(this.getBgColor());
-            this.setBorderColor(this.getBorderColor());
-            this.setBorderWidth(this.getBorderWidth());
+            this.bgColor(this.bgColor());
+            this.borderColor(this.borderColor());
+            this.borderWidth(this.borderWidth());
             this._drawWidget(context);
             this._drawChildren(context);
         },
@@ -609,79 +630,95 @@ define([
 
         /**
          * Sets this widget's background color.
+         * Returns this widget for method chaining.
          * @param {number} r - 0 ~ 255
          * @param {number} g - 0 ~ 255
          * @param {number} b - 0 ~ 255
          * @param {number} a - 0 ~ 1.0
+         * @return {Widget}
          *//**
          * @param {string} colorName - 'skyblue', 'transparent'
+         * @return {Widget}
          *//**
          * @param {string} hexCode - '#ff0', '#ffff00', 'ff0', 'ffff00'
+         * @return {Widget}
          *//**
          * @param {Color} color
+         * @return {Widget}
          */
-        setBgColor: function (color) {
-            this.desc('setBgColor', color);
-            this._bgColor = new Color(color);
-        },
-
         /**
          * Returns this widget's background color.
          * @return {Color}
          */
-        getBgColor: function () {
-            return this._bgColor;
+        bgColor: function () {
+            this.desc('bgColor', arguments);
+            if (arguments.length) {
+                this._bgColor = genetic.getInstanceOf(Color, arguments);
+                return this;
+            } else {
+                return this._bgColor;
+            }
         },
 
         /**
          * Sets this widget's border color.
+         * Returns this widget for method chaining.
          * @param {number} r - 0 ~ 255
          * @param {number} g - 0 ~ 255
          * @param {number} b - 0 ~ 255
          * @param {number} a - 0 ~ 1.0
+         * @return {Widget}
          *//**
          * @param {string} colorName - 'skyblue', 'transparent'
+         * @return {Widget}
          *//**
          * @param {string} hexCode - '#ff0', '#ffff00', 'ff0', 'ffff00'
+         * @return {Widget}
          *//**
          * @param {Color} color
+         * @return {Widget}
          */
-        setBorderColor: function (color) {
-            this.desc('setBorderColor', color);
-            this._borderColor = new Color(color);
-        },
-
         /**
          * Returns this widget's border color.
          * @return {Color}
          */
-        getBorderColor: function () {
-            return this._borderColor;
+        borderColor: function () {
+            this.desc('borderColor', arguments);
+            if (arguments.length) {
+                this._borderColor = genetic.getInstanceOf(Color, arguments);
+                return this;
+            } else {
+                return this._borderColor;
+            }
         },
 
         /**
          * Sets this widget's border's spaces.
+         * Returns this widget for method chaining.
          * @param {number} top
          * @param {number} right
          * @param {number} bottom
          * @param {number} left
+         * @return {Widget}
          *//**
          * @param {Spaces} spaces
+         * @return {Widget}
          *//**
          * @param {number} number - If same values for each sides
+         * @return {Widget}
          */
-        setBorderWidth: function () {
-            this.desc('setBorderWidth', arguments);
-            this._borderWidth = this.getInstanceOf(Spaces, arguments);
-        },
-
         /**
          * Returns this widget's border's spaces.
-         * @param {Spaces}
+         * @return {Spaces}
          */
-        getBorderWidth: function () {
-            this.desc('getBorderWidth', [], this._borderWidth);
-            return this._borderWidth;
+        borderWidth: function () {
+            this.desc('borderWidth', arguments);
+            if (arguments.length) {
+                this._borderWidth = genetic.getInstanceOf(Spaces, arguments);
+                return this;
+            } else {
+                return this._borderWidth;
+            }
         },
 
         /**

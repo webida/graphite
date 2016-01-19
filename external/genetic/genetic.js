@@ -55,6 +55,16 @@ define(function () {
                 }
             }
             return target;
+        },
+
+        /**
+         * Pass any arguments to the given class
+         * then returns new instance of the class.
+         */
+        getInstanceOf: function (cst, args) {
+            var arr = ([]).slice.call(args);
+            arr = [null].concat(arr);
+            return new (Function.prototype.bind.apply(cst, arr));
         }
     };
 });

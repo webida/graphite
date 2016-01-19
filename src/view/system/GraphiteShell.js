@@ -78,7 +78,7 @@ define([
                 this._container = c;
                 this.getUpdateManager().setGraphicContext(
                         new GraphicContext(c));
-                this.getRootWidget().setBounds(c.getClientArea());
+                this.getRootWidget().bounds(c.getClientArea());
             }
         },
 
@@ -90,7 +90,7 @@ define([
             this.desc('createRootWidget');
             var widget = new RootWidget(this);
             widget.onAdded();
-            widget.setLayoutManager(new StackLayout());
+            widget.setLayout(new StackLayout());
             return widget;
         },
 
@@ -123,7 +123,7 @@ define([
                 root.remove(this._contents);
             }
             this._contents = widget;
-            root.addChild(widget);
+            root.append(widget);
         },
 
         /**

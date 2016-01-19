@@ -59,7 +59,7 @@ define([
          */
         _drawWidget: function (context) {
             this.desc('_drawWidget', context, undefined, 'green');
-            var bounds = this.getBounds();
+            var bounds = this.bounds();
             var div = this.getElement();
             dom.setStyles(div, {
                 'left': bounds.x + 'px',

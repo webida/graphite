@@ -71,18 +71,18 @@ define([
          * this Widget's top-left corner.
          * @return {boolean}
          */
-        useLocalCoordinates: function () {
-            this.desc('useLocalCoordinates', [], true);
+        isLocalCoordinates: function () {
+            this.desc('isLocalCoordinates', [], true);
             return true;
         },
 
         /**
-         * @param {LayoutManager} manager
+         * @param {Layout} layout
          * @override
          */
-        setLayoutManager: function (manager) {
-            this.desc('setLayoutManager', arguments);
-            DomWidget.prototype.setLayoutManager.call(this, manager);
+        setLayout: function (layout) {
+            this.desc('setLayout', arguments);
+            DomWidget.prototype.setLayout.call(this, layout);
             if (manager instanceof XYLayout) {
                 this.setPosition('absolute');
             }
@@ -90,7 +90,7 @@ define([
 
         /**
          * Sets this widget's background color.
-         * @see Widget#setBgColor
+         * @see Widget#bgColor
          * @param {number} r - 0 ~ 255
          * @param {number} g - 0 ~ 255
          * @param {number} b - 0 ~ 255
@@ -102,8 +102,8 @@ define([
          *//**
          * @param {Color} color
          */
-        setBgColor: function (color) {
-            DomWidget.prototype.setBgColor.call(this, color);
+        bgColor: function () {
+            DomWidget.prototype.bgColor.apply(this, arguments);
             dom.setStyles(this.getElement(), {
                 'background-color': color
             });
@@ -122,7 +122,7 @@ define([
          */
         setPadding: function () {
             this.desc('setPadding', arguments);
-            this._padding = this.getInstanceOf(Spaces, arguments);
+            this._padding = genetic.getInstanceOf(Spaces, arguments);
         },
 
         /**
@@ -139,8 +139,8 @@ define([
          * @protected
          */
         _getRevisedBounds: function () {
-            var border = this.getBorderWidth();
-            var r = new Rectangle(this.getBounds());
+            var border = this.borderWidth();
+            var r = new Rectangle(this.bounds());
             var hTop, hRight, hBottom, hLeft;
             if (!border.isEmpty()) {
                 hTop = border.top/2,

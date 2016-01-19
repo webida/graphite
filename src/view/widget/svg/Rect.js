@@ -71,7 +71,7 @@ define([
          * @return {string}
          */
         toString: function () {
-            var bounds = this.getBounds();
+            var bounds = this.bounds();
             return Shape.prototype.toString.call(this) + 
                     '(' + bounds.x + ',' + bounds.y + ',' +
                             bounds.w + ',' + bounds.h + ')';
