@@ -138,7 +138,7 @@ define([
 
         /**
          * Sets this widget's border color.
-         * @see Widget#setBorderColor
+         * @see Widget#borderColor
          * @param {number} r - 0 ~ 255
          * @param {number} g - 0 ~ 255
          * @param {number} b - 0 ~ 255
@@ -150,10 +150,10 @@ define([
          *//**
          * @param {Color} color
          */
-        setBorderColor: function (color) {
-            Widget.prototype.setBorderColor.call(this, color);
+        borderColor: function () {
+            Widget.prototype.borderColor.apply(this, arguments);
             dom.setAttributes(this.getElement(), {
-                'stroke': this.getBorderColor()
+                'stroke': this.borderColor()
             });
         },
 

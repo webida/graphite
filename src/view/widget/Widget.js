@@ -574,7 +574,7 @@ define([
         draw: function (context) {
             this.desc('draw', context, undefined, 'tomato');
             this.bgColor(this.bgColor());
-            this.setBorderColor(this.getBorderColor());
+            this.borderColor(this.borderColor());
             this.setBorderWidth(this.getBorderWidth());
             this._drawWidget(context);
             this._drawChildren(context);
@@ -646,17 +646,17 @@ define([
          *//**
          * @param {Color} color
          */
-        setBorderColor: function () {
-            this.desc('setBorderColor', arguments);
-            this._borderColor = genetic.getInstanceOf(Color, arguments);
-        },
-
         /**
          * Returns this widget's border color.
          * @return {Color}
          */
-        getBorderColor: function () {
-            return this._borderColor;
+        borderColor: function () {
+            this.desc('borderColor', arguments);
+            if (arguments.length) {
+                this._borderColor = genetic.getInstanceOf(Color, arguments);
+            } else {
+                return this._borderColor;
+            }
         },
 
         /**
