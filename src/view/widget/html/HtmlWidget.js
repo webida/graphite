@@ -95,18 +95,31 @@ define([
          * @param {number} g - 0 ~ 255
          * @param {number} b - 0 ~ 255
          * @param {number} a - 0 ~ 1.0
+         * @return {Widget}
          *//**
          * @param {string} colorName - 'skyblue', 'transparent'
+         * @return {Widget}
          *//**
          * @param {string} hexCode - '#ff0', '#ffff00', 'ff0', 'ffff00'
+         * @return {Widget}
          *//**
          * @param {Color} color
+         * @return {Widget}
+         */
+        /**
+         * Returns this widget's background color.
+         * @return {Color}
          */
         bgColor: function () {
-            DomWidget.prototype.bgColor.apply(this, arguments);
-            dom.setStyles(this.getElement(), {
-                'background-color': color
-            });
+            if (arguments.length) {
+                DomWidget.prototype.bgColor.apply(this, arguments);
+                dom.setStyles(this.getElement(), {
+                    'background-color': color
+                });
+                return this;
+            } else {
+                return this._bgColor;
+            }
         },
 
         /**
