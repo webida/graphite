@@ -64,24 +64,24 @@ define([
          * Adds the given Widget as a child of this Widget with the given
          * index and constraint.
          * 
-         * addChild(widget, index, constraint)
+         * append(widget, index, constraint)
          * @param {Widget} widget - The Widget to add
          * @param {number} index - Where the new Widget should be added
          * @param {Object} constraint - The added Widget's constraint
          *//**
-         * addChild(widget)
+         * append(widget)
          * @param {Widget} widget - The Widget to add
          *//**
-         * addChild(widget, index)
+         * append(widget, index)
          * @param {Widget} widget - The Widget to add
          * @param {number} index - Where the new Widget should be added
          *//**
-         * addChild(widget, constraint)
+         * append(widget, constraint)
          * @param {Widget} widget - The Widget to add
          * @param {Object} constraint - The added Widget's constraint
          */
-        addChild: function () {
-            this.desc('addChild', arguments);
+        append: function () {
+            this.desc('append', arguments);
             if (!this.isContainer()) {
                 throw new Error(this.constructor.name
                         + ' is not container widget');

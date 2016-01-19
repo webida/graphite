@@ -123,7 +123,7 @@ define([
                 root.remove(this._contents);
             }
             this._contents = widget;
-            root.addChild(widget);
+            root.append(widget);
         },
 
         /**
