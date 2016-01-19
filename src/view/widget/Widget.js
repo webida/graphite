@@ -376,7 +376,7 @@ define([
             }
             rect.setBounds(this.getBounds());
             rect.shrink(this.getBorderWidth());
-            if (this.useLocalCoordinates()) {
+            if (this.isLocalCoordinates()) {
                 rect.setLocation(0, 0);
             }
             this.info('getClientArea() --> ' + rect);
@@ -490,8 +490,8 @@ define([
          * this Widget's top-left corner.
          * @return {boolean}
          */
-        useLocalCoordinates: function () {
-            this.desc('useLocalCoordinates', [], false);
+        isLocalCoordinates: function () {
+            this.desc('isLocalCoordinates', [], false);
             return false;
         },
 
@@ -517,7 +517,7 @@ define([
             var bounds = this.getBounds();
             bounds.x += dx;
             bounds.y += dy;
-            if (this.useLocalCoordinates()) {
+            if (this.isLocalCoordinates()) {
                 /**
                  * moved event.
                  * @event Widget#moved
@@ -542,7 +542,7 @@ define([
          */
         translateToParent: function (t) {
             var bounds = this.getBounds();
-            if (this.useLocalCoordinates()) {
+            if (this.isLocalCoordinates()) {
                 t.performTranslate(bounds.x + getInsets().left, bounds.y + getInsets().top);
             }
         },

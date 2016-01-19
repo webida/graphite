@@ -71,8 +71,8 @@ define([
          * this Widget's top-left corner.
          * @return {boolean}
          */
-        useLocalCoordinates: function () {
-            this.desc('useLocalCoordinates', [], true);
+        isLocalCoordinates: function () {
+            this.desc('isLocalCoordinates', [], true);
             return true;
         },
 
