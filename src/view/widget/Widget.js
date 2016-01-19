@@ -573,7 +573,7 @@ define([
          */
         draw: function (context) {
             this.desc('draw', context, undefined, 'tomato');
-            this.setBgColor(this.getBgColor());
+            this.bgColor(this.bgColor());
             this.setBorderColor(this.getBorderColor());
             this.setBorderWidth(this.getBorderWidth());
             this._drawWidget(context);
@@ -620,17 +620,17 @@ define([
          *//**
          * @param {Color} color
          */
-        setBgColor: function () {
-            this.desc('setBgColor', arguments);
-            this._bgColor = genetic.getInstanceOf(Color, arguments);
-        },
-
         /**
          * Returns this widget's background color.
          * @return {Color}
          */
-        getBgColor: function () {
-            return this._bgColor;
+        bgColor: function () {
+            this.desc('bgColor', arguments);
+            if (arguments.length) {
+                this._bgColor = genetic.getInstanceOf(Color, arguments);
+            } else {
+                return this._bgColor;
+            }
         },
 
         /**

@@ -117,7 +117,7 @@ define([
 
         /**
          * Sets this widget's background color.
-         * @see Widget#setBgColor
+         * @see Widget#bgColor
          * @param {number} r - 0 ~ 255
          * @param {number} g - 0 ~ 255
          * @param {number} b - 0 ~ 255
@@ -129,10 +129,10 @@ define([
          *//**
          * @param {Color} color
          */
-        setBgColor: function (color) {
-            SvgWidget.prototype.setBgColor.call(this, color);
+        bgColor: function () {
+            SvgWidget.prototype.bgColor.apply(this, arguments);
             dom.setAttributes(this.getElement(), {
-                'fill': this.getBgColor()
+                'fill': this.bgColor()
             });
         },
 

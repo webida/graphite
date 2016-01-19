@@ -18,18 +18,18 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         shell.setContents(svg);
 
         var r1 = new Rect();
-        r1.setBgColor('salmon');
+        r1.bgColor('salmon');
         r1.setBorderColor(new Color(132, 45, 123));
         r1.setBorderWidth(10);
         svg.addChild(r1, new Rectangle(0, 0, 100, 100));
 
         var r2 = new Rect();
-        r2.setBgColor('salmon');
+        r2.bgColor('salmon');
         svg.addChild(r2, new Rectangle(100, 100, 100, 100));
 
         var ellipse = new Ellipse();
         ellipse.setBorderColor('green');
-        ellipse.setBgColor('white');
+        ellipse.bgColor('white');
         ellipse.setBounds(new Rectangle(200, 200, 150, 100));
         svg.addChild(ellipse);
 
@@ -45,13 +45,13 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         shell.setContents(svg);
 
         var r1 = new Rect();
-        r1.setBgColor('salmon');
+        r1.bgColor('salmon');
         r1.setBorderColor(new Color(132, 45, 123));
         r1.setBorderWidth(10);
         svg.addChild(r1, new Rectangle(0, 0, 100, 100));
 
         var r2 = new Rect();
-        r2.setBgColor('salmon');
+        r2.bgColor('salmon');
         r2.setBorderWidth(0);
         svg.addChild(r2, new Rectangle(100, 100, 100, 100));
 
@@ -66,12 +66,12 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
 
 /*
         var div1 = new Div();
-        div1.setBgColor('orange');
+        div1.bgColor('orange');
         div1.setSize(50, 50);
         root.addChild(div1);
 
         var div2 = new Div();
-        div2.setBgColor('yellow');
+        div2.bgColor('yellow');
         div2.setSize(20, 20);
         div1.addChild(div2);
 
@@ -83,13 +83,13 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
 */
 
         var div1 = new Div();
-        div1.setBgColor('orange');
+        div1.bgColor('orange');
         div1.setSize(50, 50);
         div1.setStyle({'float': 'left'});
         root.addChild(div1);
 
         var div2 = new Div();
-        div2.setBgColor('yellow');
+        div2.bgColor('yellow');
         div2.setStyle({
             'position': 'relative',
             'float': 'left',
@@ -111,11 +111,11 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
 
         var r4 = new Div();
         r4.setLayout(new XYLayout());
-        r4.setBgColor('salmon');
+        r4.bgColor('salmon');
         r3.addChild(r4, new Rectangle(230, 230, 50, 50));
 
         var r5 = new Div();
-        r5.setBgColor('green');
+        r5.bgColor('green');
         r4.addChild(r5, new Rectangle(5, 5, 10, 10));
 
         return;
@@ -128,13 +128,13 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
 
         var r1 = new Rect();
         r1.setLayout(new XYLayout());
-        r1.setBgColor('salmon');
+        r1.bgColor('salmon');
         r1.setBorderColor('white');
         r1.setBorderWidth(5);
         svg.addChild(r1, new Rectangle(30, 30, 100, 100));
 
         var r2 = new Rect();
-        r2.setBgColor('orange');
+        r2.bgColor('orange');
         r2.setBorderColor('white');
         r2.setBorderWidth(5);
         svg.addChild(r2, new Rectangle(330, 330, 50, 50));
@@ -142,7 +142,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         setTimeout(function () {
             console.log(svg);
             //console.clear();
-            r1.setBgColor('seagreen');
+            r1.bgColor('seagreen');
             r1.setBounds(100, 100, 200, 200);
             r2.setBounds(320, 300, 70, 70);
             r2.setBorderWidth(20);

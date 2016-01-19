@@ -90,7 +90,7 @@ define([
 
         /**
          * Sets this widget's background color.
-         * @see Widget#setBgColor
+         * @see Widget#bgColor
          * @param {number} r - 0 ~ 255
          * @param {number} g - 0 ~ 255
          * @param {number} b - 0 ~ 255
@@ -102,8 +102,8 @@ define([
          *//**
          * @param {Color} color
          */
-        setBgColor: function (color) {
-            DomWidget.prototype.setBgColor.call(this, color);
+        bgColor: function () {
+            DomWidget.prototype.bgColor.apply(this, arguments);
             dom.setStyles(this.getElement(), {
                 'background-color': color
             });
