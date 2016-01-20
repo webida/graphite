@@ -132,18 +132,18 @@ define([
          * @param {Spaces} spaces
          *//**
          * @param {number} number - If same values for each sides
-         */
-        setPadding: function () {
-            this.desc('setPadding', arguments);
-            this._padding = genetic.getInstanceOf(Spaces, arguments);
-        },
-
-        /**
+         *//**
          * Returns this widget's padding value.
          * @return {Spaces}
          */
-        getPadding: function () {
-            return this._padding;
+        padding: function () {
+            this.desc('setPadding', arguments);
+            if (arguments.length) {
+                this._padding = genetic.getInstanceOf(Spaces, arguments);
+                return this;
+            } else {
+                return this._padding;
+            }
         },
 
         /**
