@@ -20,17 +20,18 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         var r1 = new Rect();
         //r1.bgColor('salmon').borderWidth(10).borderColor('purple');
         r1.bgColor('salmon').border(10, 'purple');
-        svg.append(r1, new Rectangle(0, 0, 100, 100));
+        svg.append(r1, 0, 0, 100, 100);
 
         var r2 = new Rect();
         r2.bgColor('salmon');
-        svg.append(r2, new Rectangle(100, 100, 100, 100));
+        r2.bounds(100, 100, 100, 100);
+        svg.append(r2);
 
-        var ellipse = new Ellipse();
-        ellipse.borderColor('green');
-        ellipse.bgColor('white');
-        ellipse.bounds(new Rectangle(200, 200, 150, 100));
-        svg.append(ellipse);
+        var e = new Ellipse();
+        e.borderColor('green');
+        e.bgColor('white');
+        e.bounds(new Rectangle(200, 200, 150, 100));
+        svg.append(e);
 
         setTimeout(function () {
             console.log('root --> ', svg, r1.bounds().toString());

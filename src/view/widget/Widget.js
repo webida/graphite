@@ -22,6 +22,7 @@
 
 define([
     'external/genetic/genetic',
+    'external/math/math',
     'graphite/base/BaseEmitter',
     'graphite/base/Color',
     'graphite/base/FlagSupport',
@@ -29,6 +30,7 @@ define([
     'graphite/view/geometry/Spaces'
 ], function (
     genetic,
+    math,
     BaseEmitter,
     Color,
     FlagSupport,
@@ -79,6 +81,21 @@ define([
          * append(widget, constraint)
          * @param {Widget} widget - The Widget to add
          * @param {Object} constraint - The added Widget's constraint
+         *//**
+         * append(widget, x, y, w, h)
+         * @param {Widget} widget - The Widget to add
+         * @param {number} x
+         * @param {number} y
+         * @param {number} w
+         * @param {number} h
+         *//**
+         * append(widget, index, x, y, w, h)
+         * @param {Widget} widget - The Widget to add
+         * @param {number} index - Where the new Widget should be added
+         * @param {number} x
+         * @param {number} y
+         * @param {number} w
+         * @param {number} h
          */
         append: function () {
             this.desc('append', arguments);
@@ -89,6 +106,8 @@ define([
             var args = arguments;
             var child = args[0];
             var index, constraint;
+            var others = ([]).slice.call(args);
+            others.shift();
             if (args.length === 1) {
                 index = -1;
                 constraint = null;
@@ -103,6 +122,15 @@ define([
             } else if (args.length === 3) {
                 index = args[1];
                 constraint = args[2];
+            } else if (args.length === 5
+                    && math.isAllNumber(others)) {
+                index = -1;
+                constraint = genetic.getInstanceOf(Rectangle, others);
+            } else if (args.length === 6
+                    && math.isAllNumber(others)) {
+                index = args[1];
+                others.shift();
+                constraint = genetic.getInstanceOf(Rectangle, others);
             } else {
                 throw new Error('Illegal parameters');
             }
