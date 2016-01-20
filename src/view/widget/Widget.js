@@ -801,7 +801,8 @@ define([
     genetic.inherits(Widget, BaseEmitter, proto);
 
     /** @constant {number} */
-    Widget.FLAG_REALIZED = 1 << 31
+    Widget.FLAG_REALIZED = 1 << 31;
+    Widget.FLAG_MAX = FLAG_ENABLED;
 
     return Widget;
 });
