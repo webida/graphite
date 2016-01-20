@@ -42,6 +42,9 @@ define(function () {
 
         /**
          * Simply mixin object arguments.
+         * @example
+         * var mixed = genetic.mixin({a:1}, {b:2});
+         * // mixed will be {a:1, b:2}
          */
         mixin: function () {
             var source;
@@ -60,6 +63,10 @@ define(function () {
         /**
          * Pass any arguments to the given class
          * then returns new instance of the class.
+         * @param {Function} cst - constructor
+         * @param {Arguments} args - arguments
+         * @example
+         * var color = genetic.getInstanceOf(Color, arguments);
          */
         getInstanceOf: function (cst, args) {
             var arr = ([]).slice.call(args);
