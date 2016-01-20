@@ -97,7 +97,9 @@ define([
 
         /** @inheritdoc */
         bounds: function () {
-            this.setFlag(FLAG_BOUNDS_SET, true);
+            if (arguments.length) {
+                this.setFlag(FLAG_BOUNDS_SET, true);
+            }
             return Structural.prototype.bounds.apply(this, arguments);
         },
 
