@@ -137,7 +137,7 @@ define([
          * @return {Spaces}
          */
         padding: function () {
-            this.desc('setPadding', arguments);
+            this.desc('padding', arguments);
             if (arguments.length) {
                 this._padding = genetic.getInstanceOf(Spaces, arguments);
                 return this;
