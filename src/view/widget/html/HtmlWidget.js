@@ -83,7 +83,7 @@ define([
         setLayout: function (layout) {
             this.desc('setLayout', arguments);
             DomWidget.prototype.setLayout.call(this, layout);
-            if (manager instanceof XYLayout) {
+            if (layout instanceof XYLayout) {
                 this.setPosition('absolute');
             }
         },
@@ -114,7 +114,7 @@ define([
             if (arguments.length) {
                 DomWidget.prototype.bgColor.apply(this, arguments);
                 dom.setStyles(this.getElement(), {
-                    'background-color': color
+                    'background-color': this.bgColor()
                 });
                 return this;
             } else {
