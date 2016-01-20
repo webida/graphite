@@ -722,6 +722,28 @@ define([
         },
 
         /**
+         * Convenient method for width, color for border.
+         * Returns this widget for method chaining.
+         * @param {Spaces|number} width
+         * @param {Color|string} color
+         * @return {Widget}
+         */
+        border: function (width, color) {
+            this.desc('border', arguments);
+            if (typeof width !== 'undefined'
+                    && (typeof width === 'number'
+                            || width instanceof Spaces)) {
+                this.borderWidth.call(this, width);
+            }
+            if (typeof color !== 'undefined'
+                    && (typeof color === 'string'
+                            || color instanceof Color)) {
+                this.borderColor.call(this, color);
+            }
+            return this;
+        },
+
+        /**
          * Returns whether this Widget has the given widget as a child.
          * @return {boolean}
          */
