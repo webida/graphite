@@ -55,7 +55,7 @@ define([
                 if (bounds) {
                     if (bounds.w === -1 || bounds.h === -1) {
                         preferredSize = child.getPreferredSize(bounds.w, bounds.h);
-                        bounds = bounds.getCopy();
+                        bounds = bounds.clone();
                         if (bounds.w === -1) {
                             bounds.w = preferredSize.w;
                         }

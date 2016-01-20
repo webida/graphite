@@ -110,14 +110,14 @@ define([
             others.shift();
             if (args.length === 1) {
                 index = -1;
-                constraint = child.bounds().getCopy();
+                constraint = child.bounds().clone();
             } else if (args.length === 2) {
                 if (args[1] instanceof Object) {
                     index = -1;
                     constraint = args[1];
                 } else if (typeof args[1] === 'number') {
                     index = args[1];
-                    constraint = child.bounds().getCopy();
+                    constraint = child.bounds().clone();
                 }
             } else if (args.length === 3) {
                 index = args[1];
