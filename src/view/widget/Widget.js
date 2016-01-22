@@ -505,6 +505,7 @@ define([
          * Sets this Widget's size.
          * @param {number} w
          * @param {number} h
+         * @return {Widget}
          */
         /**
          * Returns this Widget's size.
@@ -516,7 +517,7 @@ define([
             this.desc('size', arguments);
             if (arguments.length) {
                 var bounds = this.bounds();
-                this.bounds(bounds.x, bounds.y, w, h);
+                return this.bounds(bounds.x, bounds.y, w, h);
             } else {
                 return {
                     w: w,
