@@ -83,7 +83,7 @@ define([
         setLayout: function (layout) {
             this.desc('setLayout', arguments);
             DomWidget.prototype.setLayout.call(this, layout);
-            if (manager instanceof XYLayout) {
+            if (layout instanceof XYLayout) {
                 this.setPosition('absolute');
             }
         },
@@ -95,18 +95,31 @@ define([
          * @param {number} g - 0 ~ 255
          * @param {number} b - 0 ~ 255
          * @param {number} a - 0 ~ 1.0
+         * @return {Widget}
          *//**
          * @param {string} colorName - 'skyblue', 'transparent'
+         * @return {Widget}
          *//**
          * @param {string} hexCode - '#ff0', '#ffff00', 'ff0', 'ffff00'
+         * @return {Widget}
          *//**
          * @param {Color} color
+         * @return {Widget}
+         */
+        /**
+         * Returns this widget's background color.
+         * @return {Color}
          */
         bgColor: function () {
-            DomWidget.prototype.bgColor.apply(this, arguments);
-            dom.setStyles(this.getElement(), {
-                'background-color': color
-            });
+            if (arguments.length) {
+                DomWidget.prototype.bgColor.apply(this, arguments);
+                dom.setStyles(this.getElement(), {
+                    'background-color': this.bgColor()
+                });
+                return this;
+            } else {
+                return this._bgColor;
+            }
         },
 
         /**
@@ -119,18 +132,18 @@ define([
          * @param {Spaces} spaces
          *//**
          * @param {number} number - If same values for each sides
-         */
-        setPadding: function () {
-            this.desc('setPadding', arguments);
-            this._padding = genetic.getInstanceOf(Spaces, arguments);
-        },
-
-        /**
+         *//**
          * Returns this widget's padding value.
          * @return {Spaces}
          */
-        getPadding: function () {
-            return this._padding;
+        padding: function () {
+            this.desc('padding', arguments);
+            if (arguments.length) {
+                this._padding = genetic.getInstanceOf(Spaces, arguments);
+                return this;
+            } else {
+                return this._padding;
+            }
         },
 
         /**

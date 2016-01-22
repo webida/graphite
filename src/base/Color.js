@@ -22,23 +22,16 @@
 
 define([
     'external/genetic/genetic',
+    'external/math/math',
     'graphite/base/Base'
 ], function (
     genetic,
+    math,
     Base
 ) {
     'use strict';
 
     var singleton = {};
-
-    function isAllNumber(arr) {
-        for (var i = 0; i < arr.length; i++) {
-            if (typeof arr[i] !== 'number') {
-                return false;
-            }
-        }
-        return true;
-    }
 
     function getColor(args) {
         if (args.length === 1) {
@@ -66,7 +59,7 @@ define([
                     console.warn('Invalid color argument');
                 }
             }
-        } else if (args.length > 2 && isAllNumber(args)) {
+        } else if (args.length > 2 && math.isAllNumber(args)) {
             if (args.length === 3) {
                 prefix = 'rgb';
             } else if (args.length === 4) {

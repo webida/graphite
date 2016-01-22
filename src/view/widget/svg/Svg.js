@@ -21,21 +21,28 @@
  */
 
 define([
+    'external/dom/dom',
     'external/genetic/genetic',
+    'graphite/view/geometry/Rectangle',
     'graphite/view/system/GraphiteShell',
     'graphite/view/widget/html/Container',
-    './Rectangular',
     './Structural',
-    './SvgWidget'
+    './SvgWidget',
+    '../Widget'
 ], function (
+    dom,
     genetic,
+    Rectangle,
     GraphiteShell,
     Container,
-    Rectangular,
     Structural,
-    SvgWidget
+    SvgWidget,
+    Widget
 ) {
     'use strict';
+
+    /** @constant {number} */
+    var FLAG_BOUNDS_SET = Widget.FLAG_MAX << 1;
 
     /**
      * A Svg.
@@ -46,9 +53,10 @@ define([
         this.setProperty({
             'shape-rendering': 'crispEdges'
         });
+        this.setFlag(FLAG_BOUNDS_SET, false);
     }
 
-    var proto = genetic.mixin(Rectangular.prototype, {
+    genetic.inherits(Svg, Structural, {
 
         /**
          * Returns tagName for this Widget's element.
@@ -77,6 +85,42 @@ define([
         },
 
         /**
+         * Returns true if this Widget uses local coordinates.
+         * This means its children are placed relative to
+         * this Widget's top-left corner.
+         * @return {boolean}
+         */
+        isLocalCoordinates: function () {
+            this.desc('isLocalCoordinates', [], true);
+            return true;
+        },
+
+        /** @inheritdoc */
+        bounds: function () {
+            if (arguments.length) {
+                this.setFlag(FLAG_BOUNDS_SET, true);
+            }
+            return Structural.prototype.bounds.apply(this, arguments);
+        },
+
+        /**
+         * @see Widget#_drawWidget
+         * @param {GraphicContext} context
+         */
+        _drawWidget: function (context) {
+            this.desc('_drawWidget', context, undefined, 'green');
+            if (this.getFlag(FLAG_BOUNDS_SET)) {
+                var bounds = this.bounds();
+                dom.setAttributes(this.getElement(), {
+                    'x': bounds.x,
+                    'y': bounds.y,
+                    'width': bounds.w,
+                    'height': bounds.h
+                });
+            }
+        },
+
+        /**
          * For convenience, this tells position for
          * x,y,w,h of this Rectangle.
          * @return {string}
@@ -88,8 +132,6 @@ define([
                             bounds.w + ',' + bounds.h + ')';
         }
     });
-
-    genetic.inherits(Svg, Structural, proto);
 
     return Svg;
 });

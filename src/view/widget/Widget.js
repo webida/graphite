@@ -22,6 +22,7 @@
 
 define([
     'external/genetic/genetic',
+    'external/math/math',
     'graphite/base/BaseEmitter',
     'graphite/base/Color',
     'graphite/base/FlagSupport',
@@ -29,6 +30,7 @@ define([
     'graphite/view/geometry/Spaces'
 ], function (
     genetic,
+    math,
     BaseEmitter,
     Color,
     FlagSupport,
@@ -41,6 +43,7 @@ define([
     var FLAG_VALID = 1;
     var FLAG_VISIBLE = 1 << 2;
     var FLAG_ENABLED = 1 << 4;
+    var FLAG_FILL_PARENT = 1 << 8;
 
     /**
      * An abstract class for all Graphite Widgets.
@@ -79,6 +82,21 @@ define([
          * append(widget, constraint)
          * @param {Widget} widget - The Widget to add
          * @param {Object} constraint - The added Widget's constraint
+         *//**
+         * append(widget, x, y, w, h)
+         * @param {Widget} widget - The Widget to add
+         * @param {number} x
+         * @param {number} y
+         * @param {number} w
+         * @param {number} h
+         *//**
+         * append(widget, index, x, y, w, h)
+         * @param {Widget} widget - The Widget to add
+         * @param {number} index - Where the new Widget should be added
+         * @param {number} x
+         * @param {number} y
+         * @param {number} w
+         * @param {number} h
          */
         append: function () {
             this.desc('append', arguments);
@@ -89,20 +107,31 @@ define([
             var args = arguments;
             var child = args[0];
             var index, constraint;
+            var others = ([]).slice.call(args);
+            others.shift();
             if (args.length === 1) {
                 index = -1;
-                constraint = null;
+                constraint = child.bounds().clone();
             } else if (args.length === 2) {
                 if (args[1] instanceof Object) {
                     index = -1;
                     constraint = args[1];
                 } else if (typeof args[1] === 'number') {
                     index = args[1];
-                    constraint = null;
+                    constraint = child.bounds().clone();
                 }
             } else if (args.length === 3) {
                 index = args[1];
                 constraint = args[2];
+            } else if (args.length === 5
+                    && math.isAllNumber(others)) {
+                index = -1;
+                constraint = genetic.getInstanceOf(Rectangle, others);
+            } else if (args.length === 6
+                    && math.isAllNumber(others)) {
+                index = args[1];
+                others.shift();
+                constraint = genetic.getInstanceOf(Rectangle, others);
             } else {
                 throw new Error('Illegal parameters');
             }
@@ -115,7 +144,7 @@ define([
             var w = this;
             while (w !== null) {
                 if (w === child) {
-                    throw new Error('Added child makes cycle');
+                    throw new Error('Child makes cycle on appending');
                 }
                 w = w.getParent();
             }
@@ -477,6 +506,7 @@ define([
          * Sets this Widget's size.
          * @param {number} w
          * @param {number} h
+         * @return {Widget}
          */
         /**
          * Returns this Widget's size.
@@ -488,7 +518,7 @@ define([
             this.desc('size', arguments);
             if (arguments.length) {
                 var bounds = this.bounds();
-                this.bounds(bounds.x, bounds.y, w, h);
+                return this.bounds(bounds.x, bounds.y, w, h);
             } else {
                 return {
                     w: w,
@@ -722,6 +752,28 @@ define([
         },
 
         /**
+         * Convenient method for width, color for border.
+         * Returns this widget for method chaining.
+         * @param {Spaces|number} width
+         * @param {Color|string} color
+         * @return {Widget}
+         */
+        border: function (width, color) {
+            this.desc('border', arguments);
+            if (typeof width !== 'undefined'
+                    && (typeof width === 'number'
+                            || width instanceof Spaces)) {
+                this.borderWidth.call(this, width);
+            }
+            if (typeof color !== 'undefined'
+                    && (typeof color === 'string'
+                            || color instanceof Color)) {
+                this.borderColor.call(this, color);
+            }
+            return this;
+        },
+
+        /**
          * Returns whether this Widget has the given widget as a child.
          * @return {boolean}
          */
@@ -745,13 +797,34 @@ define([
                 }
             }
             return false;
+        },
+
+        /**
+         * Sets whether this Widget's bounds expands
+         * to parent's client area.
+         * @param {boolean} isFill
+         * @return {Widget}
+         *//**
+         * Returns whether this Widget's bounds should
+         * be expanded to parent's client area.
+         * @return {boolean}
+         */
+        fillParent: function () {
+            this.desc('fillParent', arguments);
+            if (arguments.length) {
+                this.setFlag(FLAG_FILL_PARENT, !!arguments[0]);
+                return this;
+            } else {
+                return this.getFlag(FLAG_FILL_PARENT);
+            }
         }
     });
 
     genetic.inherits(Widget, BaseEmitter, proto);
 
     /** @constant {number} */
-    Widget.FLAG_REALIZED = 1 << 31
+    Widget.FLAG_REALIZED = 1 << 31;
+    Widget.FLAG_MAX = FLAG_FILL_PARENT;
 
     return Widget;
 });

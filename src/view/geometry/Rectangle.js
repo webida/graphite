@@ -182,7 +182,7 @@ define([
          * @return {Rectangle}
          */
         getTranslated: function () {
-            var copy = this.getCopy();
+            var copy = this.clone();
             return copy.translate.apply(copy, arguments);
         },
 
@@ -218,7 +218,7 @@ define([
          * Returns a copied clone for this Rectangle.
          * @return {Rectangle}
          */
-        getCopy: function () {
+        clone: function () {
             return new Rectangle(this);
         },
 
@@ -298,6 +298,15 @@ define([
                 this.h = bottom - this.y;
                 return this;
             }
+        },
+
+        /**
+         * Returns true if the w or h property
+         * is less than or equal to 0.
+         * @return {boolean}
+         */
+        isEmpty : function() {
+            return this.w <= 0 || this.h <= 0;
         },
 
         /**

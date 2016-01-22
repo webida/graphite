@@ -2,38 +2,122 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
     require(['graphite/graphite'], function(graphite) {
 
         var GraphiteShell = graphite.view.system.GraphiteShell;
-        var Div = graphite.view.widget.html.Div;
         var Color = graphite.base.Color;
-        var Rect = graphite.view.widget.svg.Rect;
+        var Rectangle = graphite.view.geometry.Rectangle;
+        var StackLayout = graphite.view.layout.StackLayout;
+        var XYLayout = graphite.view.layout.XYLayout;
+        var Div = graphite.view.widget.html.Div;
         var Circle = graphite.view.widget.svg.Circle;
         var Ellipse = graphite.view.widget.svg.Ellipse;
+        var Rect = graphite.view.widget.svg.Rect;
         var Svg = graphite.view.widget.svg.Svg;
-        var XYLayout = graphite.view.layout.XYLayout;
-        var Rectangle = graphite.view.geometry.Rectangle;
-        
+
         var shell = new GraphiteShell('container');
 
+        var div = new Div();
+        shell.setContents(div);
+
+        /********************/
+
+        var div1 = new Div();
+        div1.setStyle({
+            float: 'left',
+            padding: '10px',
+            border: '10px solid lightyellow'
+        });
+        div1.size(100, 100).bgColor('salmon');
+        div.append(div1);
+
+        var div3 = new Div();
+        div3.setStyle({
+            margin: '10px'
+        });
+        div3.bounds(10, 10, 20, 20).bgColor('moccasin');
+        div1.append(div3);
+
+        /********************/
+
+        var div2 = new Div();
+        div2.setStyle({
+            float: 'left',
+            position: 'relative',
+            padding: '10px'
+        });
+        div2.size(100, 100).bgColor('salmon');
+        div.append(div2);
+
+        var div4 = new Div();
+        div4.setStyle({
+            position: 'absolute'
+        });
+        div4.bounds(10, 10, 20, 20).bgColor('moccasin');
+        div2.append(div4);
+
+        /********************/
+
         var svg = new Svg();
+        svg.setStyle({
+            margin: '10px',
+            padding: '10px'
+        });
         svg.setLayout(new XYLayout());
-        shell.setContents(svg);
+        div.append(svg);
 
         var r1 = new Rect();
-        r1.bgColor('salmon').borderColor('purple').borderWidth(10);
-        svg.append(r1, new Rectangle(0, 0, 100, 100));
+        r1.bgColor('burlywood').border(10, 'bisque');
+        svg.append(r1, 0, 0, 100, 100);
+
+        return;
+
+        var svg = new Svg();
+        shell.setContents(svg);
+
+        var svg1 = new Svg();
+        //svg1.setLayout(new XYLayout);
+        svg1.bounds(10, 10, 300, 300);
+        svg.append(svg1);
+
+        var r1 = new Rect();
+        r1.bgColor('green');
+        r1.bounds(0, 0, 100, 100);
+        svg1.append(r1);
 
         var r2 = new Rect();
         r2.bgColor('salmon');
-        svg.append(r2, new Rectangle(100, 100, 100, 100));
-
-        var ellipse = new Ellipse();
-        ellipse.borderColor('green');
-        ellipse.bgColor('white');
-        ellipse.bounds(new Rectangle(200, 200, 150, 100));
-        svg.append(ellipse);
+        r2.bounds(10, 10, 100, 100);
+        svg1.append(r2);
 
         setTimeout(function () {
-            console.log('root --> ', svg, r1.bounds().toString());
-            console.log('r1.getClientArea() --> ', r1.getClientArea());
+            console.log('r1.bounds()', r1.bounds());
+        }, 2000);
+
+        return;
+
+        var r2 = new Rect();
+        r2.bgColor('green');
+        console.clear();
+        r2.bounds(5, 5, 100, 100);
+        svg.append(r2);
+
+        var div2 = new Div();
+        div2.bgColor('yellow');
+        div2.size(20, 20);
+        div1.append(div2);
+
+
+
+
+
+        var e = new Ellipse();
+        e.borderColor('green');
+        e.bgColor('white');
+        e.bounds(new Rectangle(200, 200, 150, 100));
+        svg.append(e);
+
+        setTimeout(function () {
+            console.log(svg.bounds());
+            //console.log('root --> ', root);
+            //console.log('r1.getClientArea() --> ', r1.getClientArea());
         }, 2000);
 
         return;
@@ -58,27 +142,6 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         }, 2000);
 
         return;
-
-        var root = new Div();
-        shell.setContents(root);
-
-/*
-        var div1 = new Div();
-        div1.bgColor('orange');
-        div1.size(50, 50);
-        root.append(div1);
-
-        var div2 = new Div();
-        div2.bgColor('yellow');
-        div2.size(20, 20);
-        div1.append(div2);
-
-        setTimeout(function () {
-            console.log('root --> ', root);
-        }, 2000);
-
-        return;
-*/
 
         var div1 = new Div();
         div1.bgColor('orange');
