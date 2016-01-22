@@ -21,10 +21,12 @@
 
 /* jshint unused:false */
 
-// @formatter:off
-define(function (module) {
+define(function () {
     'use strict';
-// @formatter:on
+
+    function int(prop) {
+        return parseInt(prop);
+    };
 
     return {
 
@@ -41,10 +43,8 @@ define(function (module) {
             return element.querySelectorAll(selector);
         },
 
-        getAppliedStyleClone: function (element) {
-            /*jshint -W010 */
-            var prop, result = new Object();
-            /*jshint +W010 */
+        appliedCss: function (element) {
+            var prop, result = {};
             for (prop in element.style) {
                 if (element.style.hasOwnProperty(prop)) {
                     result[prop] = element.style[prop];
@@ -53,17 +53,17 @@ define(function (module) {
             return result;
         },
 
-        getComputedStyleClone: function (element) {
-            var styles = window.getComputedStyle(element), len = styles.length, i, prop, result = {};
+        computedCss: function (element) {
+            var styles = window.getComputedStyle(element);
+            var len = styles.length, i, prop, result = {};
             for (i = 0; i < len; i++) {
                 prop = styles[i];
-                //result[prop] = styles[prop];
                 result[prop] = styles.getPropertyValue(prop);
             }
             return result;
         },
 
-        getComputedStyleDiff: function (styleOrg, styleVar) {
+        computedCssDiff: function (styleOrg, styleVar) {
             var prop, result = {};
             for (prop in styleOrg) {
                 if (styleOrg[prop] !== styleVar[prop]) {
@@ -73,11 +73,11 @@ define(function (module) {
             return result;
         },
 
-        checkComputedStyleDiff: function (styleOrg, styleVar) {
-            var i, check = false, result = this.getComputedStyleDiff(styleOrg, styleVar);
+        checkComputedCssDiff: function (styleOrg, styleVar) {
+            var i, check = false;
+            var result = this.computedCssDiff(styleOrg, styleVar);
             for (i in result) {
                 if (result.hasOwnProperty(i)) {
-                    //console.log(i+' = '+result[i]);
                     check = true;
                 }
             }
@@ -86,12 +86,10 @@ define(function (module) {
 
         getStyle: function (element, prop) {
             var styles = window.getComputedStyle(element);
-            //return styles[prop];
             return styles.getPropertyValue(prop);
         },
 
         setStyles: function (element, propSet) {
-            //console.log('dom.setStyles('+element.id+', propSet)');
             var prop, style = element.style;
             for (prop in propSet) {
                 if (propSet.hasOwnProperty(prop)) {
@@ -158,6 +156,83 @@ define(function (module) {
                     width: parseFloat(this.getStyle(e, 'width')),
                     height: parseFloat(this.getStyle(e, 'height'))
                 };
+            }
+        },
+
+        getWindow: function (elem) {
+            var doc;
+            if (elem.nodeType === 9) {
+                doc = elem;
+            } else {
+                doc = elem.ownerDocument;
+            }
+            return doc.defaultView || doc.parentWindow;
+        },
+
+        /**
+         * Gets element's offset from it's document. 
+         * @param {HTMLElement} elem
+         */
+        getOffset: function (elem) {
+            var doc, win, docElem, rect;
+            if (!elem.getClientRects().length) {
+                return {
+                    'top': 0,
+                    'left': 0
+                };
+            }
+            rect = elem.getBoundingClientRect();
+            if (rect.width || rect.height) {
+                doc = elem.ownerDocument;
+                win = this.getWindow(elem);
+                docElem = doc.documentElement;
+                return {
+                    'top': rect.top + win.pageYOffset - docElem.clientTop,
+                    'left': rect.left + win.pageXOffset - docElem.clientLeft
+                };
+            }
+            return rect;
+        },
+
+        /**
+         * Gets element's offset from it's parent. 
+         * @param {HTMLElement} elem
+         */
+        getLocalOffset: function (elem) {
+            var parentOffset = {
+                'top': 0,
+                'left': 0
+            };
+            var offset = this.getOffset(elem);
+            if (elem.parentNode) {
+                parentOffset = this.getOffset(elem.parentNode);
+            }
+            return {
+                'top': offset.top - parentOffset.top,
+                'left': offset.left - parentOffset.left
+            };
+        },
+
+        getBoxModel: function (elem, bounds) {
+            //TODO calculates for % and auto
+            var s = this.computedCss(elem);
+            var positioned = function (dir) {
+                return int(s['margin-' + dir]);
+            }
+            var occupied = function (dir) {
+                return int(s['border-' + dir + '-width'])
+                        + int(s['padding-' + dir]);
+            }
+            var left = bounds.x - positioned('left');
+            var top = bounds.y - positioned('top');
+            var width = bounds.w - (occupied('left') + occupied('right'));
+            console.log('width ===> ', width);
+            var height = bounds.h - (occupied('top') + occupied('bottom'));
+            return {
+                'left': left,
+                'top': top,
+                'width': width,
+                'height': height
             }
         }
     };
