@@ -4,7 +4,6 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         var GraphiteShell = graphite.view.system.GraphiteShell;
         var Color = graphite.base.Color;
         var Rectangle = graphite.view.geometry.Rectangle;
-        var HtmlLayout = graphite.view.layout.HtmlLayout;
         var StackLayout = graphite.view.layout.StackLayout;
         var XYLayout = graphite.view.layout.XYLayout;
         var Div = graphite.view.widget.html.Div;
@@ -14,6 +13,61 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         var Svg = graphite.view.widget.svg.Svg;
 
         var shell = new GraphiteShell('container');
+
+        var div = new Div();
+        shell.setContents(div);
+
+        /********************/
+
+        var div1 = new Div();
+        div1.setStyle({
+            float: 'left',
+            padding: '10px',
+            border: '10px solid lightyellow'
+        });
+        div1.size(100, 100).bgColor('salmon');
+        div.append(div1);
+
+        var div3 = new Div();
+        div3.setStyle({
+            margin: '10px'
+        });
+        div3.bounds(10, 10, 20, 20).bgColor('moccasin');
+        div1.append(div3);
+
+        /********************/
+
+        var div2 = new Div();
+        div2.setStyle({
+            float: 'left',
+            position: 'relative',
+            padding: '10px'
+        });
+        div2.size(100, 100).bgColor('salmon');
+        div.append(div2);
+
+        var div4 = new Div();
+        div4.setStyle({
+            position: 'absolute'
+        });
+        div4.bounds(10, 10, 20, 20).bgColor('moccasin');
+        div2.append(div4);
+
+        /********************/
+
+        var svg = new Svg();
+        svg.setStyle({
+            margin: '10px',
+            padding: '10px'
+        });
+        svg.setLayout(new XYLayout());
+        div.append(svg);
+
+        var r1 = new Rect();
+        r1.bgColor('burlywood').border(10, 'bisque');
+        svg.append(r1, 0, 0, 100, 100);
+
+        return;
 
         var svg = new Svg();
         shell.setContents(svg);
@@ -36,28 +90,6 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         setTimeout(function () {
             console.log('r1.bounds()', r1.bounds());
         }, 2000);
-
-        return;
-
-        var root = new Div();
-        root.setLayout(new HtmlLayout());
-        shell.setContents(root);
-
-        var div1 = new Div();
-        div1.bgColor('orange');
-        div1.size(50, 50);
-        root.append(div1);
-
-        var svg = new Svg();
-        svg.size(300, 300);
-        svg.setLayout(new XYLayout());
-        root.append(svg);
-
-        var r1 = new Rect();
-        r1.bgColor('salmon').border(10, 'purple');
-        svg.append(r1, 0, 0, 100, 100);
-
-
 
         return;
 
