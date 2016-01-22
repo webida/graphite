@@ -301,6 +301,15 @@ define([
         },
 
         /**
+         * Returns true if the w or h property
+         * is less than or equal to 0.
+         * @return {boolean}
+         */
+        isEmpty : function() {
+            return this.w <= 0 || this.h <= 0;
+        },
+
+        /**
          * For convenience, this tells position for
          * x,y,w,h of this Rectangle.
          * @return {string}
