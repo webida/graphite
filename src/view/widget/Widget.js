@@ -43,6 +43,7 @@ define([
     var FLAG_VALID = 1;
     var FLAG_VISIBLE = 1 << 2;
     var FLAG_ENABLED = 1 << 4;
+    var FLAG_FILL_PARENT = 1 << 8;
 
     /**
      * An abstract class for all Graphite Widgets.
@@ -796,6 +797,26 @@ define([
                 }
             }
             return false;
+        },
+
+        /**
+         * Sets whether this Widget's bounds expands
+         * to parent's client area.
+         * @param {boolean} isFill
+         * @return {Widget}
+         *//**
+         * Returns whether this Widget's bounds should
+         * be expanded to parent's client area.
+         * @return {boolean}
+         */
+        fillParent: function () {
+            this.desc('fillParent', arguments);
+            if (arguments.length) {
+                this.setFlag(FLAG_FILL_PARENT, !!arguments[0]);
+                return this;
+            } else {
+                return this.getFlag(FLAG_FILL_PARENT);
+            }
         }
     });
 
@@ -803,7 +824,7 @@ define([
 
     /** @constant {number} */
     Widget.FLAG_REALIZED = 1 << 31;
-    Widget.FLAG_MAX = FLAG_ENABLED;
+    Widget.FLAG_MAX = FLAG_FILL_PARENT;
 
     return Widget;
 });
