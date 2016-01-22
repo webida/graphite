@@ -143,7 +143,7 @@ define([
             var w = this;
             while (w !== null) {
                 if (w === child) {
-                    throw new Error('Added child makes cycle');
+                    throw new Error('Child makes cycle on appending');
                 }
                 w = w.getParent();
             }
