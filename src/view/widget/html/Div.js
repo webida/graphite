@@ -54,22 +54,6 @@ define([
         },
 
         /**
-         * @see Widget#_drawWidget
-         * @param {GraphicContext} context
-         */
-        _drawWidget: function (context) {
-            this.desc('_drawWidget', context, undefined, 'green');
-            var bounds = this.bounds();
-            var div = this.getElement();
-            dom.setStyles(div, {
-                'left': bounds.x + 'px',
-                'top': bounds.y + 'px',
-                'width': bounds.w + 'px',
-                'height': bounds.h + 'px'
-            });
-        },
-
-        /**
          * Sets this Widget's parent.
          * @param {Widget} parent
          * @override 

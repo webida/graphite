@@ -56,6 +56,31 @@ define([
         },
 
         /**
+         * @see Widget#_drawWidget
+         * @param {GraphicContext} context
+         * @override
+         */
+        _drawWidget: function (context) {
+            this.desc('_drawWidget', context, undefined, 'green');
+            this._locateElement(context);
+        },
+
+        /**
+         * Locates HTMLElement with this Widget's bounds.
+         * @param {GraphicContext} context
+         */
+        _locateElement: function (context) {
+            this.desc('_locateElement', context);
+            var bounds = this.bounds();
+            dom.setStyles(this.getElement(), {
+                'left': bounds.x + 'px',
+                'top': bounds.y + 'px',
+                'width': bounds.w + 'px',
+                'height': bounds.h + 'px'
+            });
+        },
+
+        /**
          * Sets position CSS property for this Widget's element.
          * @param {string} property - static, relative, absolute, fixed
          */
