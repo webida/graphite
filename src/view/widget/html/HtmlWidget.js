@@ -42,6 +42,8 @@ define([
     function HtmlWidget() {
         DomWidget.apply(this, arguments);
         this._padding = new Spaces(0, 0, 0, 0);
+        //TODO support for originally hidden case
+        this.setStyle({'visibility': 'hidden'});
     }
 
     genetic.inherits(HtmlWidget, DomWidget, {
@@ -63,6 +65,7 @@ define([
         _drawWidget: function (context) {
             this.desc('_drawWidget', context, undefined, 'green');
             this._locateElement(context);
+            this.setStyle({'visibility': 'visible'});
         },
 
         /**
