@@ -23,12 +23,14 @@
 define([
     'external/dom/dom',
     'external/genetic/genetic',
+    'graphite/view/geometry/BoxModel',
     'graphite/view/geometry/Spaces',
     'graphite/view/layout/XYLayout',
     'graphite/view/widget/dom/DomWidget'
 ], function (
     dom,
     genetic,
+    BoxModel,
     Spaces,
     XYLayout,
     DomWidget
@@ -41,6 +43,7 @@ define([
      */
     function HtmlWidget() {
         DomWidget.apply(this, arguments);
+        this._boxModel = new BoxModel();
         this._padding = new Spaces(0, 0, 0, 0);
         //TODO support for originally hidden case
         this.setStyle({'visibility': 'hidden'});
