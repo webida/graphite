@@ -65,7 +65,7 @@ define([
             var ry = r.h / 2;
             var cx = r.x + rx;
             var cy = r.y + ry;
-            dom.setAttributes(this.getElement(), {
+            dom.setAttributes(this.element(), {
                 'cx': cx,
                 'cy': cy,
                 'rx': rx,

@@ -75,7 +75,7 @@ define([
             this.desc('setParent', parent);
             SvgWidget.prototype.setParent.call(this, parent);
             if (parent instanceof Structural || parent instanceof Container) {
-                parent.getElement().appendChild(this.getElement());
+                parent.element().appendChild(this.element());
                 if (this.bounds().isEmpty()) {
                     this.fillParent(true);
                 }
@@ -83,7 +83,7 @@ define([
                 var upman = this.getUpdateManager();
                 var context = upman.getGraphicContext();
                 var root = context.getSVG();;
-                root.appendChild(this.getElement());
+                root.appendChild(this.element());
             }
         },
 
@@ -114,7 +114,7 @@ define([
             this.desc('_drawWidget', context, undefined, 'green');
             if (this.getFlag(FLAG_BOUNDS_SET)) {
                 var bounds = this.bounds();
-                dom.setAttributes(this.getElement(), {
+                dom.setAttributes(this.element(), {
                     'x': bounds.x,
                     'y': bounds.y,
                     'width': bounds.w,

@@ -66,7 +66,7 @@ define([
             this.desc('setParent', parent);
             SvgWidget.prototype.setParent.call(this, parent);
             if (parent instanceof Structural) {
-                parent.getElement().appendChild(this.getElement());
+                parent.element().appendChild(this.element());
             } else {
                 throw new Error('Only Structural can be a parent for Shape');
             }
@@ -135,7 +135,7 @@ define([
         bgColor: function () {
             if (arguments.length) {
                 SvgWidget.prototype.bgColor.apply(this, arguments);
-                dom.setAttributes(this.getElement(), {
+                dom.setAttributes(this.element(), {
                     'fill': this.bgColor()
                 });
                 return this;
@@ -174,7 +174,7 @@ define([
         borderColor: function () {
             if (arguments.length) {
                 Widget.prototype.borderColor.apply(this, arguments);
-                dom.setAttributes(this.getElement(), {
+                dom.setAttributes(this.element(), {
                     'stroke': this.borderColor()
                 });
                 return this;
@@ -202,7 +202,7 @@ define([
                 if (typeof width === 'number') {
                     this.borderWidth().uniSize(width);
                 }
-                dom.setAttributes(this.getElement(), {
+                dom.setAttributes(this.element(), {
                     'stroke-width': this.borderWidth().uniSize()
                 });
                 return this;

@@ -79,7 +79,7 @@ define([
         _locateElement: function (context) {
             this.desc('_locateElement', context);
             var bounds = this.bounds();
-            dom.setStyles(this.getElement(), {
+            dom.setStyles(this.element(), {
                 'left': bounds.x + 'px',
                 'top': bounds.y + 'px',
                 'width': bounds.w + 'px',
@@ -92,7 +92,7 @@ define([
          * @param {string} property - static, relative, absolute, fixed
          */
         setPosition: function (property) {
-            dom.setStyles(this.getElement(), {
+            dom.setStyles(this.element(), {
                 'position': property
             });
         },
@@ -145,7 +145,7 @@ define([
         bgColor: function () {
             if (arguments.length) {
                 DomWidget.prototype.bgColor.apply(this, arguments);
-                dom.setStyles(this.getElement(), {
+                dom.setStyles(this.element(), {
                     'background-color': this.bgColor()
                 });
                 return this;

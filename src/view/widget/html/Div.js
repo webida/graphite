@@ -71,7 +71,7 @@ define([
                         var upman = this.getUpdateManager();
                         var context = upman.getGraphicContext();
                         var document = context.getDocument();;
-                        document.body.appendChild(this.getElement());
+                        document.body.appendChild(this.element());
                     }
                 } else {
                     throw e;

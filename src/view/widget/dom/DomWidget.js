@@ -37,7 +37,7 @@ define([
      */
     function DomWidget() {
         Widget.apply(this, arguments);
-        this.setElement(this._createElement());
+        this.element(this._createElement());
     }
 
     genetic.inherits(DomWidget, Widget, {
@@ -66,17 +66,17 @@ define([
         /**
          * Sets html element for this HtmlWidget.
          * @param {HTMLElement} element
-         */
-        setElement: function (element) {
-            this._element = element;
-        },
-
-        /**
+         *//**
          * Returns html element for this HtmlWidget.
          * @return {HTMLElement}
          */
-        getElement: function () {
-            return this._element;
+        element: function () {
+            if (arguments.length) {
+                this._element = arguments[0];
+                return this;
+            } else {
+                return this._element;
+            }
         },
 
         /**
@@ -84,7 +84,7 @@ define([
          * @param {Object} propSet - pairs of key and value 
          */
         setProperty: function (propSet) {
-            var element = this.getElement();
+            var element = this.element();
             if (element) {
                 dom.setAttributes(element, propSet);
             }
@@ -95,7 +95,7 @@ define([
          * @param {Object} propSet - pairs of key and value 
          */
         setStyle: function (propSet) {
-            var element = this.getElement();
+            var element = this.element();
             if (element) {
                 dom.setStyles(element, propSet);
             }
