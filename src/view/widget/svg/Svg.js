@@ -62,7 +62,7 @@ define([
          * Returns tagName for this Widget's element.
          * @return {string}
          */
-        getTagName: function () {
+        nodeName: function () {
             return 'svg';
         },
 

@@ -57,7 +57,7 @@ define([
          * @return {HTMLElement}
          */
         _createElement: function () {
-            return dom.makeElement(this.getTagName());
+            return dom.makeElement(this.nodeName());
         },
 
         /**

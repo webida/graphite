@@ -47,7 +47,7 @@ define([
          * @return {SVGElement}
          */
         _createElement: function () {
-            return dom.makeSvgElement(this.getTagName());
+            return dom.makeSvgElement(this.nodeName());
         },
     });
 

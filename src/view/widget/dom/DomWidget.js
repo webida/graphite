@@ -43,12 +43,12 @@ define([
     genetic.inherits(DomWidget, Widget, {
 
         /**
-         * Returns tagName for this Widget's element.
+         * Returns nodeName for this Widget's element.
          * @return {string}
          * @abstract
          */
-        getTagName: function () {
-            throw new Error('getTagName() should be '
+        nodeName: function () {
+            throw new Error('nodeName() should be '
                     + 'implemented by ' + this.constructor.name);
         },
 

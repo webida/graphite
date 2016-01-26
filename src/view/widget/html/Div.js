@@ -49,7 +49,7 @@ define([
          * Returns tagName for this Widget.
          * @return {string}
          */
-        getTagName: function () {
+        nodeName: function () {
             return 'div';
         },
 
