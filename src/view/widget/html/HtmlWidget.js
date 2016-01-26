@@ -88,16 +88,6 @@ define([
         },
 
         /**
-         * Sets position CSS property for this Widget's element.
-         * @param {string} property - static, relative, absolute, fixed
-         */
-        setPosition: function (property) {
-            dom.setStyles(this.element(), {
-                'position': property
-            });
-        },
-
-        /**
          * Returns true if this Widget uses local coordinates.
          * This means its children are placed relative to
          * this Widget's top-left corner.
@@ -116,7 +106,7 @@ define([
             this.desc('setLayout', arguments);
             DomWidget.prototype.setLayout.call(this, layout);
             if (layout instanceof XYLayout) {
-                this.setPosition('absolute');
+                this.css({'position': 'absolute'});
             }
         },
 

@@ -52,7 +52,7 @@ define([
             if (parent instanceof Container) {
                 parent.element().appendChild(this.element());
                 if (parent.getLayout() instanceof XYLayout) {
-                    this.setPosition('absolute');
+                    this.css({'position': 'absolute'});
                 }
             } else {
                 var err = new Error('Only Container can be a parent for Container');
