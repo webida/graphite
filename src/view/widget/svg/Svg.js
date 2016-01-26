@@ -76,6 +76,9 @@ define([
             SvgWidget.prototype.setParent.call(this, parent);
             if (parent instanceof Structural || parent instanceof Container) {
                 parent.getElement().appendChild(this.getElement());
+                if (this.bounds().isEmpty()) {
+                    this.fillParent(true);
+                }
             } else if (parent instanceof GraphiteShell.RootWidget) {
                 var upman = this.getUpdateManager();
                 var context = upman.getGraphicContext();
