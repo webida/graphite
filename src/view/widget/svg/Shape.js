@@ -75,23 +75,14 @@ define([
         /**
          * @see Widget#_drawWidget
          * @param {GraphicContext} context
+         * @override
          */
         _drawWidget: function (context) {
             this.desc('_drawWidget', context, undefined, 'green');
             if (!this.isEnabled()) {
                 //TODO
             }
-            this._drawShape(context);
-        },
-
-        /**
-         * Draws the shape with it's bounds.
-         * @param {GraphicContext} context
-         * @abstract
-         * @protected
-         */
-        _drawShape: function (context) {
-            this.isInterface('_drawShape', context);
+            SvgWidget.prototype._drawWidget.call(this, context);
         },
 
         /**

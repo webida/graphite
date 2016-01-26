@@ -53,12 +53,13 @@ define([
         },
 
         /**
-         * Draws the svg circle with it's bounds.
+         * Locates the svg circle with it's bounds.
          * @param {GraphicContext} context
+         * @see DomWidget#_locateElement
          * @protected
          */
-        _drawShape: function (context) {
-            this.desc('_drawShape', context);
+        _locateElement: function (context) {
+            this.desc('_locateElement', context);
             var r = this._getRevisedBounds();
             var radius = Math.min(r.w, r.h) / 2.0;
             var cx = r.x + radius;

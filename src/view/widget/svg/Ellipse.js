@@ -53,12 +53,13 @@ define([
         },
 
         /**
-         * Draws the svg ellipse with it's bounds.
+         * Locates the svg ellipse with it's bounds.
          * @param {GraphicContext} context
+         * @see DomWidget#_locateElement
          * @protected
          */
-        _drawShape: function (context) {
-            this.desc('_drawShape', context);
+        _locateElement: function (context) {
+            this.desc('_locateElement', context);
             var r = this._getRevisedBounds();
             var rx = r.w / 2;
             var ry = r.h / 2;

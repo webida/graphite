@@ -99,7 +99,27 @@ define([
             if (element) {
                 dom.setStyles(element, propSet);
             }
-        }
+        },
+
+        /**
+         * @see Widget#_drawWidget
+         * @param {GraphicContext} context
+         * @override
+         */
+        _drawWidget: function (context) {
+            this.desc('_drawWidget', context, undefined, 'green');
+            this._locateElement(context);
+        },
+
+        /**
+         * Locates DOMElement with the Widget's bounds.
+         * @param {GraphicContext} context
+         * @abstract
+         * @protected
+         */
+        _locateElement: function (context) {
+            this.isInterface('_locateElement', context);
+        },
     });
 
     return DomWidget;

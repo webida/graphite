@@ -66,14 +66,15 @@ define([
          * @override
          */
         _drawWidget: function (context) {
-            this.desc('_drawWidget', context, undefined, 'green');
-            this._locateElement(context);
+            DomWidget.prototype._drawWidget.call(this, context);
             this.setStyle({'visibility': 'visible'});
         },
 
         /**
          * Locates HTMLElement with this Widget's bounds.
          * @param {GraphicContext} context
+         * @see DomWidget#_locateElement
+         * @protected
          */
         _locateElement: function (context) {
             this.desc('_locateElement', context);
