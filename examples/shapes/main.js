@@ -20,25 +20,23 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         /********************/
 
         var div1 = new Div();
-        div1.setStyle({
+        div1.css({
             float: 'left',
             padding: '10px',
             border: '10px solid lightyellow'
-        });
-        div1.size(100, 100).bgColor('salmon');
+        }).size(100, 100).bgColor('salmon');
         div.append(div1);
 
         var div3 = new Div();
-        div3.setStyle({
+        div3.css({
             margin: '10px'
-        });
-        div3.bounds(10, 10, 20, 20).bgColor('moccasin');
+        }).bounds(10, 10, 20, 20).bgColor('moccasin');
         div1.append(div3);
 
         /********************/
 
         var div2 = new Div();
-        div2.setStyle({
+        div2.css({
             float: 'left',
             position: 'relative',
             padding: '10px'
@@ -47,7 +45,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         div.append(div2);
 
         var div4 = new Div();
-        div4.setStyle({
+        div4.css({
             position: 'absolute'
         });
         div4.bounds(10, 10, 20, 20).bgColor('moccasin');
@@ -56,7 +54,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         /********************/
 
         var svg = new Svg();
-        svg.setStyle({
+        svg.css({
             margin: '10px',
             padding: '10px'
         });
@@ -146,12 +144,12 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         var div1 = new Div();
         div1.bgColor('orange');
         div1.size(50, 50);
-        div1.setStyle({'float': 'left'});
+        div1.css({'float': 'left'});
         root.append(div1);
 
         var div2 = new Div();
         div2.bgColor('yellow');
-        div2.setStyle({
+        div2.css({
             'position': 'relative',
             'float': 'left',
             'margin': '10px'

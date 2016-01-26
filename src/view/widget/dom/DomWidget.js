@@ -80,24 +80,59 @@ define([
         },
 
         /**
-         * Sets property for this HtmlWidget's element.
-         * @param {Object} propSet - pairs of key and value 
+         * Sets attributes for this HtmlWidget's element.
+         * @param {Object} propSet - pairs of key and value
+         * @return {DomWidget}
+         *//**
+         * Returns attribute of this HtmlWidget's element
+         * for the given property name.
+         * @param {string} property - property name
+         * @return {*}
          */
-        setProperty: function (propSet) {
+        attr: function () {
+            var args = arguments;
             var element = this.element();
             if (element) {
-                dom.setAttributes(element, propSet);
+                if (typeof args[0] === 'object') {
+                    dom.setAttributes(element, args[0]);
+                } else if (typeof args[0] === 'string') {
+                    return element.getAttribute(args[0]);
+                }
             }
+            return this;
         },
 
         /**
          * Sets property for this HtmlWidget's element.
-         * @param {Object} propSet - pairs of key and value 
+         * @param {Object} propSet - pairs of key and value
+         * @return {DomWidget}
+         *//**
+         * Returns css property of this HtmlWidget's element
+         * for the given css property.
+         * @param {string} property - css property name
+         * @return {Object}
+         *//**
+         * Returns css property set for this HtmlWidget's element.
+         * @return {Object}
          */
-        setStyle: function (propSet) {
+        css: function (propSet) {
+            var args = arguments;
             var element = this.element();
-            if (element) {
-                dom.setStyles(element, propSet);
+            if (args.length) {
+                if (element) {
+                    if (typeof args[0] === 'string') {
+                        return dom.getStyle(element, args[0]);
+                    } else if (typeof args[0] === 'object') {
+                        dom.setStyles(element, propSet);
+                    }
+                }
+                return this;
+            } else {
+                if (element) {
+                    return dom.computedCss(element);
+                } else {
+                    return {};
+                } 
             }
         },
 

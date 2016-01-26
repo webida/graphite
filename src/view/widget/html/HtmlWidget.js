@@ -46,7 +46,7 @@ define([
         this._boxModel = new BoxModel();
         this._padding = new Spaces(0, 0, 0, 0);
         //TODO support for originally hidden case
-        this.setStyle({'visibility': 'hidden'});
+        this.css({'visibility': 'hidden'});
     }
 
     genetic.inherits(HtmlWidget, DomWidget, {
@@ -67,7 +67,7 @@ define([
          */
         _drawWidget: function (context) {
             DomWidget.prototype._drawWidget.call(this, context);
-            this.setStyle({'visibility': 'visible'});
+            this.css({'visibility': 'visible'});
         },
 
         /**

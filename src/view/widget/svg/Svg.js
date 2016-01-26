@@ -50,7 +50,7 @@ define([
      */
     function Svg() {
         Structural.apply(this, arguments);
-        this.setProperty({
+        this.attr({
             'shape-rendering': 'crispEdges'
         });
         this.setFlag(FLAG_BOUNDS_SET, false);

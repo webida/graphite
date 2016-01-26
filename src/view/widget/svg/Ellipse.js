@@ -37,7 +37,7 @@ define([
      */
     function Ellipse() {
         Shape.apply(this, arguments);
-        this.setProperty({
+        this.attr({
             'shape-rendering': 'auto'
         });
     }
