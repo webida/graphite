@@ -24,14 +24,12 @@ define([
     'external/dom/dom',
     'external/genetic/genetic',
     'graphite/view/geometry/BoxModel',
-    'graphite/view/geometry/Spaces',
     'graphite/view/layout/XYLayout',
     'graphite/view/widget/dom/DomWidget'
 ], function (
     dom,
     genetic,
     BoxModel,
-    Spaces,
     XYLayout,
     DomWidget
 ) {
@@ -44,7 +42,6 @@ define([
     function HtmlWidget() {
         DomWidget.apply(this, arguments);
         this.boxModel = new BoxModel();
-        this._padding = new Spaces(0, 0, 0, 0);
         //TODO support for originally hidden case
         this.css({'visibility': 'hidden'});
     }
@@ -152,30 +149,6 @@ define([
                 return this;
             } else {
                 return this._bgColor;
-            }
-        },
-
-        /**
-         * Sets this widget's padding value.
-         * @param {number} top
-         * @param {number} right
-         * @param {number} bottom
-         * @param {number} left
-         *//**
-         * @param {Spaces} spaces
-         *//**
-         * @param {number} number - If same values for each sides
-         *//**
-         * Returns this widget's padding value.
-         * @return {Spaces}
-         */
-        padding: function () {
-            this.desc('padding', arguments);
-            if (arguments.length) {
-                this._padding = genetic.getInstanceOf(Spaces, arguments);
-                return this;
-            } else {
-                return this._padding;
             }
         }
     });
