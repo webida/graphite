@@ -24,7 +24,6 @@ define([
     'external/dom/dom',
     'external/genetic/genetic',
     'graphite/view/geometry/BoxModel',
-    'graphite/view/geometry/Rectangle',
     'graphite/view/geometry/Spaces',
     'graphite/view/layout/XYLayout',
     'graphite/view/widget/dom/DomWidget'
@@ -32,7 +31,6 @@ define([
     dom,
     genetic,
     BoxModel,
-    Rectangle,
     Spaces,
     XYLayout,
     DomWidget
@@ -179,29 +177,7 @@ define([
             } else {
                 return this._padding;
             }
-        },
-
-        /**
-         * Returns compensated bounds for border.
-         * @return {Rectangle}
-         * @protected
-         */
-        _getRevisedBounds: function () {
-            var border = this.borderWidth();
-            var r = new Rectangle(this.bounds());
-            var hTop, hRight, hBottom, hLeft;
-            if (!border.isEmpty()) {
-                hTop = border.top/2,
-                hRight = border.right/2;
-                hBottom = border.bottom/2;
-                hLeft = border.left/2;
-                r.x += hLeft;
-                r.y += hTop;
-                r.w -= hLeft + hRight;
-                r.h -= hTop + hBottom;
-            }
-            return r;
-        },
+        }
     });
 
     return HtmlWidget;
