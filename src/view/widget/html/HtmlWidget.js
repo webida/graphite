@@ -24,6 +24,7 @@ define([
     'external/dom/dom',
     'external/genetic/genetic',
     'graphite/view/geometry/BoxModel',
+    'graphite/view/geometry/Rectangle',
     'graphite/view/geometry/Spaces',
     'graphite/view/layout/XYLayout',
     'graphite/view/widget/dom/DomWidget'
@@ -31,6 +32,7 @@ define([
     dom,
     genetic,
     BoxModel,
+    Rectangle,
     Spaces,
     XYLayout,
     DomWidget
@@ -43,7 +45,7 @@ define([
      */
     function HtmlWidget() {
         DomWidget.apply(this, arguments);
-        this._boxModel = new BoxModel();
+        this.boxModel = new BoxModel();
         this._padding = new Spaces(0, 0, 0, 0);
         //TODO support for originally hidden case
         this.css({'visibility': 'hidden'});
@@ -78,13 +80,24 @@ define([
          */
         _locateElement: function (context) {
             this.desc('_locateElement', context);
-            var bounds = this.bounds();
+            var box = this.boxModel;
             dom.setStyles(this.element(), {
-                'left': bounds.x + 'px',
-                'top': bounds.y + 'px',
-                'width': bounds.w + 'px',
-                'height': bounds.h + 'px'
+                'left': box.left + 'px',
+                'top': box.top + 'px',
+                'width': box.width + 'px',
+                'height': box.height + 'px'
             });
+        },
+
+        /**
+         * Lays out this Widget using its Layout.
+         * Additionally, HtmlWidget calculates box model properties
+         * such as, left, top, width, height with given bounds.
+         * @override
+         */
+        layout: function () {
+            this.boxModel.inBounds(this.element(), this.bounds());
+            DomWidget.prototype.layout.apply(this, arguments);
         },
 
         /**
