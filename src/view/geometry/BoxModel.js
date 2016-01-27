@@ -21,9 +21,11 @@
  */
 
 define([
+    'external/dom/dom',
     'external/genetic/genetic',
     'graphite/base/Base'
 ], function (
+    dom,
     genetic,
     Base
 ) {
@@ -43,6 +45,27 @@ define([
         top: 0,
         width: 0,
         height: 0,
+
+        /**
+         * Returns position and occupation for this BoxModel.
+         * @param {HTMLElement} elem
+         * @param {Rectangle|object} bounds
+         */
+        inBounds: function (elem, bounds) {
+            //TODO calculates for % and auto
+            var s = dom.computedCss(elem);
+            var positioned = function (dir) {
+                return parseInt(s['margin-' + dir]);
+            }
+            var occupied = function (dir) {
+                return parseInt(s['border-' + dir + '-width'])
+                        + parseInt(s['padding-' + dir]);
+            }
+            this.left = bounds.x - positioned('left');
+            this.top = bounds.y - positioned('top');
+            this.width = bounds.w - (occupied('left') + occupied('right'));
+            this.height = bounds.h - (occupied('top') + occupied('bottom'));
+        },
 
         /**
          * Returns position and occupation for this BoxModel.
