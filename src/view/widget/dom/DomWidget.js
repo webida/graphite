@@ -37,18 +37,18 @@ define([
      */
     function DomWidget() {
         Widget.apply(this, arguments);
-        this.setElement(this._createElement());
+        this.element(this._createElement());
     }
 
     genetic.inherits(DomWidget, Widget, {
 
         /**
-         * Returns tagName for this Widget's element.
+         * Returns nodeName for this Widget's element.
          * @return {string}
          * @abstract
          */
-        getTagName: function () {
-            throw new Error('getTagName() should be '
+        nodeName: function () {
+            throw new Error('nodeName() should be '
                     + 'implemented by ' + this.constructor.name);
         },
 
@@ -66,40 +66,95 @@ define([
         /**
          * Sets html element for this HtmlWidget.
          * @param {HTMLElement} element
-         */
-        setElement: function (element) {
-            this._element = element;
-        },
-
-        /**
+         *//**
          * Returns html element for this HtmlWidget.
          * @return {HTMLElement}
          */
-        getElement: function () {
-            return this._element;
-        },
-
-        /**
-         * Sets property for this HtmlWidget's element.
-         * @param {Object} propSet - pairs of key and value 
-         */
-        setProperty: function (propSet) {
-            var element = this.getElement();
-            if (element) {
-                dom.setAttributes(element, propSet);
+        element: function () {
+            if (arguments.length) {
+                this._element = arguments[0];
+                return this;
+            } else {
+                return this._element;
             }
         },
 
         /**
-         * Sets property for this HtmlWidget's element.
-         * @param {Object} propSet - pairs of key and value 
+         * Sets attributes for this HtmlWidget's element.
+         * @param {Object} propSet - pairs of key and value
+         * @return {DomWidget}
+         *//**
+         * Returns attribute of this HtmlWidget's element
+         * for the given property name.
+         * @param {string} property - property name
+         * @return {*}
          */
-        setStyle: function (propSet) {
-            var element = this.getElement();
+        attr: function () {
+            var args = arguments;
+            var element = this.element();
             if (element) {
-                dom.setStyles(element, propSet);
+                if (typeof args[0] === 'object') {
+                    dom.setAttributes(element, args[0]);
+                } else if (typeof args[0] === 'string') {
+                    return element.getAttribute(args[0]);
+                }
             }
-        }
+            return this;
+        },
+
+        /**
+         * Sets property for this HtmlWidget's element.
+         * @param {Object} propSet - pairs of key and value
+         * @return {DomWidget}
+         *//**
+         * Returns css property of this HtmlWidget's element
+         * for the given css property.
+         * @param {string} property - css property name
+         * @return {Object}
+         *//**
+         * Returns css property set for this HtmlWidget's element.
+         * @return {Object}
+         */
+        css: function (propSet) {
+            var args = arguments;
+            var element = this.element();
+            if (args.length) {
+                if (element) {
+                    if (typeof args[0] === 'string') {
+                        return dom.getStyle(element, args[0]);
+                    } else if (typeof args[0] === 'object') {
+                        dom.setStyles(element, propSet);
+                    }
+                }
+                return this;
+            } else {
+                if (element) {
+                    return dom.computedCss(element);
+                } else {
+                    return {};
+                } 
+            }
+        },
+
+        /**
+         * @see Widget#_drawWidget
+         * @param {GraphicContext} context
+         * @override
+         */
+        _drawWidget: function (context) {
+            this.desc('_drawWidget', context, undefined, 'green');
+            this._locateElement(context);
+        },
+
+        /**
+         * Locates DOMElement with the Widget's bounds.
+         * @param {GraphicContext} context
+         * @abstract
+         * @protected
+         */
+        _locateElement: function (context) {
+            this.isInterface('_locateElement', context);
+        },
     });
 
     return DomWidget;

@@ -50,9 +50,9 @@ define([
             this.desc('setParent', parent);
             HtmlWidget.prototype.setParent.call(this, parent);
             if (parent instanceof Container) {
-                parent.getElement().appendChild(this.getElement());
+                parent.element().appendChild(this.element());
                 if (parent.getLayout() instanceof XYLayout) {
-                    this.setPosition('absolute');
+                    this.css({'position': 'absolute'});
                 }
             } else {
                 var err = new Error('Only Container can be a parent for Container');

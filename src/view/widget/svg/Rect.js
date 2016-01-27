@@ -45,19 +45,20 @@ define([
          * Returns tagName for this Widget's element.
          * @return {string}
          */
-        getTagName: function () {
+        nodeName: function () {
             return 'rect';
         },
 
         /**
-         * Draws the svg rect with it's bounds.
+         * Locates the svg rect with it's bounds.
          * @param {GraphicContext} context
+         * @see DomWidget#_locateElement
          * @protected
          */
-        _drawShape: function (context) {
-            this.desc('_drawShape', context);
+        _locateElement: function (context) {
+            this.desc('_locateElement', context);
             var r = this._getRevisedBounds();
-            dom.setAttributes(this.getElement(), {
+            dom.setAttributes(this.element(), {
                 'x': r.x,
                 'y': r.y,
                 'width': r.w,

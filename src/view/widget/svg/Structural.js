@@ -51,7 +51,7 @@ define([
             this.desc('setParent', parent);
             SvgWidget.prototype.setParent.call(this, parent);
             if (parent instanceof Structural) {
-                parent.getElement().appendChild(this.getElement());
+                parent.element().appendChild(this.element());
             } else {
                 throw new Error('Only Structural can be a parent for Structural');
             }

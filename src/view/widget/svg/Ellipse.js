@@ -37,7 +37,7 @@ define([
      */
     function Ellipse() {
         Shape.apply(this, arguments);
-        this.setProperty({
+        this.attr({
             'shape-rendering': 'auto'
         });
     }
@@ -48,23 +48,24 @@ define([
          * Returns tagName for this Widget's element.
          * @return {string}
          */
-        getTagName: function () {
+        nodeName: function () {
             return 'ellipse';
         },
 
         /**
-         * Draws the svg ellipse with it's bounds.
+         * Locates the svg ellipse with it's bounds.
          * @param {GraphicContext} context
+         * @see DomWidget#_locateElement
          * @protected
          */
-        _drawShape: function (context) {
-            this.desc('_drawShape', context);
+        _locateElement: function (context) {
+            this.desc('_locateElement', context);
             var r = this._getRevisedBounds();
             var rx = r.w / 2;
             var ry = r.h / 2;
             var cx = r.x + rx;
             var cy = r.y + ry;
-            dom.setAttributes(this.getElement(), {
+            dom.setAttributes(this.element(), {
                 'cx': cx,
                 'cy': cy,
                 'rx': rx,

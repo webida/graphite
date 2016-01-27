@@ -211,29 +211,6 @@ define(function () {
                 'top': offset.top - parentOffset.top,
                 'left': offset.left - parentOffset.left
             };
-        },
-
-        getBoxModel: function (elem, bounds) {
-            //TODO calculates for % and auto
-            var s = this.computedCss(elem);
-            var positioned = function (dir) {
-                return int(s['margin-' + dir]);
-            }
-            var occupied = function (dir) {
-                return int(s['border-' + dir + '-width'])
-                        + int(s['padding-' + dir]);
-            }
-            var left = bounds.x - positioned('left');
-            var top = bounds.y - positioned('top');
-            var width = bounds.w - (occupied('left') + occupied('right'));
-            console.log('width ===> ', width);
-            var height = bounds.h - (occupied('top') + occupied('bottom'));
-            return {
-                'left': left,
-                'top': top,
-                'width': width,
-                'height': height
-            }
         }
     };
 });

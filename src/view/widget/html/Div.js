@@ -49,24 +49,8 @@ define([
          * Returns tagName for this Widget.
          * @return {string}
          */
-        getTagName: function () {
+        nodeName: function () {
             return 'div';
-        },
-
-        /**
-         * @see Widget#_drawWidget
-         * @param {GraphicContext} context
-         */
-        _drawWidget: function (context) {
-            this.desc('_drawWidget', context, undefined, 'green');
-            var bounds = this.bounds();
-            var div = this.getElement();
-            dom.setStyles(div, {
-                'left': bounds.x + 'px',
-                'top': bounds.y + 'px',
-                'width': bounds.w + 'px',
-                'height': bounds.h + 'px'
-            });
         },
 
         /**
@@ -84,7 +68,7 @@ define([
                         var upman = this.getUpdateManager();
                         var context = upman.getGraphicContext();
                         var document = context.getDocument();;
-                        document.body.appendChild(this.getElement());
+                        document.body.appendChild(this.element());
                     }
                 } else {
                     throw e;

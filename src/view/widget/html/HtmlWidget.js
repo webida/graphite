@@ -23,13 +23,13 @@
 define([
     'external/dom/dom',
     'external/genetic/genetic',
-    'graphite/view/geometry/Spaces',
+    'graphite/view/geometry/BoxModel',
     'graphite/view/layout/XYLayout',
     'graphite/view/widget/dom/DomWidget'
 ], function (
     dom,
     genetic,
-    Spaces,
+    BoxModel,
     XYLayout,
     DomWidget
 ) {
@@ -41,7 +41,9 @@ define([
      */
     function HtmlWidget() {
         DomWidget.apply(this, arguments);
-        this._padding = new Spaces(0, 0, 0, 0);
+        this.boxModel = new BoxModel();
+        //TODO support for originally hidden case
+        this.css({'visibility': 'hidden'});
     }
 
     genetic.inherits(HtmlWidget, DomWidget, {
@@ -52,17 +54,45 @@ define([
          * @return {HTMLElement}
          */
         _createElement: function () {
-            return dom.makeElement(this.getTagName());
+            return dom.makeElement(this.nodeName());
         },
 
         /**
-         * Sets position CSS property for this Widget's element.
-         * @param {string} property - static, relative, absolute, fixed
+         * @see Widget#_drawWidget
+         * @param {GraphicContext} context
+         * @override
          */
-        setPosition: function (property) {
-            dom.setStyles(this.getElement(), {
-                'position': property
+        _drawWidget: function (context) {
+            DomWidget.prototype._drawWidget.call(this, context);
+            this.css({'visibility': 'visible'});
+        },
+
+        /**
+         * Locates HTMLElement with this Widget's bounds.
+         * @param {GraphicContext} context
+         * @see DomWidget#_locateElement
+         * @protected
+         */
+        _locateElement: function (context) {
+            this.desc('_locateElement', context);
+            var box = this.boxModel;
+            dom.setStyles(this.element(), {
+                'left': box.left + 'px',
+                'top': box.top + 'px',
+                'width': box.width + 'px',
+                'height': box.height + 'px'
             });
+        },
+
+        /**
+         * Lays out this Widget using its Layout.
+         * Additionally, HtmlWidget calculates box model properties
+         * such as, left, top, width, height with given bounds.
+         * @override
+         */
+        layout: function () {
+            this.boxModel.inBounds(this.element(), this.bounds());
+            DomWidget.prototype.layout.apply(this, arguments);
         },
 
         /**
@@ -84,7 +114,7 @@ define([
             this.desc('setLayout', arguments);
             DomWidget.prototype.setLayout.call(this, layout);
             if (layout instanceof XYLayout) {
-                this.setPosition('absolute');
+                this.css({'position': 'absolute'});
             }
         },
 
@@ -113,60 +143,14 @@ define([
         bgColor: function () {
             if (arguments.length) {
                 DomWidget.prototype.bgColor.apply(this, arguments);
-                dom.setStyles(this.getElement(), {
+                dom.setStyles(this.element(), {
                     'background-color': this.bgColor()
                 });
                 return this;
             } else {
                 return this._bgColor;
             }
-        },
-
-        /**
-         * Sets this widget's padding value.
-         * @param {number} top
-         * @param {number} right
-         * @param {number} bottom
-         * @param {number} left
-         *//**
-         * @param {Spaces} spaces
-         *//**
-         * @param {number} number - If same values for each sides
-         *//**
-         * Returns this widget's padding value.
-         * @return {Spaces}
-         */
-        padding: function () {
-            this.desc('padding', arguments);
-            if (arguments.length) {
-                this._padding = genetic.getInstanceOf(Spaces, arguments);
-                return this;
-            } else {
-                return this._padding;
-            }
-        },
-
-        /**
-         * Returns compensated bounds for border.
-         * @return {Rectangle}
-         * @protected
-         */
-        _getRevisedBounds: function () {
-            var border = this.borderWidth();
-            var r = new Rectangle(this.bounds());
-            var hTop, hRight, hBottom, hLeft;
-            if (!border.isEmpty()) {
-                hTop = border.top/2,
-                hRight = border.right/2;
-                hBottom = border.bottom/2;
-                hLeft = border.left/2;
-                r.x += hLeft;
-                r.y += hTop;
-                r.w -= hLeft + hRight;
-                r.h -= hTop + hBottom;
-            }
-            return r;
-        },
+        }
     });
 
     return HtmlWidget;

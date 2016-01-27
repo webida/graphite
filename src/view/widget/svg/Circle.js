@@ -37,7 +37,7 @@ define([
      */
     function Circle() {
         Shape.apply(this, arguments);
-        this.setProperty({
+        this.attr({
             'shape-rendering': 'auto'
         });
     }
@@ -48,22 +48,23 @@ define([
          * Returns tagName for this Widget's element.
          * @return {string}
          */
-        getTagName: function () {
+        nodeName: function () {
             return 'circle';
         },
 
         /**
-         * Draws the svg circle with it's bounds.
+         * Locates the svg circle with it's bounds.
          * @param {GraphicContext} context
+         * @see DomWidget#_locateElement
          * @protected
          */
-        _drawShape: function (context) {
-            this.desc('_drawShape', context);
+        _locateElement: function (context) {
+            this.desc('_locateElement', context);
             var r = this._getRevisedBounds();
             var radius = Math.min(r.w, r.h) / 2.0;
             var cx = r.x + radius;
             var cy = r.y + radius;
-            dom.setAttributes(this.getElement(), {
+            dom.setAttributes(this.element(), {
                 'cx': cx,
                 'cy': cy,
                 'r': radius

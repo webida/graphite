@@ -460,8 +460,7 @@ define([
             if (arguments.length) {
                 this.desc('bounds', arguments);
                 if (arguments.length === 4) {
-                    var a = arguments;
-                    return this.bounds(new Rectangle(a[0], a[1], a[2], a[3]));
+                    return this.bounds(genetic.getInstanceOf(Rectangle, arguments));
                 } else if (arguments.length === 1) {
                     var newBounds = arguments[0];
                 }
