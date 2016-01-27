@@ -17,7 +17,6 @@
 define([
     'graphite/base/Color',
     'graphite/view/geometry/Rectangle',
-    'graphite/view/layout/HtmlLayout',
     'graphite/view/layout/StackLayout',
     'graphite/view/layout/XYLayout',
     'graphite/view/system/GraphiteShell',
@@ -30,7 +29,6 @@ define([
 ], function (
     Color,
     Rectangle,
-    HtmlLayout,
     StackLayout,
     XYLayout,
     GraphiteShell,
@@ -52,7 +50,6 @@ define([
                 Rectangle: Rectangle
             },
             layout: {
-                HtmlLayout: HtmlLayout,
                 StackLayout: StackLayout,
                 XYLayout: XYLayout
             },
