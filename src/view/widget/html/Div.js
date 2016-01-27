@@ -65,9 +65,6 @@ define([
             } catch (e) {
                 if (e.name === 'InvalidParent') {
                     if (parent instanceof GraphiteShell.RootWidget) {
-                        if (this.bounds().isEmpty()) {
-                            this.fillParent(true);
-                        }
                         var upman = this.getUpdateManager();
                         var context = upman.getGraphicContext();
                         var document = context.getDocument();;
