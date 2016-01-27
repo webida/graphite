@@ -23,18 +23,22 @@
 define([
     'external/dom/dom',
     'external/genetic/genetic',
+    'graphite/view/geometry/BoxModel',
     'graphite/view/geometry/Rectangle',
     'graphite/view/system/GraphiteShell',
     'graphite/view/widget/html/Container',
+    'graphite/view/widget/html/HtmlWidget',
     './Structural',
     './SvgWidget',
     '../Widget'
 ], function (
     dom,
     genetic,
+    BoxModel,
     Rectangle,
     GraphiteShell,
     Container,
+    HtmlWidget,
     Structural,
     SvgWidget,
     Widget
@@ -50,6 +54,7 @@ define([
      */
     function Svg() {
         Structural.apply(this, arguments);
+        this.boxModel = new BoxModel();
         this.attr({
             'shape-rendering': 'crispEdges'
         });
@@ -107,20 +112,48 @@ define([
         },
 
         /**
-         * @see Widget#_drawWidget
+         * Locates SVGSVGElement with this Widget's bounds.
+         * If it's parent is HtmlWidget, this will use box model,
+         * otherwise it will act as a nested svg.
          * @param {GraphicContext} context
+         * @see DomWidget#_locateElement
+         * @protected
          */
-        _drawWidget: function (context) {
-            this.desc('_drawWidget', context, undefined, 'green');
-            if (this.getFlag(FLAG_BOUNDS_SET)) {
-                var bounds = this.bounds();
+        _locateElement: function (context) {
+            this.desc('_locateElement', context);
+            if (this.getParent() instanceof HtmlWidget) {
+                var box = this.boxModel;
                 dom.setAttributes(this.element(), {
-                    'x': bounds.x,
-                    'y': bounds.y,
-                    'width': bounds.w,
-                    'height': bounds.h
+                    'x': box.left,
+                    'y': box.top,
+                    'width': box.width,
+                    'height': box.height
                 });
+            } else {
+                if (this.getFlag(FLAG_BOUNDS_SET)) {
+                    var bounds = this.bounds();
+                    dom.setAttributes(this.element(), {
+                        'x': bounds.x,
+                        'y': bounds.y,
+                        'width': bounds.w,
+                        'height': bounds.h
+                    });
+                }
             }
+        },
+
+        /**
+         * Lays out this Widget using its Layout.
+         * Additionally, HtmlWidget calculates box model properties
+         * such as, left, top, width, height with given bounds.
+         * @override
+         */
+        layout: function () {
+            if (this.getParent() && this.fillParent()) {
+                this.bounds(this.getParent().getClientArea());
+            }
+            this.boxModel.inBounds(this.element(), this.bounds());
+            Structural.prototype.layout.apply(this, arguments);
         },
 
         /**
