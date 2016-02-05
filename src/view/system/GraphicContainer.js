@@ -47,23 +47,32 @@ define([
         /**
          * @param {HTMLElement} element
          */
-        setElement : function(element){
+        setElement: function (element) {
             this.desc('setElement', element);
             this._element = element;
+            this._mask = dom.bySelector('#mask', element)[0];
+            //TODO make #mask div
         },
 
         /***
          * @return {HTMLElement}
          */
-        getElement : function(){
+        getElement: function () {
             this.desc('getElement');
             return this._element;
+        },
+
+        /***
+         * @return {HTMLElement}
+         */
+        getEventMask: function () {
+            return this._mask;
         },
 
         /**
          * @return {Rectangle}
          */
-        getClientArea : function(){
+        getClientArea: function () {
             var e = this.getElement();
             var rect = dom.getRect(e);
             var r = new Rectangle(0, 0, rect.width,rect.height);

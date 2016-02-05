@@ -25,6 +25,7 @@ define([
     'external/genetic/genetic',
     'graphite/base/Base',
     'graphite/view/layout/StackLayout',
+    'graphite/view/system/EventReceiver',
     'graphite/view/system/GraphicContainer',
     'graphite/view/system/GraphicContext',
     'graphite/view/update-manager/AsyncUpdateManager',
@@ -34,6 +35,7 @@ define([
     genetic,
     Base,
     StackLayout,
+    EventReceiver,
     GraphicContainer,
     GraphicContext,
     AsyncUpdateManager,
@@ -61,7 +63,7 @@ define([
     genetic.inherits(GraphiteShell, Base, {
 
         /**
-         * Sets the root widget.
+         * Sets the GraphicContainer.
          * @param {GraphicContainer|HTMLElement|string} c
          */
         setContainer: function (c) {
@@ -78,8 +80,17 @@ define([
                 this._container = c;
                 this.getUpdateManager().setGraphicContext(
                         new GraphicContext(c));
+                this.setEventReceiver(new EventReceiver());
                 this.getRootWidget().bounds(c.getClientArea());
             }
+        },
+
+        /**
+         * Returns the GraphicContainer.
+         * @return {GraphicContainer}
+         */
+        getContainer: function () {
+            return this._container;
         },
 
         /**
@@ -143,6 +154,24 @@ define([
          */
         getUpdateManager: function () {
             return this._updateManager;
+        },
+
+        /**
+         * Sets EventReceiver.
+         * @param {EventReceiver} receiver
+         */
+        setEventReceiver: function (receiver) {
+            this._eventReceiver = receiver;
+            receiver.setRoot(this.getRootWidget());
+            receiver.listen(this.getContainer());
+        },
+
+        /**
+         * Returns EventReceiver.
+         * @return {EventReceiver}
+         */
+        getEventReceiver: function () {
+            return this._eventReceiver;
         }
     });
 
