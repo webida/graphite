@@ -113,6 +113,17 @@ define([
             } else {
                 return this._uniSize;
             }
+        },
+
+        /**
+         * For convenience, this tells position for
+         * x,y of this Rectangle.
+         * @return {string}
+         */
+        toString: function () {
+            return Base.prototype.toString.call(this) + 
+                    '[' + this.top + ',' + this.right
+                        + ',' + this.bottom + ',' + this.left + ']';
         }
     });
 
