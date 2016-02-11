@@ -74,7 +74,7 @@ define([
          */
         getClientArea: function () {
             var e = this.getElement();
-            var rect = dom.getRect(e);
+            var rect = dom.getRect(e, true);
             var r = new Rectangle(0, 0, rect.width,rect.height);
             this.desc('getClientArea', [], r + '');
             return r;
