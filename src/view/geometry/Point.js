@@ -57,12 +57,32 @@ define([
         y: 0,
 
         /**
-         * Explain
-         * @param {}
-         * @return {Array}
+         * Sets location for this Point.
+         * @param {number} x
+         * @param {number} y
+         * @return {Point}
          */
-        aaaa: function () {
-            return this.bbb;
+        location: function () {
+            var args = arguments;
+            if (args.length === 2) {
+                this.x = args[0];
+                this.y = args[1];
+            }
+            return this;
+        },
+
+        /**
+         * Translates this Point by the given dx, dy.
+         * @param {number} dx
+         * @param {number} dy
+         * @return {Point}
+         */
+        translate: function (dx, dy) {
+            this.desc('translate', arguments);
+            this.x += dx;
+            this.y += dy;
+            this.info('translated -> ' + this);
+            return this;
         },
 
         /**
@@ -72,9 +92,11 @@ define([
          */
         toString: function () {
             return Base.prototype.toString.call(this) + 
-                    ' [' + this.x + ', ' + this.y + ']';
+                    '[' + this.x + ',' + this.y + ']';
         },
     });
+
+    Point.SINGLETON = new Point();
 
     return Point;
 });
