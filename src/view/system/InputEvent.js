@@ -39,13 +39,22 @@ define([
 
     genetic.inherits(InputEvent, Base, {
 
+        _consumed: false,
+
         /**
-         * Explain
-         * @param {}
-         * @return {Array}
+         * Marks this event as consumed so that it doesn't
+         * get passed on to other listeners.
          */
-        aaaa: function () {
-            return this.bbb;
+        consume: function () {
+            this._consumed = true;
+        },
+
+        /**
+         * Returns whether this event has been consumed.
+         * @return {boolean}
+         */
+        isConsumed: function () {
+            return this._consumed;
         }
     });
 
