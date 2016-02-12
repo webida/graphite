@@ -26,6 +26,7 @@ define([
     'graphite/base/BaseEmitter',
     'graphite/base/Color',
     'graphite/base/FlagSupport',
+    'graphite/view/geometry/Point',
     'graphite/view/geometry/Rectangle',
     'graphite/view/geometry/Spaces'
 ], function (
@@ -34,6 +35,7 @@ define([
     BaseEmitter,
     Color,
     FlagSupport,
+    Point,
     Rectangle,
     Spaces
 ) {
@@ -62,6 +64,10 @@ define([
     }
 
     var proto = genetic.mixin(BaseEmitter.prototype, FlagSupport.prototype, {
+
+        cursor: 'default',
+
+        _toolTip: null,
 
         /**
          * Adds the given Widget as a child of this Widget with the given
@@ -185,7 +191,7 @@ define([
          * @return {boolean}
          */
         isEnabled: function () {
-            return this.getFlag(Widget.FLAG_ENABLED);
+            return this.getFlag(FLAG_ENABLED);
         },
 
         /**
@@ -399,7 +405,6 @@ define([
          * @return {Rectangle}
          */
         getClientArea: function (rect) {
-            this.desc('getClientArea', arguments);
             if (!(rect instanceof Rectangle)) {
                 rect = new Rectangle();
             }
@@ -408,7 +413,7 @@ define([
             if (this.isLocalCoordinates()) {
                 rect.setLocation(0, 0);
             }
-            this.info('getClientArea() --> ' + rect);
+            this.desc('getClientArea', arguments, rect + '');
             return rect;
         },
 
@@ -552,7 +557,7 @@ define([
          * @return {boolean}
          */
         isLocalCoordinates: function () {
-            this.desc('isLocalCoordinates', [], false);
+            this.desc('isLocalCoordinates', [], 'false');
             return false;
         },
 
@@ -602,9 +607,11 @@ define([
          * @param {Translatable} t
          */
         translateToParent: function (t) {
+            this.desc('translateToParent', t);
             var bounds = this.bounds();
+            var border = this.borderWidth();
             if (this.isLocalCoordinates()) {
-                t.performTranslate(bounds.x + getInsets().left, bounds.y + getInsets().top);
+                t.translate(bounds.x + border.left, bounds.y + border.top);
             }
         },
 
@@ -614,7 +621,25 @@ define([
          * @param {Translatable} t
          */
         translateToAbsolute: function (t) {
+            this.desc('translateToAbsolute', t);
+            this.warn('TODO');
             //TODO : Calculate bounds from this Widget's settings and environment
+        },
+
+        /**
+         * Translates a Translatable from this Widget's parent's coordinates to
+         * this Widget's local coordinates.
+         * Translates coordinates that are relative to this Widget’s parent
+         * into coordinates that are relative to this Widget.
+         * @param {Translatable} t
+         */
+        translateFromParent: function (t) {
+            this.desc('translateFromParent', t);
+            var bounds = this.bounds();
+            var border = this.borderWidth();
+            if (this.isLocalCoordinates()) {
+                t.translate(-1*(bounds.x + border.left), -1*(bounds.y + border.top));
+            }
         },
 
         /**
@@ -741,11 +766,12 @@ define([
          * @return {Spaces}
          */
         borderWidth: function () {
-            this.desc('borderWidth', arguments);
             if (arguments.length) {
+                this.desc('borderWidth', arguments);
                 this._borderWidth = genetic.getInstanceOf(Spaces, arguments);
                 return this;
             } else {
+                this.desc('borderWidth', arguments, this._borderWidth + '');
                 return this._borderWidth;
             }
         },
@@ -816,6 +842,193 @@ define([
             } else {
                 return this.getFlag(FLAG_FILL_PARENT);
             }
+        },
+
+        /**
+         * Returns the Widget at the specified location.
+         * @param {number} x
+         * @param {number} y
+         * @param {Object} filter
+         * @return {Widget}
+         */
+        getWidgetAt: function (x, y, filter) {
+            this.desc('getWidgetAt', arguments);
+            var child;
+            var noFilter = {
+                prune: function (widget) {
+                    return false;
+                },
+                accept: function (widget) {
+                    return true;
+                }
+            };
+            if (!filter) {
+                filter = noFilter;
+            }
+            if (!this.containsPoint(x, y)) {
+                return null;
+            }
+            if (filter.prune(this)) {
+                return null;
+            }
+            child = this._getDescendantAt(x, y, filter);
+            if (child !== null) {
+                return child;
+            }
+            if (filter.accept(this)) {
+                return this;
+            }
+            return null;
+        },
+
+        /**
+         * Returns the Widget at the specified location
+         * except for given array of widgets.
+         * @param {number} x
+         * @param {number} y
+         * @param {Array} except
+         * @return {Widget}
+         */
+        getWidgetAtExcept: function (x, y, except) {
+            return this.getWidgetAt(x, y, {
+                prune: function (widget) {
+                    return except.indexOf(widget) > -1;
+                },
+                accept: function (widget) {
+                    return true;
+                }
+            });
+        },
+
+        /**
+         * Returns the descendant Widget at the specified location.
+         * @param {number} x
+         * @param {number} y
+         * @param {Object} filter
+         * @return {Widget}
+         * @protected
+         */
+        _getDescendantAt: function (x, y, filter) {
+            this.desc('_getDescendantAt', arguments);
+            var child, children = this.getChildren();
+            Point.SINGLETON.location(x, y);
+            this.translateFromParent(Point.SINGLETON);
+            if (!this.getClientArea(Rectangle.SINGLETON).contains(Point.SINGLETON)) {
+                return null;
+            }
+            x = Point.SINGLETON.x;
+            y = Point.SINGLETON.y;
+            for (var i = children.length; i > 0; i--) {
+                child = children[0];
+                if (child.isVisible()) {
+                    child = child.getWidgetAt(x, y, filter);
+                    if (child !== null) {
+                        return child;
+                    }
+                }
+            }
+            return null;
+        },
+
+        /**
+         * Returns true if the given point is contained
+         * within this Widget's bounds.
+         * @param {number} x
+         * @param {number} y
+         * @return {boolean}
+         *//**
+         * Returns true if the given point is contained
+         * within this Widget's bounds.
+         * @param {Point} p
+         * @return {boolean}
+         */
+        containsPoint: function () {
+            var x, y, args = arguments, result;
+            if (args.length === 1
+                    && args[0] instanceof Point) {
+                x = args[0].x;
+                y = args[0].y;
+            } else if (args.length === 2) {
+                x = args[0];
+                y = args[1];
+            }
+            result = this.bounds().contains(x, y);
+            this.desc('containsPoint', args, result + '');
+            return result;
+        },
+
+        /**
+         * Sets tool tip for this Widget.
+         * @param {Widget} toolTip
+         * @return {Widget}
+         *//**
+         * Returns tool tip for this Widget.
+         * @return {Widget}
+         */
+        toolTip: function () {
+            if (arguments.length) {
+                this._toolTip = arguments[0];
+                return this;
+            } else {
+                return this._toolTip;
+            }
+        },
+
+        /**
+         * Returns the deepest descendant for which
+         * _canReceiveMouseEvent() returns true.
+         * @param {number} x
+         * @param {number} y
+         * @return {Widget}
+         */
+        getMouseEventTargetAt: function (x, y) {
+            this.desc('getMouseEventTargetAt', arguments);
+            if (!this.containsPoint(x, y)) {
+                return null;
+            }
+            var wiz = this._getMouseEventTargetInDescendantsAt(x, y);
+            if (wiz) {
+                return wiz;
+            }
+            if (this._canReceiveMouseEvent()) {
+                return this;
+            }
+            return null;
+        },
+
+        /**
+         * Searches this Widget's children for the deepest descendant
+         * where the child Widget can receive MouseEvent.
+         * @return {boolean}
+         * @protected
+         */
+        _getMouseEventTargetInDescendantsAt: function (x, y) {
+            this.desc('_getMouseEventTargetInDescendantsAt', arguments);
+            var child, children = this.getChildren();
+            Point.SINGLETON.location(x, y);
+            this.translateFromParent(Point.SINGLETON);
+            if (!this.getClientArea(Rectangle.SINGLETON).contains(Point.SINGLETON)) {
+                return null;
+            }
+            for (var i = children.length; i > 0; i--) {
+                child = children[0];
+                if (child.isVisible() && child.isEnabled()) {
+                    if (child.containsPoint(Point.SINGLETON.x, Point.SINGLETON.y)) {
+                        child = child.getMouseEventTargetAt(Point.SINGLETON.x, Point.SINGLETON.y);
+                        return child;
+                    }
+                }
+            }
+            return null;
+        },
+
+        /**
+         * Returns true if this Widget can receive MouseEvent.
+         * @return {boolean}
+         * @protected
+         */
+        _canReceiveMouseEvent: function () {
+            return true;
         }
     });
 
