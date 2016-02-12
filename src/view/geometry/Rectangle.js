@@ -305,8 +305,59 @@ define([
          * is less than or equal to 0.
          * @return {boolean}
          */
-        isEmpty : function() {
+        isEmpty: function () {
             return this.w <= 0 || this.h <= 0;
+        },
+
+        /**
+         * Returns the x-coordinate of the right side
+         * of this Rectangle.
+         * @return {number}
+         */
+        right: function () {
+            return this.x + this.w;
+        },
+
+        /**
+         * Returns the y-coordinate of the bottom
+         * of this Rectangle.
+         * @return {number}
+         */
+        bottom: function () {
+            return this.y + this.h;
+        },
+
+        /**
+         * Returns true if the w or h property
+         * is less than or equal to 0.
+         * @return {boolean}
+         */
+        contains: function () {
+            var args = arguments;
+            var x, y, p, r, result;
+            if (args.length === 1) {
+                if (args[0] instanceof Point) {
+                    p = args[0];
+                    return this.contains(p.x, p.y);
+                } else if (args[0] instanceof Rectangle) {
+                    r = args[0];
+                    result = this.x <= r.x
+                        && this.y <= r.y
+                        && this.right() >= r.right()
+                        && this.bottom() >= r.bottom();
+                    this.desc('contains', arguments, result + '');
+                    return result;
+                }
+            } else if (args.length === 2) {
+                x = parseInt(args[0]);
+                y = parseInt(args[1]);
+                result = y >= this.y
+                    && y < this.bottom()
+                    && x >= this.x
+                    && x < this.right();
+                this.desc('contains', arguments, result + '');
+                return result;
+            }
         },
 
         /**
@@ -334,6 +385,8 @@ define([
             return false;
         }
     }; 
+
+    Rectangle.SINGLETON = new Rectangle();
 
     return Rectangle;
 });

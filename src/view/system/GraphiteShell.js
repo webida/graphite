@@ -25,6 +25,7 @@ define([
     'external/genetic/genetic',
     'graphite/base/Base',
     'graphite/view/layout/StackLayout',
+    'graphite/view/system/EventTransmitter',
     'graphite/view/system/GraphicContainer',
     'graphite/view/system/GraphicContext',
     'graphite/view/update-manager/AsyncUpdateManager',
@@ -34,6 +35,7 @@ define([
     genetic,
     Base,
     StackLayout,
+    EventTransmitter,
     GraphicContainer,
     GraphicContext,
     AsyncUpdateManager,
@@ -61,7 +63,7 @@ define([
     genetic.inherits(GraphiteShell, Base, {
 
         /**
-         * Sets the root widget.
+         * Sets the GraphicContainer.
          * @param {GraphicContainer|HTMLElement|string} c
          */
         setContainer: function (c) {
@@ -78,8 +80,17 @@ define([
                 this._container = c;
                 this.getUpdateManager().setGraphicContext(
                         new GraphicContext(c));
+                this.setEventTransmitter(new EventTransmitter());
                 this.getRootWidget().bounds(c.getClientArea());
             }
+        },
+
+        /**
+         * Returns the GraphicContainer.
+         * @return {GraphicContainer}
+         */
+        getContainer: function () {
+            return this._container;
         },
 
         /**
@@ -143,6 +154,24 @@ define([
          */
         getUpdateManager: function () {
             return this._updateManager;
+        },
+
+        /**
+         * Sets EventTransmitter.
+         * @param {EventTransmitter} transmitter
+         */
+        setEventTransmitter: function (transmitter) {
+            this._transmitter = transmitter;
+            transmitter.setRoot(this.getRootWidget());
+            transmitter.listen(this.getContainer());
+        },
+
+        /**
+         * Returns EventTransmitter.
+         * @return {EventTransmitter}
+         */
+        getEventTransmitter: function () {
+            return this._transmitter;
         }
     });
 

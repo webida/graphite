@@ -141,6 +141,26 @@ define(function () {
             return element;
         },
 
+        addEvent: function (element, eventName, handler, useCapture) {
+            if (element.addEventListener) {
+                if (typeof useCapture === 'undefined') {
+                    useCapture = false;
+                }
+                element.addEventListener(eventName, handler, useCapture);
+            } else {
+                element.attachEvent('on' + eventName, handler);
+            }
+            return handler;
+        },
+
+        removeEvent: function (element, eventName, handler) {
+            if (element.removeEventListener) {
+                element.removeEventListener(eventName, handler, false);
+            } else {
+                element.detachEvent('on' + eventName, handler);
+            }
+        },
+
         getRect: function (e, isInt) {
             if (isInt === true) {
                 return {
