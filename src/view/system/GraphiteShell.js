@@ -25,7 +25,7 @@ define([
     'external/genetic/genetic',
     'graphite/base/Base',
     'graphite/view/layout/StackLayout',
-    'graphite/view/system/EventTransceiver',
+    'graphite/view/system/EventTransmitter',
     'graphite/view/system/GraphicContainer',
     'graphite/view/system/GraphicContext',
     'graphite/view/update-manager/AsyncUpdateManager',
@@ -35,7 +35,7 @@ define([
     genetic,
     Base,
     StackLayout,
-    EventTransceiver,
+    EventTransmitter,
     GraphicContainer,
     GraphicContext,
     AsyncUpdateManager,
@@ -80,7 +80,7 @@ define([
                 this._container = c;
                 this.getUpdateManager().setGraphicContext(
                         new GraphicContext(c));
-                this.setEventTransceiver(new EventTransceiver());
+                this.setEventTransmitter(new EventTransmitter());
                 this.getRootWidget().bounds(c.getClientArea());
             }
         },
@@ -157,21 +157,21 @@ define([
         },
 
         /**
-         * Sets EventTransceiver.
-         * @param {EventTransceiver} receiver
+         * Sets EventTransmitter.
+         * @param {EventTransmitter} transmitter
          */
-        setEventTransceiver: function (receiver) {
-            this._eventReceiver = receiver;
-            receiver.setRoot(this.getRootWidget());
-            receiver.listen(this.getContainer());
+        setEventTransmitter: function (transmitter) {
+            this._transmitter = transmitter;
+            transmitter.setRoot(this.getRootWidget());
+            transmitter.listen(this.getContainer());
         },
 
         /**
-         * Returns EventTransceiver.
-         * @return {EventTransceiver}
+         * Returns EventTransmitter.
+         * @return {EventTransmitter}
          */
-        getEventTransceiver: function () {
-            return this._eventReceiver;
+        getEventTransmitter: function () {
+            return this._transmitter;
         }
     });
 
