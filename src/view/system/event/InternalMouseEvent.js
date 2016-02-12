@@ -22,22 +22,22 @@
 
 define([
     'external/genetic/genetic',
-    './InputEvent'
+    './InternalInputEvent'
 ], function (
     genetic,
-    InputEvent
+    InternalInputEvent
 ) {
     'use strict';
 
     /**
-     * A MouseEvent.
+     * A InternalMouseEvent.
      * @constructor
      */
-    function MouseEvent() {
-        InputEvent.apply(this, arguments);
+    function InternalMouseEvent() {
+        InternalInputEvent.apply(this, arguments);
     }
 
-    genetic.inherits(MouseEvent, InputEvent, {
+    genetic.inherits(InternalMouseEvent, InternalInputEvent, {
 
         /**
          * Explain
@@ -49,5 +49,5 @@ define([
         }
     });
 
-    return MouseEvent;
+    return InternalMouseEvent;
 });

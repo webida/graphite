@@ -30,14 +30,14 @@ define([
     'use strict';
 
     /**
-     * A InputEvent.
+     * A InternalInputEvent.
      * @constructor
      */
-    function InputEvent() {
+    function InternalInputEvent() {
         Base.apply(this, arguments);
     }
 
-    genetic.inherits(InputEvent, Base, {
+    genetic.inherits(InternalInputEvent, Base, {
 
         _consumed: false,
 
@@ -58,5 +58,5 @@ define([
         }
     });
 
-    return InputEvent;
+    return InternalInputEvent;
 });
