@@ -14,6 +14,37 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
 
         var shell = new GraphiteShell('container');
 
+        var svg = new Svg();
+        shell.setContents(svg);
+
+        var svg1 = new Svg();
+        svg1.bounds(20, 20, 200, 200);
+        svg.append(svg1);
+
+        var r1 = new Rect();
+        r1.border(10, 'moccasin').bgColor('salmon').bounds(10, 10, 100, 100);
+        r1.on('mousedown', function (x) {
+            console.log(x);
+        });
+        svg1.append(r1);
+
+        setTimeout(function(){
+            console.clear();
+        });
+
+        return;
+
+        var r2 = new Rect();
+        r2.bgColor('salmon');
+        r2.bounds(10, 10, 100, 100);
+        svg1.append(r2);
+
+        setTimeout(function () {
+            console.log('r1.bounds()', r1.bounds());
+        }, 2000);
+
+        return;
+
         var div = new Div();
         shell.setContents(div);
 
@@ -64,30 +95,6 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         var r1 = new Rect();
         r1.bgColor('burlywood').border(10, 'bisque');
         svg.append(r1, 0, 0, 100, 100);
-
-        return;
-
-        var svg = new Svg();
-        shell.setContents(svg);
-
-        var svg1 = new Svg();
-        //svg1.setLayout(new XYLayout);
-        svg1.bounds(10, 10, 300, 300);
-        svg.append(svg1);
-
-        var r1 = new Rect();
-        r1.bgColor('green');
-        r1.bounds(0, 0, 100, 100);
-        svg1.append(r1);
-
-        var r2 = new Rect();
-        r2.bgColor('salmon');
-        r2.bounds(10, 10, 100, 100);
-        svg1.append(r2);
-
-        setTimeout(function () {
-            console.log('r1.bounds()', r1.bounds());
-        }, 2000);
 
         return;
 
