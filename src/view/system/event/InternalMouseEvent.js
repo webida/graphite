@@ -49,5 +49,9 @@ define([
         }
     });
 
+    InternalMouseEvent.LEFT = 1;
+    InternalMouseEvent.RIGHT = 2;
+    InternalMouseEvent.WHEEL = 4;
+
     return InternalMouseEvent;
 });
