@@ -34,10 +34,10 @@ define([
     'use strict';
 
     /**
-     * A EventReceiver.
+     * A EventTransceiver.
      * @constructor
      */
-    function EventReceiver() {
+    function EventTransceiver() {
         Base.apply(this, arguments);
     }
 
@@ -81,7 +81,7 @@ define([
         };
     }
 
-    genetic.inherits(EventReceiver, Base, {
+    genetic.inherits(EventTransceiver, Base, {
 
         _captured: false,
 
@@ -280,5 +280,5 @@ define([
         },
     });
 
-    return EventReceiver;
+    return EventTransceiver;
 });
