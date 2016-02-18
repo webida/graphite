@@ -150,8 +150,7 @@ define([
      */
     function InternalKeyEvent(widget, e) {
         InternalInputEvent.apply(this, arguments);
-        this.keycode = e.keycode;
-        this.character = String.fromCharCode(e.keyCode);
+        this.key = InternalKeyEvent.getKey(e);
     }
 
     genetic.inherits(InternalKeyEvent, InternalInputEvent, {
