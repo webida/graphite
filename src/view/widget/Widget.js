@@ -45,6 +45,7 @@ define([
     var FLAG_VALID = 1;
     var FLAG_VISIBLE = 1 << 2;
     var FLAG_ENABLED = 1 << 4;
+    var FLAG_FOCUS_TRAVERSABLE = 1 << 5;
     var FLAG_FILL_PARENT = 1 << 8;
 
     /**
@@ -192,6 +193,26 @@ define([
          */
         isEnabled: function () {
             return this.getFlag(FLAG_ENABLED);
+        },
+
+        /**
+         * Returns true if this Widget can get
+         * a traverse KeyboardEvent event.
+         * @see InternalKeyEvent#traverseKeys
+         * @return {boolean}
+         */
+        isFocusTraversable: function () {
+            return this.getFlag(FLAG_FOCUS_TRAVERSABLE);
+        },
+
+        /**
+         * Sets true if this Widget can get
+         * a traverse KeyboardEvent event.
+         * @see InternalKeyEvent#traverseKeys
+         * @param {boolean} traversable
+         */
+        setFocusTraversable: function (traversable) {
+            this.setFlag(FLAG_FOCUS_TRAVERSABLE, traversable);
         },
 
         /**
