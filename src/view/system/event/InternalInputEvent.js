@@ -32,12 +32,20 @@ define([
     /**
      * A InternalInputEvent.
      * @constructor
+     * @param {Widget} widget
+     * @param {UIEvent} e 
      */
-    function InternalInputEvent() {
+    function InternalInputEvent(widget, e) {
         Base.apply(this, arguments);
+        this.target = widget;
+        this.uiEvent = e; 
     }
 
     genetic.inherits(InternalInputEvent, Base, {
+
+        target: null,
+        
+        uiEvent: null,
 
         _consumed: false,
 

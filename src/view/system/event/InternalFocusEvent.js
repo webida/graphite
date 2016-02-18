@@ -22,38 +22,25 @@
 
 define([
     'external/genetic/genetic',
-    './InternalInputEvent'
+    'graphite/base/Base'
 ], function (
     genetic,
-    InternalInputEvent
+    Base
 ) {
     'use strict';
 
     /**
-     * A InternalMouseEvent.
+     * A InternalFocusEvent.
      * @constructor
-     * @param {Widget} widget
-     * @param {MouseEvent} e
      */
-    function InternalMouseEvent(widget, e) {
-        InternalInputEvent.apply(this, arguments);
+    function InternalFocusEvent(blured, focused) {
+        Base.apply(this, arguments);
+        this.blured = blured;
+        this.focused = focused;
     }
 
-    genetic.inherits(InternalMouseEvent, InternalInputEvent, {
-
-        /**
-         * Explain
-         * @param {}
-         * @return {Array}
-         */
-        aaaa: function () {
-            return this.bbb;
-        }
+    genetic.inherits(InternalFocusEvent, Base, {
     });
 
-    InternalMouseEvent.LEFT = 1;
-    InternalMouseEvent.RIGHT = 2;
-    InternalMouseEvent.WHEEL = 4;
-
-    return InternalMouseEvent;
+    return InternalFocusEvent;
 });

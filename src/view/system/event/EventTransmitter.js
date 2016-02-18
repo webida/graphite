@@ -24,11 +24,17 @@ define([
     'external/dom/dom',
     'external/genetic/genetic',
     'graphite/base/Base',
-    './event/InternalMouseEvent'
+    './FocusManager',
+    './InternalFocusEvent',
+    './InternalKeyEvent',
+    './InternalMouseEvent'
 ], function (
     dom,
     genetic,
     Base,
+    FocusManager,
+    InternalFocusEvent,
+    InternalKeyEvent,
     InternalMouseEvent
 ) {
     'use strict';
@@ -39,6 +45,7 @@ define([
      */
     function EventTransmitter() {
         Base.apply(this, arguments);
+        this._focusManager = new FocusManager();
     }
 
     function receive(e) {
@@ -83,6 +90,8 @@ define([
 
     genetic.inherits(EventTransmitter, Base, {
 
+        _keyTraversable: true,
+
         _captured: false,
 
         _currentEvent: null,
@@ -92,6 +101,8 @@ define([
         _mouseTarget: null,
 
         _hoverTarget: null,
+
+        _focused: null,
 
         /**
          * @param {Widget} widget
@@ -116,8 +127,41 @@ define([
             var that = this;
             var mask = container.getEventMask();
             this.setContainer(container);
+            dom.addEvent(mask, 'focus', function (e) {
+                that.transmitFocus(e);
+            });
+            dom.addEvent(mask, 'blur', function (e) {
+                that.transmitBlur(e);
+            });
+            dom.addEvent(mask, 'keydown', function (e) {
+                that.transmitKeyDown(e);
+                if (InternalKeyEvent.isTraverseKey(e)) {
+                    that.transmitKeyTraverse(e);
+                }
+            });
+            dom.addEvent(mask, 'keyup', function (e) {
+                that.transmitKeyUp(e);
+            });
+            dom.addEvent(mask, 'wheel', function (e) {
+                that.transmitWheel(e);
+            });
+            dom.addEvent(mask, 'dblclick', function (e) {
+                that.transmitDblClick(e);
+            });
             dom.addEvent(mask, 'mousedown', function (e) {
                 that.transmitMouseDown(e);
+            });
+            dom.addEvent(mask, 'mouseup', function (e) {
+                that.transmitMouseUp(e);
+            });
+            dom.addEvent(mask, 'mousemove', function (e) {
+                that.transmitMouseMove(e);
+            });
+            dom.addEvent(mask, 'mouseenter', function (e) {
+                that.transmitMouseEnter(e);
+            });
+            dom.addEvent(mask, 'mouseleave', function (e) {
+                that.transmitMouseLeave(e);
             });
         },
 
@@ -266,6 +310,132 @@ define([
         },
 
         /**
+         * Sets the focused Widget.
+         * @param {Widget} newFocused
+         * @protected
+         */
+        _setFocused: function (newFocused) {
+            this.desc('_setFocused', arguments);
+            var oldFocused = this._focused;
+            var focusManager = this._focusManager;
+            if (newFocused === oldFocused) {
+                return;
+            }
+            var focusEvent = new InternalFocusEvent(oldFocused, newFocused);
+            this._focused = newFocused;
+            if (oldFocused) {
+                oldFocused.emit('blur', focusEvent);
+            }
+            if (newFocused) {
+                focusManager.focused = newFocused;
+                newFocused.emit('focus', focusEvent);
+            }
+        },
+
+        /**
+         * Sets traversable true or false.
+         * @param {boolean} traversable
+         */
+        setKeyTraversable: function (traversable) {
+            this._keyTraversable = traversable;
+        },
+
+        /**
+         * Transmits focus event.
+         * @param {MouseEvent} e
+         */
+        transmitFocus: function (e) {
+            this.desc('transmitFocus', e);
+            var focusManager = this._focusManager;
+            var newFocused = focusManager.focused;
+            if (!newFocused) {
+                newFocused = focusManager.getNextFocusable(this.getRoot(), this._focused);
+            }
+            this._setFocused(newFocused);
+        },
+
+        /**
+         * Transmits blur event.
+         * @param {MouseEvent} e
+         */
+        transmitBlur: function (e) {
+            this.desc('transmitBlur', e);
+            this._setFocused(null);
+        },
+
+        /**
+         * Transmits keydown event.
+         * @param {KeyboardEvent} e
+         */
+        transmitKeyDown: function (e) {
+            this.desc('transmitKeyDown', e);
+            if (this._focused) {
+                var keyEvent = new InternalKeyEvent(this._focused, e);
+                this._focused.emit('keydown', keyEvent);
+            }
+        },
+
+        /**
+         * Transmits keyup event.
+         * @param {KeyboardEvent} e
+         */
+        transmitKeyUp: function (e) {
+            this.desc('transmitKeyUp', e);
+            if (InternalKeyEvent.getKey(e) === 'Escape') {
+                console.clear();
+            }
+            if (this._focused) {
+                var keyEvent = new InternalKeyEvent(this._focused, e);
+                this._focused.emit('keyup', keyEvent);
+            }
+        },
+
+        /**
+         * Transmits keytraverse event.
+         * @param {KeyboardEvent} e
+         */
+        transmitKeyTraverse: function (e) {
+            this.desc('transmitKeyTraverse', e);
+            var next = null;
+            var focusManager = this._focusManager;
+            e.preventDefault();
+            if (!this._keyTraversable) {
+                return;
+            }
+            if (InternalKeyEvent.getKey(e) === 'Tab') {
+                if (e.shiftKey) {
+                    next = focusManager.getPrevFocusable(this.getRoot(), this._focused);
+                } else {
+                    next = focusManager.getNextFocusable(this.getRoot(), this._focused);
+                }
+            }
+            if (next) {
+                this._setFocused(next);
+            }
+        },
+
+        /**
+         * Transmits wheel event.
+         * @param {MouseEvent} e
+         */
+        transmitWheel: function (e) {
+            e.preventDefault();
+            this.info(e);
+            //TODO
+        },
+
+        /**
+         * Transmits dblclick event to the mouseTarget.
+         * @param {MouseEvent} e
+         */
+        transmitDblClick: function (e) {
+            receive.call(this, e);
+            if (this._mouseTarget) {
+                this._mouseTarget.emit('dblclick', this._currentEvent);
+            }
+        },
+
+        /**
          * Transmits mousedown event to the mouseTarget.
          * @param {MouseEvent} e
          */
@@ -276,6 +446,56 @@ define([
                 if (this._currentEvent.isConsumed()) {
                     this._capture(this._mouseTarget);
                 }
+            }
+        },
+
+        /**
+         * Transmits mouseup event to the mouseTarget.
+         * @param {MouseEvent} e
+         */
+        transmitMouseUp: function (e) {
+            receive.call(this, e);
+            if (this._mouseTarget) {
+                this._mouseTarget.emit('mouseup', this._currentEvent);
+            }
+            this._release();
+            receive.call(this, e);
+        },
+
+        /**
+         * Transmits mousemove event to the mouseTarget.
+         * @param {MouseEvent} e
+         */
+        transmitMouseMove: function (e) {
+            receive.call(this, e);
+            if (this._mouseTarget) {
+                if (e.buttons & InternalMouseEvent.LEFT) {
+                    this._mouseTarget.emit('drag', this._currentEvent);
+                } else {
+                    this._mouseTarget.emit('mousemove', this._currentEvent);
+                }
+            }
+        },
+
+        /**
+         * Transmits mouseenter event to the mouseTarget.
+         * @param {MouseEvent} e
+         */
+        transmitMouseEnter: function (e) {
+            receive.call(this, e);
+        },
+
+        /**
+         * Transmits mouseleave event to the mouseTarget.
+         * @param {MouseEvent} e
+         */
+        transmitMouseLeave: function (e) {
+            this._setHoverTarget(null, e);
+            if (this._mouseTarget) {
+                this._currentEvent = new InternalMouseEvent(this._mouseTarget, e);
+                this._mouseTarget.emit('mouseleave', this._currentEvent);
+                this._release();
+                this._mouseTarget = null;
             }
         },
     });

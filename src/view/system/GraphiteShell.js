@@ -25,7 +25,7 @@ define([
     'external/genetic/genetic',
     'graphite/base/Base',
     'graphite/view/layout/StackLayout',
-    'graphite/view/system/EventTransmitter',
+    'graphite/view/system/event/EventTransmitter',
     'graphite/view/system/GraphicContainer',
     'graphite/view/system/GraphicContext',
     'graphite/view/update-manager/AsyncUpdateManager',
