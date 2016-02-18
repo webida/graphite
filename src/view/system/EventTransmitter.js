@@ -24,11 +24,17 @@ define([
     'external/dom/dom',
     'external/genetic/genetic',
     'graphite/base/Base',
+    './event/FocusManager',
+    './event/InternalFocusEvent',
+    './event/InternalKeyEvent',
     './event/InternalMouseEvent'
 ], function (
     dom,
     genetic,
     Base,
+    FocusManager,
+    InternalFocusEvent,
+    InternalKeyEvent,
     InternalMouseEvent
 ) {
     'use strict';
@@ -39,6 +45,7 @@ define([
      */
     function EventTransmitter() {
         Base.apply(this, arguments);
+        this._focusManager = new FocusManager();
     }
 
     function receive(e) {
@@ -83,6 +90,8 @@ define([
 
     genetic.inherits(EventTransmitter, Base, {
 
+        _keyTraversable: true,
+
         _captured: false,
 
         _currentEvent: null,
@@ -92,6 +101,8 @@ define([
         _mouseTarget: null,
 
         _hoverTarget: null,
+
+        _focused: null,
 
         /**
          * @param {Widget} widget
@@ -127,9 +138,9 @@ define([
             });
             dom.addEvent(mask, 'keydown', function (e) {
                 that.transmitKeyDown(e);
-            });
-            dom.addEvent(mask, 'keypress', function (e) {
-                that.transmitKeyPress(e);
+                if (InternalKeyEvent.isTraverseKey(e)) {
+                    that.transmitKeyTraverse(e);
+                }
             });
             dom.addEvent(mask, 'keyup', function (e) {
                 that.transmitKeyUp(e);
@@ -299,11 +310,48 @@ define([
         },
 
         /**
+         * Sets the focused Widget.
+         * @param {Widget} newFocused
+         * @protected
+         */
+        _setFocused: function (newFocused) {
+            this.desc('_setFocused', arguments);
+            var oldFocused = this._focused;
+            var focusManager = this._focusManager;
+            if (newFocused === oldFocused) {
+                return;
+            }
+            var focusEvent = new InternalFocusEvent(oldFocused, newFocused);
+            this._focused = newFocused;
+            if (oldFocused) {
+                oldFocused.emit('blur', focusEvent);
+            }
+            if (newFocused) {
+                focusManager.focused = newFocused;
+                newFocused.emit('focus', focusEvent);
+            }
+        },
+
+        /**
+         * Sets traversable true or false.
+         * @param {boolean} traversable
+         */
+        setKeyTraversable: function (traversable) {
+            this._keyTraversable = traversable;
+        },
+
+        /**
          * Transmits focus event.
          * @param {MouseEvent} e
          */
         transmitFocus: function (e) {
-            //TODO
+            this.desc('transmitFocus', e);
+            var focusManager = this._focusManager;
+            var newFocused = focusManager.focused;
+            if (!newFocused) {
+                newFocused = focusManager.getNextFocusable(this.getRoot(), this._focused);
+            }
+            this._setFocused(newFocused);
         },
 
         /**
@@ -311,7 +359,8 @@ define([
          * @param {MouseEvent} e
          */
         transmitBlur: function (e) {
-            //TODO
+            this.desc('transmitBlur', e);
+            this._setFocused(null);
         },
 
         /**
@@ -330,16 +379,10 @@ define([
          */
         transmitKeyDown: function (e) {
             this.desc('transmitKeyDown', e);
-            //TODO
-        },
-
-        /**
-         * Transmits keypress event.
-         * @param {KeyboardEvent} e
-         */
-        transmitKeyPress: function (e) {
-            this.desc('transmitKeyPress', e);
-            //TODO
+            if (this._focused) {
+                var keyEvent = new InternalKeyEvent(this._focused, e);
+                this._focused.emit('keydown', keyEvent);
+            }
         },
 
         /**
@@ -349,7 +392,34 @@ define([
         transmitKeyUp: function (e) {
             this.desc('transmitKeyUp', e);
             console.clear();
-            //TODO
+            if (this._focused) {
+                var keyEvent = new InternalKeyEvent(this._focused, e);
+                this._focused.emit('keyup', keyEvent);
+            }
+        },
+
+        /**
+         * Transmits keytraverse event.
+         * @param {KeyboardEvent} e
+         */
+        transmitKeyTraverse: function (e) {
+            this.desc('transmitKeyTraverse', e);
+            var next = null;
+            var focusManager = this._focusManager;
+            e.preventDefault();
+            if (!this._keyTraversable) {
+                return;
+            }
+            if (InternalKeyEvent.getKey(e) === 'Tab') {
+                if (e.shiftKey) {
+                    next = focusManager.getPrevFocusable(this.getRoot(), this._focused);
+                } else {
+                    next = focusManager.getNextFocusable(this.getRoot(), this._focused);
+                }
+            }
+            if (next) {
+                this._setFocused(next);
+            }
         },
 
         /**
