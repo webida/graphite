@@ -16,21 +16,29 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
 
         var svg = new Svg();
         shell.setContents(svg);
+        svg.on('focus', function () {
+            console.log('focus >> svg');
+        });
 
         var svg1 = new Svg();
+        svg1.setFocusTraversable(true);
         svg1.bounds(20, 20, 200, 200);
         svg.append(svg1);
+        svg1.on('focus', function () {
+            console.log('focus >> svg1');
+        });
 
         var r1 = new Rect();
+        r1.cursor = 'move';
+        r1.setFocusTraversable(true);
         r1.border(10, 'moccasin').bgColor('salmon').bounds(10, 10, 100, 100);
+        r1.on('focus', function (x) {
+            console.log('focus >> r1');
+        });
         r1.on('mousedown', function (x) {
-            console.log(x);
+            console.log('mousedown >> r1');
         });
         svg1.append(r1);
-
-        setTimeout(function(){
-            console.clear();
-        });
 
         return;
 
