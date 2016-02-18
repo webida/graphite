@@ -391,7 +391,9 @@ define([
          */
         transmitKeyUp: function (e) {
             this.desc('transmitKeyUp', e);
-            console.clear();
+            if (InternalKeyEvent.getKey(e) === 'Escape') {
+                console.clear();
+            }
             if (this._focused) {
                 var keyEvent = new InternalKeyEvent(this._focused, e);
                 this._focused.emit('keyup', keyEvent);
