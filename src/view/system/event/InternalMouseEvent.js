@@ -32,8 +32,10 @@ define([
     /**
      * A InternalMouseEvent.
      * @constructor
+     * @param {Widget} widget
+     * @param {MouseEvent} e
      */
-    function InternalMouseEvent() {
+    function InternalMouseEvent(widget, e) {
         InternalInputEvent.apply(this, arguments);
     }
 
