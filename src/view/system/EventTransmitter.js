@@ -133,9 +133,6 @@ define([
             dom.addEvent(mask, 'blur', function (e) {
                 that.transmitBlur(e);
             });
-            dom.addEvent(mask, 'wheel', function (e) {
-                that.transmitWheel(e);
-            });
             dom.addEvent(mask, 'keydown', function (e) {
                 that.transmitKeyDown(e);
                 if (InternalKeyEvent.isTraverseKey(e)) {
@@ -144,6 +141,9 @@ define([
             });
             dom.addEvent(mask, 'keyup', function (e) {
                 that.transmitKeyUp(e);
+            });
+            dom.addEvent(mask, 'wheel', function (e) {
+                that.transmitWheel(e);
             });
             dom.addEvent(mask, 'dblclick', function (e) {
                 that.transmitDblClick(e);
@@ -364,16 +364,6 @@ define([
         },
 
         /**
-         * Transmits wheel event.
-         * @param {MouseEvent} e
-         */
-        transmitWheel: function (e) {
-            e.preventDefault();
-            this.info(e);
-            //TODO
-        },
-
-        /**
          * Transmits keydown event.
          * @param {KeyboardEvent} e
          */
@@ -422,6 +412,16 @@ define([
             if (next) {
                 this._setFocused(next);
             }
+        },
+
+        /**
+         * Transmits wheel event.
+         * @param {MouseEvent} e
+         */
+        transmitWheel: function (e) {
+            e.preventDefault();
+            this.info(e);
+            //TODO
         },
 
         /**
