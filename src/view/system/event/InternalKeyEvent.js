@@ -156,6 +156,12 @@ define([
     genetic.inherits(InternalKeyEvent, InternalInputEvent, {
     });
 
+    /**
+     * Returns key Values with given UI Events KeyboardEvent.
+     * @see https://www.w3.org/TR/DOM-Level-3-Events-key/
+     * @return {string} 
+     * @static
+     */
     InternalKeyEvent.getKey = function (e) {
         var key;
         if (e.key) {
@@ -173,6 +179,12 @@ define([
         return key;
     };
 
+    /**
+     * Returns true if the given KeyboardEvent's key is traverse key.
+     * such as tab, arrows, escape, enter, home, end, page-up, page-down.
+     * @return {boolean} 
+     * @static
+     */
     InternalKeyEvent.isTraverseKey = function (e) {
         var key = this.getKey(e);
         return traverseKeys.indexOf(key) > -1;
