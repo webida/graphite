@@ -24,10 +24,10 @@ define([
     'external/dom/dom',
     'external/genetic/genetic',
     'graphite/base/Base',
-    './event/FocusManager',
-    './event/InternalFocusEvent',
-    './event/InternalKeyEvent',
-    './event/InternalMouseEvent'
+    './FocusManager',
+    './InternalFocusEvent',
+    './InternalKeyEvent',
+    './InternalMouseEvent'
 ], function (
     dom,
     genetic,
