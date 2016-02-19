@@ -205,6 +205,7 @@ define([
                 dom.setAttributes(this.element(), {
                     'stroke-width': this.borderWidth().uniSize()
                 });
+                this.redraw();
                 return this;
             } else {
                 return this._borderWidth;

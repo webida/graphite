@@ -939,8 +939,8 @@ define([
             }
             x = Point.SINGLETON.x;
             y = Point.SINGLETON.y;
-            for (var i = children.length; i > 0; i--) {
-                child = children[0];
+            for (var i = children.length - 1; i >= 0; i--) {
+                child = children[i];
                 if (child.isVisible()) {
                     child = child.getWidgetAt(x, y, filter);
                     if (child !== null) {
@@ -1031,8 +1031,8 @@ define([
             if (!this.getClientArea(Rectangle.SINGLETON).contains(Point.SINGLETON)) {
                 return null;
             }
-            for (var i = children.length; i > 0; i--) {
-                child = children[0];
+            for (var i = children.length - 1; i >= 0; i--) {
+                child = children[i];
                 if (child.isVisible() && child.isEnabled()) {
                     if (child.containsPoint(Point.SINGLETON.x, Point.SINGLETON.y)) {
                         child = child.getMouseEventTargetAt(Point.SINGLETON.x, Point.SINGLETON.y);
