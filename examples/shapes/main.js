@@ -22,7 +22,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
 
         var svg1 = new Svg();
         svg1.setFocusTraversable(true);
-        svg1.bounds(20, 20, 200, 200);
+        svg1.bounds(20, 20, 300, 300);
         svg.append(svg1);
         svg1.on('focus', function () {
             console.log('focus >> svg1');
@@ -31,14 +31,39 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         var r1 = new Rect();
         r1.cursor = 'move';
         r1.setFocusTraversable(true);
-        r1.border(10, 'moccasin').bgColor('salmon').bounds(10, 10, 100, 100);
+        r1.border(10, 'salmon').bgColor('moccasin').bounds(10, 10, 100, 100);
         r1.on('focus', function (x) {
-            console.log('focus >> r1');
-        });
-        r1.on('mousedown', function (x) {
-            console.log('mousedown >> r1');
+            console.log('focus >> r1' + r1);
         });
         svg1.append(r1);
+
+        var r2 = new Rect();
+        r2.cursor = 'move';
+        r2.setFocusTraversable(true);
+        r2.border(20, 'moccasin').bgColor('salmon').bounds(10, 110, 100, 100);
+        r2.on('focus', function (e) {
+            console.log('focus >> r2' + r2);
+        });
+        svg1.append(r2);
+
+        r2.on('mousedown', function (e) {
+            console.log(e);
+            clearInterval(repeat);
+        });
+
+        var e = new Ellipse();
+        e.border(10, 'salmon');
+        e.bgColor('moccasin');
+        e.cursor = 'move';
+        e.bounds(new Rectangle(100, 210, 100, 80));
+        svg1.append(e);
+
+        var repeat = setInterval(function(){
+            var rand = Math.round(40*Math.random());
+            console.clear();
+            r2.border(rand, 'moccasin');
+            e.border(rand, 'salmon');
+        }, 1000);
 
         return;
 
