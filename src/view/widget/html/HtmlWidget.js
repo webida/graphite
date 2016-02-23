@@ -25,12 +25,14 @@ define([
     'external/genetic/genetic',
     'graphite/view/geometry/BoxModel',
     'graphite/view/layout/XYLayout',
+    'graphite/view/system/GraphiteShell',
     'graphite/view/widget/dom/DomWidget'
 ], function (
     dom,
     genetic,
     BoxModel,
     XYLayout,
+    GraphiteShell,
     DomWidget
 ) {
     'use strict';
@@ -88,6 +90,18 @@ define([
          */
         _drawWidget: function (context) {
             DomWidget.prototype._drawWidget.call(this, context);
+        },
+
+        /**
+         * Sets this Widget's parent.
+         * @param {Widget} parent
+         * @override 
+         */
+        setParent: function (parent) {
+            DomWidget.prototype.setParent.call(this, parent);
+            if (parent instanceof GraphiteShell.RootWidget) {
+                this.css({position: 'absolute'});
+            }
         },
 
         /**
@@ -207,16 +221,53 @@ define([
             var box = this.boxModel;
             var cssCache = this.cssCache;
             var positioned = ['absolute', 'relative'];
+            var style = dom.computedCss(this.element());
+            var position = cssCache.get('position') || style.position;
             cssCache.put({
                 'width': box.width + 'px',
                 'height': box.height + 'px'
             });
-            if (cssCache.has('position')
-                    && positioned.indexOf(cssCache.get('position')) > 0) {
+            if (positioned.indexOf(position) >= 0) {
                 cssCache.put({
                     'left': box.left + 'px',
                     'top': box.top + 'px'
                 });
+            }
+        },
+
+        /**
+         * Decorates DOMElement.
+         * @param {GraphicContext} context
+         * @protected
+         * @override
+         */
+        _decorateElement: function (context) {
+            DomWidget.prototype._decorateElement.apply(this, arguments);
+            this._syncLocation();
+        },
+
+        /**
+         * Synchronizes location-bounds with
+         * rendered HtmlElement's real location.
+         * @protected
+         */
+        _syncLocation: function () {
+            this.desc('_syncLocation');
+            var parentR;
+            var parent = this.getParent();
+            var r = this.element().getBoundingClientRect();
+            var left = r.left;
+            var top = r.top;
+            try {
+                if (this.isLocalCoordinates()) {
+                    parentR = parent.element().getBoundingClientRect();
+                    left -= parentR.left;
+                    top -= parentR.top;
+                }
+            } catch (e) {
+                //do nothing
+            } finally {
+                this.location(left, top);
             }
         },
 
