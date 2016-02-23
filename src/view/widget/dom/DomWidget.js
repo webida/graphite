@@ -151,6 +151,7 @@ define([
         _drawWidget: function (context) {
             this.desc('_drawWidget', context, undefined, 'green');
             this._locateElement(context);
+            this.cssCache.flush();
         },
 
         /**

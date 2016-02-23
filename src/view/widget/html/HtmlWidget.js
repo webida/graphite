@@ -218,7 +218,6 @@ define([
                     'top': box.top + 'px'
                 });
             }
-            cssCache.flush();
         },
 
         /**
