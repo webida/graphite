@@ -42,8 +42,32 @@ define([
     function HtmlWidget() {
         DomWidget.apply(this, arguments);
         this.boxModel = new BoxModel();
-        //TODO support for originally hidden case
-        this.css({'visibility': 'hidden'});
+    }
+
+    function parseBoxModelProperty(prop) {
+        var props = prop.split(' ');
+        var r = {
+            left: '',
+            top: '',
+            right: '',
+            bottom: ''
+        };
+        if (props.length === 1) {
+            r.left = r.top = r.right = r.bottom = props[0];
+        } else if (props.length === 2) {
+            r.top = r.bottom = props[0];
+            r.left = r.right = props[1];
+        } else if (props.length === 3) {
+            r.top = props[0];
+            r.left = r.right = props[1];
+            r.bottom = props[2];
+        } else if (props.length === 4) {
+            r.top = props[0];
+            r.right = props[1];
+            r.bottom = props[2];
+            r.left = props[3];
+        }
+        return r;
     }
 
     genetic.inherits(HtmlWidget, DomWidget, {
@@ -64,7 +88,112 @@ define([
          */
         _drawWidget: function (context) {
             DomWidget.prototype._drawWidget.call(this, context);
-            this.css({'visibility': 'visible'});
+        },
+
+        /**
+         * Sets this widget's border color.
+         * @override
+         * @see Widget#borderColor
+         * @param {number} r - 0 ~ 255
+         * @param {number} g - 0 ~ 255
+         * @param {number} b - 0 ~ 255
+         * @param {number} a - 0 ~ 1.0
+         * @return {Widget}
+         *//**
+         * @override
+         * @param {string} colorName - 'skyblue', 'transparent'
+         * @return {Widget}
+         *//**
+         * @override
+         * @param {string} hexCode - '#ff0', '#ffff00', 'ff0', 'ffff00'
+         * @return {Widget}
+         *//**
+         * @override
+         * @param {Color} color
+         * @return {Widget}
+         */
+        /**
+         * Returns this widget's border color.
+         * @override
+         * @return {Color}
+         */
+        borderColor: function () {
+            var result = DomWidget.prototype.borderColor.apply(this, arguments);
+            if (arguments.length) {
+                this.cssCache.put({
+                    'border-color': arguments[0]
+                });
+            }
+            return result;
+        },
+
+        /**
+         * Sets property for this HtmlWidget's element.
+         * For HtmlWidget, css method considers Box-Model properties.
+         * @param {Object} propSet - pairs of key and value
+         * @return {DomWidget}
+         * @override
+         *//**
+         * Returns css property of this HtmlWidget's element
+         * for the given css property.
+         * @param {string} property - css property name
+         * @return {Object}
+         *//**
+         * Returns css property set for this HtmlWidget's element.
+         * @return {Object}
+         */
+        css: function (propSet) {
+            var margin, borders, border, padding;
+            if ('margin' in propSet) {
+                margin = parseBoxModelProperty(propSet['margin']);
+                this.css({
+                    'margin-left': margin.left,
+                    'margin-top': margin.top,
+                    'margin-right': margin.right,
+                    'margin-bottom': margin.bottom
+                });
+                delete propSet['margin'];
+            }
+            if ('border' in propSet) {
+                borders = propSet['border'].split(' ');
+                if (typeof borders[1] !== undefined) {
+                    this.cssCache.put({
+                        'border-style': borders[1]
+                    });
+                }
+                if (typeof borders[2] !== undefined) {
+                    this.borderColor(borders[2]);
+                }
+                border = parseBoxModelProperty(borders[0]);
+                this.css({
+                    'border-left-width': border.left,
+                    'border-top-width': border.top,
+                    'border-right-width': border.right,
+                    'border-bottom-width': border.bottom
+                });
+                delete propSet['border'];
+            }
+            if ('border-width' in propSet) {
+                border = parseBoxModelProperty(propSet['border-width']);
+                this.css({
+                    'border-left-width': border.left,
+                    'border-top-width': border.top,
+                    'border-right-width': border.right,
+                    'border-bottom-width': border.bottom
+                });
+                delete propSet['border-width'];
+            }
+            if ('padding' in propSet) {
+                padding = parseBoxModelProperty(propSet['padding']);
+                this.css({
+                    'padding-left': padding.left,
+                    'padding-top': padding.top,
+                    'padding-right': padding.right,
+                    'padding-bottom': padding.bottom
+                });
+                delete propSet['padding'];
+            }
+            return DomWidget.prototype.css.apply(this, arguments);
         },
 
         /**
@@ -76,12 +205,20 @@ define([
         _locateElement: function (context) {
             this.desc('_locateElement', context);
             var box = this.boxModel;
-            dom.setStyles(this.element(), {
-                'left': box.left + 'px',
-                'top': box.top + 'px',
+            var cssCache = this.cssCache;
+            var positioned = ['absolute', 'relative'];
+            cssCache.put({
                 'width': box.width + 'px',
                 'height': box.height + 'px'
             });
+            if (cssCache.has('position')
+                    && positioned.indexOf(cssCache.get('position')) > 0) {
+                cssCache.put({
+                    'left': box.left + 'px',
+                    'top': box.top + 'px'
+                });
+            }
+            cssCache.flush();
         },
 
         /**
@@ -91,7 +228,7 @@ define([
          * @override
          */
         layout: function () {
-            this.boxModel.inBounds(this.element(), this.bounds());
+            this.boxModel.inBounds(this, this.bounds());
             DomWidget.prototype.layout.apply(this, arguments);
         },
 

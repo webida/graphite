@@ -152,7 +152,7 @@ define([
             if (this.getParent() && this.fillParent()) {
                 this.bounds(this.getParent().getClientArea());
             }
-            this.boxModel.inBounds(this.element(), this.bounds());
+            this.boxModel.inBounds(this, this.bounds());
             Structural.prototype.layout.apply(this, arguments);
         },
 
