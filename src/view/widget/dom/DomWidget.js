@@ -172,7 +172,6 @@ define([
         _decorateElement: function (context) {
             this.desc('_decorateElement', context, undefined, 'green');
             this.cssCache.flush();
-            this.warn(this.boxModel);
         },
     });
 
@@ -223,7 +222,6 @@ define([
          */
         flush: function () {
             this.desc('flush');
-            this.warn(this._cache);
             if (!this._widget || !this._widget.element()) {
                 return;
             }
