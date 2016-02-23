@@ -151,7 +151,7 @@ define([
         _drawWidget: function (context) {
             this.desc('_drawWidget', context, undefined, 'green');
             this._locateElement(context);
-            this.cssCache.flush();
+            this._decorateElement(context);
         },
 
         /**
@@ -162,6 +162,17 @@ define([
          */
         _locateElement: function (context) {
             this.isInterface('_locateElement', context);
+        },
+
+        /**
+         * Decorates DOMElement.
+         * @param {GraphicContext} context
+         * @protected
+         */
+        _decorateElement: function (context) {
+            this.desc('_decorateElement', context, undefined, 'green');
+            this.cssCache.flush();
+            this.warn(this.boxModel);
         },
     });
 
