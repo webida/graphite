@@ -172,15 +172,13 @@ define([
          * @return {Color}
          */
         borderColor: function () {
+            var result = Widget.prototype.borderColor.apply(this, arguments);
             if (arguments.length) {
-                Widget.prototype.borderColor.apply(this, arguments);
                 dom.setAttributes(this.element(), {
                     'stroke': this.borderColor()
                 });
-                return this;
-            } else {
-                return this._borderColor;
             }
+            return result;
         },
 
         /**
