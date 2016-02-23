@@ -54,7 +54,7 @@ define([
      */
     function Svg() {
         Structural.apply(this, arguments);
-        this.boxModel = new BoxModel();
+        this.boxModel = new BoxModel(this);
         this.attr({
             'shape-rendering': 'crispEdges'
         });
@@ -152,7 +152,7 @@ define([
             if (this.getParent() && this.fillParent()) {
                 this.bounds(this.getParent().getClientArea());
             }
-            this.boxModel.inBounds(this, this.bounds());
+            this.boxModel.castInBounds();
             Structural.prototype.layout.apply(this, arguments);
         },
 

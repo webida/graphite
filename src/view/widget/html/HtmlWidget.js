@@ -43,7 +43,7 @@ define([
      */
     function HtmlWidget() {
         DomWidget.apply(this, arguments);
-        this.boxModel = new BoxModel();
+        this.boxModel = new BoxModel(this);
     }
 
     function parseBoxModelProperty(prop) {
@@ -278,7 +278,7 @@ define([
          * @override
          */
         layout: function () {
-            this.boxModel.inBounds(this, this.bounds());
+            this.boxModel.castInBounds();
             DomWidget.prototype.layout.apply(this, arguments);
         },
 

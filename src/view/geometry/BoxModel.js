@@ -35,8 +35,9 @@ define([
      * A BoxModel.
      * @constructor
      */
-    function BoxModel() {
+    function BoxModel(widget) {
         Base.apply(this, arguments);
+        this.widget = widget;
     }
 
     genetic.inherits(BoxModel, Base, {
@@ -47,12 +48,13 @@ define([
         height: 0,
 
         /**
-         * Returns position and occupation for this BoxModel.
-         * @param {Widget} widget
-         * @param {Rectangle|object} bounds
+         * Calculates location and occupation with
+         * the given widget's bounds.
          */
-        inBounds: function (widget, bounds) {
+        castInBounds: function () {
             //TODO calculates for % and auto
+            var widget = this.widget
+            var bounds = widget.bounds();
             var s = dom.computedCss(widget.element());
             var cssCache = widget.cssCache;
             var positioned = function (dir) {
