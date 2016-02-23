@@ -23,10 +23,12 @@
 define([
     'external/dom/dom',
     'external/genetic/genetic',
+    'graphite/base/Base',
     'graphite/view/widget/Widget'
 ], function (
     dom,
     genetic,
+    Base,
     Widget
 ) {
     'use strict';
@@ -38,6 +40,7 @@ define([
     function DomWidget() {
         Widget.apply(this, arguments);
         this.element(this._createElement());
+        this.cssCache = new CssCache(this);
     }
 
     genetic.inherits(DomWidget, Widget, {
@@ -103,7 +106,10 @@ define([
         },
 
         /**
-         * Sets property for this HtmlWidget's element.
+         * Sets css property for this HtmlWidget's element.
+         * The css property will not be applied immediately,
+         * but will take effect later with UpdateManager.
+         * That is, css property will be cached until then.
          * @param {Object} propSet - pairs of key and value
          * @return {DomWidget}
          *//**
@@ -115,7 +121,7 @@ define([
          * Returns css property set for this HtmlWidget's element.
          * @return {Object}
          */
-        css: function (propSet) {
+        css: function () {
             var args = arguments;
             var element = this.element();
             if (args.length) {
@@ -123,7 +129,8 @@ define([
                     if (typeof args[0] === 'string') {
                         return dom.getStyle(element, args[0]);
                     } else if (typeof args[0] === 'object') {
-                        dom.setStyles(element, propSet);
+                        this.cssCache.put(args[0]);
+                        this.revalidate();
                     }
                 }
                 return this;
@@ -155,6 +162,69 @@ define([
         _locateElement: function (context) {
             this.isInterface('_locateElement', context);
         },
+    });
+
+    /**
+     * Class for caching css values.
+     * @constructor
+     */
+    function CssCache(widget) {
+        Base.apply(this, arguments);
+        this._widget = widget;
+        this._cache = {};
+    }
+
+    genetic.inherits(CssCache, Base, {
+
+        /**
+         * Puts css properties as a cache.
+         * This cache will be used later by the UpdateManager.
+         * @param {Object} propSet
+         */
+        put: function (propSet) {
+            Object.keys(propSet).forEach(function (prop) {
+                this._cache[prop] = propSet[prop];
+            }, this);
+        },
+
+        /**
+         * Returns the given property's value.
+         * @param {string} prop
+         * @return {*}
+         */
+        get: function (prop) {
+            return this._cache[prop];
+        },
+
+        /**
+         * Returns true if this has the given property.
+         * @param {string} prop
+         * @return {boolean}
+         */
+        has: function (prop) {
+            return prop in this._cache;
+        },
+
+        /**
+         * Applies css cache to the Element of DomWidget,
+         * then clears css cache.
+         */
+        flush: function () {
+            this.desc('flush');
+            this.warn(this._cache);
+            if (!this._widget || !this._widget.element()) {
+                return;
+            }
+            dom.setStyles(this._widget.element(), this._cache);
+            this.clear();
+        },
+
+        /**
+         * Clears css cache.
+         */
+        clear: function () {
+            this._cache = {};
+        }
     });
 
     return DomWidget;
