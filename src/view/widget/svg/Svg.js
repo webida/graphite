@@ -123,7 +123,7 @@ define([
             this.desc('_locateElement', context);
             if (this.getParent() instanceof HtmlWidget) {
                 var box = this.boxModel;
-                dom.setAttributes(this.element(), {
+                this.cssCache.put({
                     'x': box.left,
                     'y': box.top,
                     'width': box.width,
@@ -132,7 +132,7 @@ define([
             } else {
                 if (this.getFlag(FLAG_BOUNDS_SET)) {
                     var bounds = this.bounds();
-                    dom.setAttributes(this.element(), {
+                    this.cssCache.put({
                         'x': bounds.x,
                         'y': bounds.y,
                         'width': bounds.w,

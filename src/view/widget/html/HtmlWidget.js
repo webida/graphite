@@ -328,15 +328,13 @@ define([
          * @return {Color}
          */
         bgColor: function () {
+            var result = DomWidget.prototype.bgColor.apply(this, arguments);
             if (arguments.length) {
-                DomWidget.prototype.bgColor.apply(this, arguments);
-                dom.setStyles(this.element(), {
+                this.cssCache.put({
                     'background-color': this.bgColor()
                 });
-                return this;
-            } else {
-                return this._bgColor;
             }
+            return result;
         }
     });
 

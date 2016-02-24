@@ -48,8 +48,7 @@ define([
         _drawWidget: function (context) {
             this.desc('_drawWidget', context, undefined, 'green');
             var bounds = this.bounds();
-            var svg = this.element();
-            dom.setAttributes(svg, {
+            this.cssCache.put({
                 'x': bounds.x,
                 'y': bounds.y,
                 'width': bounds.w,
