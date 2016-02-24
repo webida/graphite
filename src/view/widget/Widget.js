@@ -546,8 +546,33 @@ define([
                 return this.bounds(bounds.x, bounds.y, w, h);
             } else {
                 return {
-                    w: w,
-                    h: h
+                    w: bounds.w,
+                    h: bounds.h
+                };
+            }
+        },
+
+        /**
+         * Sets this Widget's location.
+         * @param {number} x
+         * @param {number} y
+         * @return {Widget}
+         */
+        /**
+         * Returns this Widget's location.
+         * @return {Object}
+         * @property {number} x
+         * @property {number} y
+         */
+        location: function (x, y) {
+            this.desc('location', arguments);
+            if (arguments.length) {
+                var bounds = this.bounds();
+                return this.bounds(x, y, bounds.w, bounds.h);
+            } else {
+                return {
+                    x: bounds.x,
+                    y: bounds.y
                 };
             }
         },
@@ -589,7 +614,7 @@ define([
          * @param {number} dy
          */
         translate: function (dx, dy) {
-            this.warn('translate', arguments);
+            this.desc('translate', arguments);
             this._primTranslate(dx, dy);
             this._onMoved(dx, dy);
         },

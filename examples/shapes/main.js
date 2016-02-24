@@ -14,6 +14,127 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
 
         var shell = new GraphiteShell('container');
 
+        var div = new Div();
+        //div.css({opacity: 0.1}).bgColor('blue');;
+        shell.setContents(div);
+
+        var svg1 = new Svg();
+        svg1.cursor = 'cell';
+        svg1.setFocusTraversable(true);
+        svg1.bounds(0, 0, 400, 400);
+        div.append(svg1);
+        svg1.on('focus', function () {
+            console.log('focus >> svg1');
+        });
+
+        var r1 = new Rect();
+        r1.cursor = 'move';
+        r1.setFocusTraversable(true);
+        r1.border(10, 'salmon').bgColor('moccasin').bounds(10, 10, 100, 100);
+        r1.on('focus', function (x) {
+            console.log('focus >> r1' + r1);
+        });
+        svg1.append(r1);
+
+        var div1 = new Div();
+        div1.cursor = 'help';
+        div1.css({
+            'font-size': '7pt',
+            position: 'absolute',
+            margin: '20px',
+            border: '5px solid lightyellow'
+        }).bounds(30, 30, 100, 100).bgColor('salmon');
+        div.append(div1);
+
+        var div2 = new Div();
+        div2.cursor = 'alias';
+        div2.css({
+            'font-size': '7pt',
+            position: 'relative',
+            border: '10px solid lightyellow'
+        }).bounds(25, 25, 50, 50).bgColor('salmon');
+        div1.append(div2);
+
+        setTimeout(function() {
+            //div1.element().innerHTML = div1;
+            //div2.element().innerHTML = div2;
+        }, 2000);
+
+        var e = new Ellipse();
+        e.border(10, 'salmon');
+        e.bgColor('moccasin');
+        e.cursor = 'move';
+        e.bounds(new Rectangle(100, 210, 100, 80));
+        svg1.append(e);
+
+        var repeat = setInterval(function(){
+            var rand1 = Math.round(40*Math.random());
+            var rand2 = Math.round(40*Math.random());
+            var rand3 = Math.round(20*Math.random());
+            var rand4 = Math.round(60*Math.random());
+            console.clear();
+            r1.border(rand1, 'salmon');
+            e.border(rand2, 'salmon');
+            div1.location(rand1*3, rand2*3);
+            div2.css({'border': rand3 + 'px solid yellow'}).bounds(rand3, rand3, rand4, rand4);
+        }, 5000);
+
+        return;
+
+        /********************/
+
+        var div1 = new Div();
+        div1.cursor = 'move';
+        div1.css({
+            position: 'absolute',
+            margin: '10px',
+            border: '0px solid lightyellow'
+        }).bounds(0, 0, 100, 100).bgColor('salmon');
+        div.append(div1);
+
+        var div3 = new Div();
+        div3.element().innerHTML = "<span style='font-size:7pt'>" + div3 + "</span>";
+        div3.css({
+        }).bounds(10, 10, 20, 20).bgColor('moccasin');
+        div1.append(div3);
+
+        return;
+
+        /********************/
+
+        var div2 = new Div();
+        div2.css({
+            float: 'left',
+            position: 'relative',
+            padding: '10px'
+        });
+        div2.size(100, 100).bgColor('salmon');
+        div.append(div2);
+
+        var div4 = new Div();
+        div4.css({
+            position: 'absolute'
+        });
+        div4.bounds(10, 10, 20, 20).bgColor('moccasin');
+        div2.append(div4);
+
+        /********************/
+
+        var svg = new Svg();
+        svg.css({
+            margin: '10px',
+            padding: '10px'
+        });
+        svg.setLayout(new XYLayout());
+        div.append(svg);
+
+        var r1 = new Rect();
+        r1.bgColor('burlywood').border(10, 'bisque');
+        svg.append(r1, 0, 0, 100, 100);
+
+        return;
+
+
         var svg = new Svg();
         shell.setContents(svg);
         svg.on('focus', function () {
@@ -78,58 +199,6 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
 
         return;
 
-        var div = new Div();
-        shell.setContents(div);
-
-        /********************/
-
-        var div1 = new Div();
-        div1.css({
-            float: 'left',
-            padding: '10px',
-            border: '10px solid lightyellow'
-        }).size(100, 100).bgColor('salmon');
-        div.append(div1);
-
-        var div3 = new Div();
-        div3.css({
-            margin: '10px'
-        }).bounds(10, 10, 20, 20).bgColor('moccasin');
-        div1.append(div3);
-
-        /********************/
-
-        var div2 = new Div();
-        div2.css({
-            float: 'left',
-            position: 'relative',
-            padding: '10px'
-        });
-        div2.size(100, 100).bgColor('salmon');
-        div.append(div2);
-
-        var div4 = new Div();
-        div4.css({
-            position: 'absolute'
-        });
-        div4.bounds(10, 10, 20, 20).bgColor('moccasin');
-        div2.append(div4);
-
-        /********************/
-
-        var svg = new Svg();
-        svg.css({
-            margin: '10px',
-            padding: '10px'
-        });
-        svg.setLayout(new XYLayout());
-        div.append(svg);
-
-        var r1 = new Rect();
-        r1.bgColor('burlywood').border(10, 'bisque');
-        svg.append(r1, 0, 0, 100, 100);
-
-        return;
 
         var r2 = new Rect();
         r2.bgColor('green');

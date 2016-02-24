@@ -35,8 +35,9 @@ define([
      * A BoxModel.
      * @constructor
      */
-    function BoxModel() {
+    function BoxModel(widget) {
         Base.apply(this, arguments);
+        this.widget = widget;
     }
 
     genetic.inherits(BoxModel, Base, {
@@ -47,19 +48,40 @@ define([
         height: 0,
 
         /**
-         * Returns position and occupation for this BoxModel.
-         * @param {HTMLElement} elem
-         * @param {Rectangle|object} bounds
+         * Calculates location and occupation with
+         * the given widget's bounds.
          */
-        inBounds: function (elem, bounds) {
+        castInBounds: function () {
             //TODO calculates for % and auto
-            var s = dom.computedCss(elem);
+            var widget = this.widget
+            var bounds = widget.bounds();
+            var s = dom.computedCss(widget.element());
+            var cssCache = widget.cssCache;
             var positioned = function (dir) {
-                return parseInt(s['margin-' + dir]);
+                var result;
+                var margin = 'margin-' + dir;
+                if (cssCache.has(margin)) {
+                    result = parseInt(cssCache.get(margin));
+                } else {
+                    result = parseInt(s[margin]);
+                }
+                return result;
             }
             var occupied = function (dir) {
-                return parseInt(s['border-' + dir + '-width'])
-                        + parseInt(s['padding-' + dir]);
+                var borderResult, paddingResult;
+                var border = 'border-' + dir + '-width';
+                var padding = 'padding-' + dir;
+                if (cssCache.has(border)) {
+                    borderResult = parseInt(cssCache.get(border));
+                } else {
+                    borderResult = parseInt(s[border]);
+                }
+                if (cssCache.has(padding)) {
+                    paddingResult = parseInt(cssCache.get(padding));
+                } else {
+                    paddingResult = parseInt(s[padding]);
+                }
+                return borderResult + paddingResult;
             }
             this.left = bounds.x - positioned('left');
             this.top = bounds.y - positioned('top');

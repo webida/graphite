@@ -133,15 +133,13 @@ define([
          * @return {Color}
          */
         bgColor: function () {
+            var result = SvgWidget.prototype.bgColor.apply(this, arguments);
             if (arguments.length) {
-                SvgWidget.prototype.bgColor.apply(this, arguments);
-                dom.setAttributes(this.element(), {
+                this.cssCache.put({
                     'fill': this.bgColor()
                 });
-                return this;
-            } else {
-                return this._bgColor;
             }
+            return result;
         },
 
         /**
@@ -172,15 +170,13 @@ define([
          * @return {Color}
          */
         borderColor: function () {
+            var result = Widget.prototype.borderColor.apply(this, arguments);
             if (arguments.length) {
-                Widget.prototype.borderColor.apply(this, arguments);
-                dom.setAttributes(this.element(), {
+                this.cssCache.put({
                     'stroke': this.borderColor()
                 });
-                return this;
-            } else {
-                return this._borderColor;
             }
+            return result;
         },
 
         /**
@@ -197,19 +193,16 @@ define([
          * @return {Spaces}
          */
         borderWidth: function (width) {
+            var result = Widget.prototype.borderWidth.apply(this, arguments);
             if (arguments.length) {
-                Widget.prototype.borderWidth.call(this, width);
                 if (typeof width === 'number') {
                     this.borderWidth().uniSize(width);
                 }
-                dom.setAttributes(this.element(), {
+                this.css({
                     'stroke-width': this.borderWidth().uniSize()
                 });
-                this.redraw();
-                return this;
-            } else {
-                return this._borderWidth;
             }
+            return result;
         }
     });
 

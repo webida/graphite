@@ -65,7 +65,7 @@ define([
             var ry = r.h / 2;
             var cx = r.x + rx;
             var cy = r.y + ry;
-            dom.setAttributes(this.element(), {
+            this.cssCache.put({
                 'cx': cx,
                 'cy': cy,
                 'rx': rx,
