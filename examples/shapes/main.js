@@ -56,8 +56,6 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         div1.append(div2);
 
         setTimeout(function() {
-            div1.location(60, 60);
-            div2.css({'border': '10px solid yellow'}).bounds(10, 10, 60, 60);
             //div1.element().innerHTML = div1;
             //div2.element().innerHTML = div2;
         }, 2000);
@@ -70,11 +68,16 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         svg1.append(e);
 
         var repeat = setInterval(function(){
-            var rand = Math.round(40*Math.random());
+            var rand1 = Math.round(40*Math.random());
+            var rand2 = Math.round(40*Math.random());
+            var rand3 = Math.round(20*Math.random());
+            var rand4 = Math.round(60*Math.random());
             console.clear();
-            r1.border(rand, 'salmon');
-            e.border(rand, 'salmon');
-        }, 1000);
+            r1.border(rand1, 'salmon');
+            e.border(rand2, 'salmon');
+            div1.location(rand1*3, rand2*3);
+            div2.css({'border': rand3 + 'px solid yellow'}).bounds(rand3, rand3, rand4, rand4);
+        }, 5000);
 
         return;
 
