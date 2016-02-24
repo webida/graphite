@@ -225,7 +225,6 @@ define([
             if (!this._widget || !this._widget.element()) {
                 return;
             }
-            this.warn(this._cache);
             dom.setStyles(this._widget.element(), this._cache);
             this.clear();
         },
