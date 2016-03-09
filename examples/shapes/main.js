@@ -19,7 +19,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         shell.contents(div);
 
         var svg1 = new Svg();
-        svg1.cursor = 'cell';
+        svg1.cursor('cell');
         svg1.focusTraversable(true);
         svg1.bounds(0, 0, 400, 400);
         div.append(svg1);
@@ -28,7 +28,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         });
 
         var r1 = new Rect();
-        r1.cursor = 'move';
+        r1.cursor('move');
         r1.focusTraversable(true);
         r1.border(10, 'salmon').bgColor('moccasin').bounds(10, 10, 100, 100);
         r1.on('focus', function (x) {
@@ -37,7 +37,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         svg1.append(r1);
 
         var div1 = new Div();
-        div1.cursor = 'help';
+        div1.cursor('help');
         div1.css({
             'font-size': '7pt',
             position: 'absolute',
@@ -47,7 +47,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         div.append(div1);
 
         var div2 = new Div();
-        div2.cursor = 'alias';
+        div2.cursor('alias');
         div2.css({
             'font-size': '7pt',
             position: 'relative',
@@ -63,7 +63,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         var e = new Ellipse();
         e.border(10, 'salmon');
         e.bgColor('moccasin');
-        e.cursor = 'move';
+        e.cursor('move');
         e.bounds(new Rectangle(100, 210, 100, 80));
         svg1.append(e);
 
@@ -86,7 +86,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         /********************/
 
         var div1 = new Div();
-        div1.cursor = 'move';
+        div1.cursor('move');
         div1.css({
             position: 'absolute',
             margin: '10px',
@@ -152,7 +152,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         });
 
         var r1 = new Rect();
-        r1.cursor = 'move';
+        r1.cursor('move');
         r1.focusTraversable(true);
         r1.border(10, 'salmon').bgColor('moccasin').bounds(10, 10, 100, 100);
         r1.on('focus', function (x) {
@@ -161,7 +161,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         svg1.append(r1);
 
         var r2 = new Rect();
-        r2.cursor = 'move';
+        r2.cursor('move');
         r2.focusTraversable(true);
         r2.border(20, 'moccasin').bgColor('salmon').bounds(10, 110, 100, 100);
         r2.on('focus', function (e) {
@@ -177,7 +177,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         var e = new Ellipse();
         e.border(10, 'salmon');
         e.bgColor('moccasin');
-        e.cursor = 'move';
+        e.cursor('move');
         e.bounds(new Rectangle(100, 210, 100, 80));
         svg1.append(e);
 

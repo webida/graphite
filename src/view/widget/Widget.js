@@ -66,7 +66,7 @@ define([
 
     var proto = genetic.mixin(BaseEmitter.prototype, FlagSupport.prototype, {
 
-        cursor: 'default',
+        _cursor: 'default',
 
         _toolTip: null,
 
@@ -193,6 +193,25 @@ define([
          */
         isEnabled: function () {
             return this.getFlag(FLAG_ENABLED);
+        },
+
+        /**
+         * Sets cursor for this Widget and
+         * returns this Widget for convenience.
+         * @see https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
+         * @param {string} cursor
+         * @return {Widget}
+         *//**
+         * Returns cursor for this Widget.
+         * @return {string}
+         */
+        cursor: function () {
+            if (arguments.length) {
+                this._cursor = arguments[0];
+                return this;
+            } else {
+                return this._cursor;
+            }
         },
 
         /**
