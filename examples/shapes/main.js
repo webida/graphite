@@ -16,7 +16,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
 
         var div = new Div();
         //div.css({opacity: 0.1}).bgColor('blue');;
-        shell.setContents(div);
+        shell.contents(div);
 
         var svg1 = new Svg();
         svg1.cursor = 'cell';
@@ -66,6 +66,8 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         e.cursor = 'move';
         e.bounds(new Rectangle(100, 210, 100, 80));
         svg1.append(e);
+
+        return;
 
         var repeat = setInterval(function(){
             var rand1 = Math.round(40*Math.random());
@@ -136,7 +138,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
 
 
         var svg = new Svg();
-        shell.setContents(svg);
+        shell.contents(svg);
         svg.on('focus', function () {
             console.log('focus >> svg');
         });
@@ -231,7 +233,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
 
         var svg = new Svg();
         svg.setLayout(new XYLayout());
-        shell.setContents(svg);
+        shell.contents(svg);
 
         var r1 = new Rect();
         r1.bgColor('salmon');
@@ -275,7 +277,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
 
         var r3 = new Div();
         r3.setLayout(new XYLayout());
-        shell.setContents(r3);
+        shell.contents(r3);
 
         var r4 = new Div();
         r4.setLayout(new XYLayout());
@@ -290,7 +292,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
 
         var svg = new Svg();
         svg.setLayout(new XYLayout());
-        shell.setContents(svg);
+        shell.contents(svg);
         svg.setLayout(new XYLayout());
         r3.append(svg, new Rectangle(0, 0, 500, 500));
 
