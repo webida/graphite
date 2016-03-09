@@ -196,23 +196,23 @@ define([
         },
 
         /**
+         * Sets true if this Widget can get
+         * a traverse KeyboardEvent event.
+         * @see InternalKeyEvent#traverseKeys
+         * @param {boolean} traversable
+         *//**
          * Returns true if this Widget can get
          * a traverse KeyboardEvent event.
          * @see InternalKeyEvent#traverseKeys
          * @return {boolean}
          */
-        isFocusTraversable: function () {
-            return this.getFlag(FLAG_FOCUS_TRAVERSABLE);
-        },
-
-        /**
-         * Sets true if this Widget can get
-         * a traverse KeyboardEvent event.
-         * @see InternalKeyEvent#traverseKeys
-         * @param {boolean} traversable
-         */
-        setFocusTraversable: function (traversable) {
-            this.setFlag(FLAG_FOCUS_TRAVERSABLE, traversable);
+        focusTraversable: function () {
+            if (arguments.length) {
+                this.setFlag(FLAG_FOCUS_TRAVERSABLE, !!arguments[0]);
+                return this;
+            } else {
+                return this.getFlag(FLAG_FOCUS_TRAVERSABLE);
+            }
         },
 
         /**

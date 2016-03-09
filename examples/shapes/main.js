@@ -20,7 +20,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
 
         var svg1 = new Svg();
         svg1.cursor = 'cell';
-        svg1.setFocusTraversable(true);
+        svg1.focusTraversable(true);
         svg1.bounds(0, 0, 400, 400);
         div.append(svg1);
         svg1.on('focus', function () {
@@ -29,7 +29,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
 
         var r1 = new Rect();
         r1.cursor = 'move';
-        r1.setFocusTraversable(true);
+        r1.focusTraversable(true);
         r1.border(10, 'salmon').bgColor('moccasin').bounds(10, 10, 100, 100);
         r1.on('focus', function (x) {
             console.log('focus >> r1' + r1);
@@ -144,7 +144,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
         });
 
         var svg1 = new Svg();
-        svg1.setFocusTraversable(true);
+        svg1.focusTraversable(true);
         svg1.bounds(20, 20, 300, 300);
         svg.append(svg1);
         svg1.on('focus', function () {
@@ -153,7 +153,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
 
         var r1 = new Rect();
         r1.cursor = 'move';
-        r1.setFocusTraversable(true);
+        r1.focusTraversable(true);
         r1.border(10, 'salmon').bgColor('moccasin').bounds(10, 10, 100, 100);
         r1.on('focus', function (x) {
             console.log('focus >> r1' + r1);
@@ -162,7 +162,7 @@ document.getElementById('btnRun').addEventListener('click', function(oEvent) {
 
         var r2 = new Rect();
         r2.cursor = 'move';
-        r2.setFocusTraversable(true);
+        r2.focusTraversable(true);
         r2.border(20, 'moccasin').bgColor('salmon').bounds(10, 110, 100, 100);
         r2.on('focus', function (e) {
             console.log('focus >> r2' + r2);
