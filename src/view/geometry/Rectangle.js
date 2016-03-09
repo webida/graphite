@@ -126,8 +126,8 @@ define([
                 var spaces = args[0];
                 this.x += spaces.left;
                 this.y += spaces.top;
-                this.w -= (spaces.getWidth());
-                this.h -= (spaces.getHeight());
+                this.w -= (spaces.width());
+                this.h -= (spaces.height());
             } else if (args.length === 2) {
                 var h = args[0], v = args[1];
                 this.x += h;

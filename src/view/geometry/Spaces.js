@@ -81,7 +81,7 @@ define([
          * <code>right</code>.
          * @return The sum of left + right
          */
-        getWidth: function () {
+        width: function () {
             return this.left + this.right;
         },
 
@@ -90,7 +90,7 @@ define([
          * <code>bottom</code>.
          * @return The sum of top + bottom
          */
-        getHeight: function () {
+        height: function () {
             return this.top + this.bottom;
         },
 
