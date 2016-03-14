@@ -43,6 +43,7 @@ define([
 
     /** @constant {number} */
     var FLAG_VALID = 1;
+    var FLAG_FILLABLE = 1 << 1;
     var FLAG_VISIBLE = 1 << 2;
     var FLAG_ENABLED = 1 << 4;
     var FLAG_FOCUS_TRAVERSABLE = 1 << 5;
@@ -458,9 +459,8 @@ define([
         },
 
         /**
-         * returns true if this widget's visibility flag is set to
+         * Returns true if this widget's visibility flag is set to
          * true. Does not walk up the parent chain.
-         * 
          * @return {boolean}
          */
         isVisible: function () {
@@ -470,11 +470,18 @@ define([
         /**
          * Returns true where this widget is visible
          * and its parent is showing, or it has no parent.
-         * 
          * @return {boolean}
          */
         isShowing: function () {
             return this.isVisible() && (!this.getParent() || this.getParent().isShowing());
+        },
+
+        /**
+         * Returns true if this widget can have background color.
+         * @return {boolean}
+         */
+        isFillable: function () {
+            return this.getFlag(FLAG_FILLABLE);
         },
 
         /**
