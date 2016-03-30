@@ -115,6 +115,19 @@ define([
             }
         },
 
+        copy: function () {
+            return new Spaces(this);
+        },
+
+        inverse: function () {
+            this.top = -1*this.top;
+            this.right = -1*this.right;
+            this.bottom = -1*this.bottom;
+            this.left = -1*this.left;
+            this._uniSize = -1*this._uniSize;
+            return this;
+        },
+
         /**
          * For convenience, this tells position for
          * x,y of this Rectangle.
