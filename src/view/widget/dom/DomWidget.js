@@ -41,6 +41,7 @@ define([
         Widget.apply(this, arguments);
         this.element(this._createElement());
         this.cssCache = new CssCache(this);
+        this.attrCache = new AttributeCache(this);
     }
 
     genetic.inherits(DomWidget, Widget, {
@@ -172,21 +173,21 @@ define([
         _decorateElement: function (context) {
             this.desc('_decorateElement', context, undefined, 'green');
             this.cssCache.flush();
+            this.attrCache.flush();
         },
     });
 
     /**
-     * Class for caching css values.
+     * Abstract class for caching values.
      * @constructor
      */
-    function CssCache(widget) {
+    function AbstractCache(widget) {
         Base.apply(this, arguments);
         this._widget = widget;
         this._cache = {};
     }
 
-    genetic.inherits(CssCache, Base, {
-
+    genetic.inherits(AbstractCache, Base, {
         /**
          * Puts css properties as a cache.
          * This cache will be used later by the UpdateManager.
@@ -197,7 +198,6 @@ define([
                 this._cache[prop] = propSet[prop];
             }, this);
         },
-
         /**
          * Returns the given property's value.
          * @param {string} prop
@@ -206,7 +206,6 @@ define([
         get: function (prop) {
             return this._cache[prop];
         },
-
         /**
          * Returns true if this has the given property.
          * @param {string} prop
@@ -215,7 +214,30 @@ define([
         has: function (prop) {
             return prop in this._cache;
         },
+        /**
+         * Applies cache to the Element of DomWidget,
+         * then clears cache.
+         */
+        flush: function () {
+            this.isInterface('flush');
+        },
+        /**
+         * Clears css cache.
+         */
+        clear: function () {
+            this._cache = {};
+        }
+    });
 
+    /**
+     * Class for caching css values.
+     * @constructor
+     */
+    function CssCache(widget) {
+        AbstractCache.apply(this, arguments);
+    }
+
+    genetic.inherits(CssCache, AbstractCache, {
         /**
          * Applies css cache to the Element of DomWidget,
          * then clears css cache.
@@ -227,13 +249,28 @@ define([
             }
             dom.setStyles(this._widget.element(), this._cache);
             this.clear();
-        },
+        }
+    });
 
+    /**
+     * Class for caching attribute values.
+     * @constructor
+     */
+    function AttributeCache(widget) {
+        AbstractCache.apply(this, arguments);
+    }
+    genetic.inherits(AttributeCache, AbstractCache, {
         /**
-         * Clears css cache.
+         * Applies css cache to the Element of DomWidget,
+         * then clears css cache.
          */
-        clear: function () {
-            this._cache = {};
+        flush: function () {
+            this.desc('flush');
+            if (!this._widget || !this._widget.element()) {
+                return;
+            }
+            dom.setAttributes(this._widget.element(), this._cache);
+            this.clear();
         }
     });
 
