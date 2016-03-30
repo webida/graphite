@@ -39,6 +39,12 @@ define([
 
     genetic.inherits(Dimension, Base, {
 
+        /** @member {number} */
+        w: 0,
+
+        /** @member {number} */
+        h: 0,
+
         /**
          * Explain
          * @param {}
