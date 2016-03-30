@@ -38,7 +38,7 @@ define([
     }
 
     function focusable(widget) {
-        var result = (widget !== null && widget.isFocusTraversable() && widget.isShowing());
+        var result = (widget !== null && widget.focusTraversable() && widget.isShowing());
         this.info('focusable -> ', widget, result);
         return result;
     }

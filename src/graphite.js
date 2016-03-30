@@ -16,25 +16,37 @@
 
 define([
     'graphite/base/Color',
+    'graphite/view/geometry/Geometry',
+    'graphite/view/geometry/Point',
+    'graphite/view/geometry/PointList',
     'graphite/view/geometry/Rectangle',
     'graphite/view/layout/StackLayout',
     'graphite/view/layout/XYLayout',
     'graphite/view/system/GraphiteShell',
+    'graphite/view/widget/connection/anchor/CardinalAnchor',
+    'graphite/view/widget/connection/Connection',
     'graphite/view/widget/html/Div',
     'graphite/view/widget/svg/Circle',
     'graphite/view/widget/svg/Ellipse',
+    'graphite/view/widget/svg/Polyline',
     'graphite/view/widget/svg/Rect',
     'graphite/view/widget/svg/Svg',
     'graphite/view/widget/Widget'
 ], function (
     Color,
+    Geometry,
+    Point,
+    PointList,
     Rectangle,
     StackLayout,
     XYLayout,
     GraphiteShell,
+    CardinalAnchor,
+    Connection,
     Div,
     Circle,
     Ellipse,
+    Polyline,
     Rect,
     Svg,
     Widget
@@ -47,6 +59,9 @@ define([
         },
         view: {
             geometry: {
+                Geometry: Geometry,
+                Point: Point,
+                PointList: PointList,
                 Rectangle: Rectangle
             },
             layout: {
@@ -57,12 +72,19 @@ define([
                 GraphiteShell: GraphiteShell
             },
             widget: {
+                connection: {
+                    anchor: {
+                        CardinalAnchor: CardinalAnchor
+                    },
+                    Connection: Connection
+                },
                 html: {
                     Div: Div
                 },
                 svg: {
                     Circle: Circle,
                     Ellipse: Ellipse,
+                    Polyline: Polyline,
                     Rect: Rect,
                     Svg: Svg
                 },

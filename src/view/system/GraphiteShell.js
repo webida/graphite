@@ -124,17 +124,26 @@ define([
         },
 
         /**
-         * Sets widget tree's root node.
+         * Sets user's widget model's root node.
          * @param {Widget} root
+         * @return {GraphiteShell}
+         *//**
+         * Returns user's widget model's root node.
+         * @return {Widget}
          */
-        setContents: function (widget) {
-            this.desc('setContents', widget);
-            var root = this.getRootWidget();
-            if (this._contents) {
-                root.remove(this._contents);
+        contents: function (widget) {
+            if (arguments.length) {
+                this.desc('contents', widget);
+                var root = this.getRootWidget();
+                if (this._contents) {
+                    root.remove(this._contents);
+                }
+                this._contents = widget;
+                root.append(widget);
+                return this;
+            } else {
+                return this._contents;
             }
-            this._contents = widget;
-            root.append(widget);
         },
 
         /**

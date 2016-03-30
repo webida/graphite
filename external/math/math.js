@@ -22,14 +22,23 @@
 define(function (module) {
     'use strict';
 
+    function isArray(o) {
+        if (typeof o === 'object'
+                && 'length' in o
+                && typeof o.length === 'number') {
+            return true;
+        }
+        return false;
+    }
+
     function filterArray(args) {
         var arr;
-        if (Array.isArray(args[0])) {
+        if (isArray(args[0])) {
             arr = args[0];
         } else {
             arr = args;
         }
-        return arr; 
+        return arr;
     }
 
     return {
@@ -48,9 +57,6 @@ define(function (module) {
 
         isZeroAll: function () {
             var arg, args = filterArray(arguments);
-            if (Array.isArray(args[0])) {
-                args = args[0];
-            }
             for (var i = 0; i < args.length; i++) {
                 arg = args[i];
                 if (arg !== 0) {

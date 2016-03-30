@@ -30,30 +30,35 @@ define([
     'use strict';
 
     /**
-     * A Dimension.
+     * A Translatable.
      * @constructor
      */
-    function Dimension() {
+    function Translatable() {
         Base.apply(this, arguments);
     }
 
-    genetic.inherits(Dimension, Base, {
-
-        /** @member {number} */
-        w: 0,
-
-        /** @member {number} */
-        h: 0,
+    genetic.inherits(Translatable, Base, {
 
         /**
-         * Explain
-         * @param {}
-         * @return {Array}
+         * Scales this object by the scale factor.
+         * @param {number} factor
+         * @abstract
          */
-        aaaa: function () {
-            return this.bbb;
+        scale: function (factor) {
+            this.isInterface('scale', factor);
+        },
+
+        /**
+         * Translates this object horizontally by dx
+         * and vertically by dy.
+         * @param {number} dx
+         * @param {number} dy
+         * @abstract
+         */
+        translate: function (dx, dy) {
+            this.isInterface('translate', arguments);
         }
     });
 
-    return Dimension;
+    return Translatable;
 });

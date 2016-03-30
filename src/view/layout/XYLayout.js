@@ -55,7 +55,7 @@ define([
                 if (bounds) {
                     if (bounds.w === -1 || bounds.h === -1) {
                         preferredSize = child.getPreferredSize(bounds.w, bounds.h);
-                        bounds = bounds.clone();
+                        bounds = bounds.copy();
                         if (bounds.w === -1) {
                             bounds.w = preferredSize.w;
                         }
@@ -63,7 +63,7 @@ define([
                             bounds.h = preferredSize.h;
                         }
                     }
-                    bounds = bounds.getTranslated(offset);
+                    bounds = bounds.translated(offset);
                     child.bounds(bounds);
                 }
             }, this);
@@ -75,7 +75,7 @@ define([
          * @return {Point}
          */
         getOrigin: function (widget) {
-            var origin = widget.getClientArea().getLocation();
+            var origin = widget.getClientArea().location();
             this.desc('getOrigin', widget, origin + '');
             return origin;
         },

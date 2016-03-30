@@ -81,7 +81,7 @@ define([
          * <code>right</code>.
          * @return The sum of left + right
          */
-        getWidth: function () {
+        width: function () {
             return this.left + this.right;
         },
 
@@ -90,7 +90,7 @@ define([
          * <code>bottom</code>.
          * @return The sum of top + bottom
          */
-        getHeight: function () {
+        height: function () {
             return this.top + this.bottom;
         },
 
@@ -113,6 +113,19 @@ define([
             } else {
                 return this._uniSize;
             }
+        },
+
+        copy: function () {
+            return new Spaces(this);
+        },
+
+        inverse: function () {
+            this.top = -1*this.top;
+            this.right = -1*this.right;
+            this.bottom = -1*this.bottom;
+            this.left = -1*this.left;
+            this._uniSize = -1*this._uniSize;
+            return this;
         },
 
         /**

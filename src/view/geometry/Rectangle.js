@@ -22,12 +22,14 @@
 
 define([
     'external/genetic/genetic',
+    'external/math/math',
     'graphite/base/Base',
     './Dimension',
     './Point',
     './Spaces'
 ], function (
     genetic,
+    math,
     Base,
     Dimension,
     Point,
@@ -126,8 +128,8 @@ define([
                 var spaces = args[0];
                 this.x += spaces.left;
                 this.y += spaces.top;
-                this.w -= (spaces.getWidth());
-                this.h -= (spaces.getHeight());
+                this.w -= (spaces.width());
+                this.h -= (spaces.height());
             } else if (args.length === 2) {
                 var h = args[0], v = args[1];
                 this.x += h;
@@ -139,33 +141,95 @@ define([
         },
 
         /**
+         * Expands the horizontal and vertical sides of this Rectangle
+         * with the values provided as input, and returns this for
+         * convenience. The location of its center is kept constant.
+         * @param {number} h - Horizontal reduction amount
+         * @param {number} v - Vertical reduction amount
+         * @return {Rectangle}
+         *//**
+         * Expands the horizontal and vertical sides of this Rectangle
+         * by the width and height of the given Insets, and returns
+         * this for convenience.
+         * @param {Spaces} spaces
+         * @return {Rectangle}
+         */
+        expand: function () {
+            var args = arguments;
+            if (args[0] instanceof Spaces) {
+                var spaces = args[0];
+                return this.shrink(spaces.copy().inverse());
+            } else if (args.length === 2 && math.isAllNumber(args)) {
+                var h = parseInt(args[0]), v = parseInt(args[1]);
+                return this.shrink(-h, -v);
+            }
+        },
+
+        /**
+         * Sets the width and height of this Rectangle to
+         * the width and height of the given Dimension
+         * and returns this for convenience.
+         * @param {Dimension} dimension
+         * @return {Rectangle}
+         *//**
+         * Sets the width of this Rectangle to w and the height
+         * of this Rectangle to h and returns this for convenience.
+         * @param {number} w
+         * @param {number} h 
+         * @return {Rectangle}
+         *//**
+         * Retuns the dimensions of this Rectangle.
+         * @return {Dimension}
+         */
+        size: function () {
+            var args = arguments;
+            if (args.length) {
+                if (args[0] instanceof Dimension) {
+                    this.w = args[0].w;
+                    this.h = args[0].h;
+                } else if (args.length === 2 && math.isAllNumber(args)) {
+                    this.w = args[0];
+                    this.h = args[1];
+                }
+                return this;
+            } else {
+                return new Dimension(this.w, this.h);
+            }
+        },
+
+        /**
          * Sets the location of this Rectangle to
          * the coordinates given as input and
          * returns this for convenience.
          * @param {number} x - The new X coordinate
          * @param {number} y - The new Y coordinate
          * @return {Rectangle}
-         */
-        setLocation: function () {
-            this.desc('setLocation', arguments);
-            var args = arguments;
-            if (args.length === 1 && args[0] instanceof Point) {
-                return this.setLocation(args[0].x, args[0].y);
-            } else if (args.length === 2
-                    && typeof args[0] === 'number'
-                    && typeof args[1] === 'number') {
-                this.x = args[0];
-                this.y = args[1];
-                return this;
-            }
-        },
-
-        /**
+         *//**
+         * Sets the location of this Rectangle to
+         * the point given as input and
+         * returns this for convenience.
+         * @param {Point} p - The new point
+         * @return {Rectangle}
+         *//**
          * Returns the upper left corner of this rectangle.
          * @return {Point}
          */
-        getLocation: function () {
-            return new Point(this.x, this.y);
+        location: function () {
+            var args;
+            if (arguments.length) {
+                this.desc('location', arguments);
+                args = arguments;
+                if (args.length === 1 && args[0] instanceof Point) {
+                    this.x = args[0].x;
+                    this.y = args[0].y;
+                } else if (args.length === 2 && math.isAllNumber(args)) {
+                    this.x = args[0];
+                    this.y = args[1];
+                }
+                return this;
+            } else {
+                return new Point(this.x, this.y);
+            }
         },
 
         /**
@@ -181,8 +245,8 @@ define([
          * translating along each axis
          * @return {Rectangle}
          */
-        getTranslated: function () {
-            var copy = this.clone();
+        translated: function () {
+            var copy = this.copy();
             return copy.translate.apply(copy, arguments);
         },
 
@@ -215,10 +279,10 @@ define([
         },
 
         /**
-         * Returns a copied clone for this Rectangle.
+         * Returns a copied copy for this Rectangle.
          * @return {Rectangle}
          */
-        clone: function () {
+        copy: function () {
             return new Rectangle(this);
         },
 
@@ -254,12 +318,17 @@ define([
             if (len === 1) {
                 if (arguments[0] instanceof Point) {
                     var p = arguments[0];
-                    this.union(p.x, p.y);
+                    return this.union(p.x, p.y);
                 } else if (arguments[0] instanceof Rectangle) {
                     var rect = arguments[0];
                     if (rect == null || rect.isEmpty())
                         return this;
                     return this.union(rect.x, rect.y, rect.w, rect.h);
+                } else if (arguments[0] instanceof Dimension) {
+                    var d = arguments[0];
+                    this.w = Math.max(this.w, d.w);
+                    this.h = Math.max(this.h, d.h);
+                    return this;
                 }
             } else if (len === 2) {
                 var x1 = arguments[0];
@@ -269,7 +338,7 @@ define([
                     this.x = x1;
                 } else {
                     var right = this.x + this.w;
-                    if (x1 >= this.right) {
+                    if (x1 >= right) {
                         right = x1 + 1;
                         this.w = right - this.x;
                     }
@@ -328,8 +397,22 @@ define([
         },
 
         /**
-         * Returns true if the w or h property
-         * is less than or equal to 0.
+         * Returns whether the given coordinates are within the boundaries
+         * of this Rectangle. The boundaries are inclusive of the top and
+         * left edges, but exclusive of the bottom and right edges.
+         * @param {number} x
+         * @param {number} y
+         * @return {boolean}
+         *//**
+         * Returns true if the given rectangle is contained
+         * within the boundaries of this Rectangle.
+         * @param {Rectangle} rect
+         * @return {boolean}
+         *//**
+         * Returns whether the given point is within the boundaries of
+         * this Rectangle. The boundaries are inclusive of the top and
+         * left edges, but exclusive of the bottom and right edges.
+         * @param {Point} point
          * @return {boolean}
          */
         contains: function () {
@@ -358,6 +441,21 @@ define([
                 this.desc('contains', arguments, result + '');
                 return result;
             }
+        },
+
+        /**
+         * Switches the x and y and the width and height of this
+         * Rectangle. Useful for orientation changes.
+         * @return {Rectangle}
+         */
+        transpose: function () {
+            var temp = this.x;
+            this.x = this.y;
+            this.y = temp;
+            temp = this.w;
+            this.w = this.h;
+            this.h = temp;
+            return this;
         },
 
         /**

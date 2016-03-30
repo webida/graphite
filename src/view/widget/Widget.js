@@ -43,6 +43,7 @@ define([
 
     /** @constant {number} */
     var FLAG_VALID = 1;
+    var FLAG_FILLABLE = 1 << 1;
     var FLAG_VISIBLE = 1 << 2;
     var FLAG_ENABLED = 1 << 4;
     var FLAG_FOCUS_TRAVERSABLE = 1 << 5;
@@ -66,7 +67,7 @@ define([
 
     var proto = genetic.mixin(BaseEmitter.prototype, FlagSupport.prototype, {
 
-        cursor: 'default',
+        _cursor: 'default',
 
         _toolTip: null,
 
@@ -118,14 +119,14 @@ define([
             others.shift();
             if (args.length === 1) {
                 index = -1;
-                constraint = child.bounds().clone();
+                constraint = child.bounds().copy();
             } else if (args.length === 2) {
                 if (args[1] instanceof Object) {
                     index = -1;
                     constraint = args[1];
                 } else if (typeof args[1] === 'number') {
                     index = args[1];
-                    constraint = child.bounds().clone();
+                    constraint = child.bounds().copy();
                 }
             } else if (args.length === 3) {
                 index = args[1];
@@ -196,13 +197,22 @@ define([
         },
 
         /**
-         * Returns true if this Widget can get
-         * a traverse KeyboardEvent event.
-         * @see InternalKeyEvent#traverseKeys
-         * @return {boolean}
+         * Sets cursor for this Widget and
+         * returns this Widget for convenience.
+         * @see https://developer.mozilla.org/en-US/docs/Web/CSS/cursor
+         * @param {string} cursor
+         * @return {Widget}
+         *//**
+         * Returns cursor for this Widget.
+         * @return {string}
          */
-        isFocusTraversable: function () {
-            return this.getFlag(FLAG_FOCUS_TRAVERSABLE);
+        cursor: function () {
+            if (arguments.length) {
+                this._cursor = arguments[0];
+                return this;
+            } else {
+                return this._cursor;
+            }
         },
 
         /**
@@ -210,9 +220,19 @@ define([
          * a traverse KeyboardEvent event.
          * @see InternalKeyEvent#traverseKeys
          * @param {boolean} traversable
+         *//**
+         * Returns true if this Widget can get
+         * a traverse KeyboardEvent event.
+         * @see InternalKeyEvent#traverseKeys
+         * @return {boolean}
          */
-        setFocusTraversable: function (traversable) {
-            this.setFlag(FLAG_FOCUS_TRAVERSABLE, traversable);
+        focusTraversable: function () {
+            if (arguments.length) {
+                this.setFlag(FLAG_FOCUS_TRAVERSABLE, !!arguments[0]);
+                return this;
+            } else {
+                return this.getFlag(FLAG_FOCUS_TRAVERSABLE);
+            }
         },
 
         /**
@@ -432,16 +452,15 @@ define([
             rect.setBounds(this.bounds());
             rect.shrink(this.borderWidth());
             if (this.isLocalCoordinates()) {
-                rect.setLocation(0, 0);
+                rect.location(0, 0);
             }
             this.desc('getClientArea', arguments, rect + '');
             return rect;
         },
 
         /**
-         * returns true if this widget's visibility flag is set to
+         * Returns true if this widget's visibility flag is set to
          * true. Does not walk up the parent chain.
-         * 
          * @return {boolean}
          */
         isVisible: function () {
@@ -451,11 +470,26 @@ define([
         /**
          * Returns true where this widget is visible
          * and its parent is showing, or it has no parent.
-         * 
          * @return {boolean}
          */
         isShowing: function () {
             return this.isVisible() && (!this.getParent() || this.getParent().isShowing());
+        },
+
+        /**
+         * Sets whether this widget can have background color or not.
+         * @param {boolean} value
+         */
+        setFillable: function (value) {
+            this.setFlag(FLAG_FILLABLE, value);
+        },
+
+        /**
+         * Returns true if this widget can have background color.
+         * @return {boolean}
+         */
+        isFillable: function () {
+            return this.getFlag(FLAG_FILLABLE);
         },
 
         /**
@@ -1001,6 +1035,16 @@ define([
             result = this.bounds().contains(x, y);
             this.desc('containsPoint', args, result + '');
             return result;
+        },
+
+        /**
+         * Erases this Widget.
+         */
+        erase: function () {
+            if (this.getParent() === null || !this.isVisible()) {
+                return;
+            }
+            this.getParent().redraw();
         },
 
         /**

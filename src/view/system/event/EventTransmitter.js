@@ -242,7 +242,7 @@ define([
             var mask = this.getContainer().getEventMask();
             if (this._cursorTarget) {
                 dom.setStyles(mask, {
-                    'cursor': this._cursorTarget.cursor
+                    'cursor': this._cursorTarget.cursor()
                 });
             }
         },
