@@ -47,15 +47,16 @@ define([
          * Explain
          * @param {GraphicContainer} container
          */
-        initContext : function(container) {
+        initContext: function(container) {
             this.desc('initContext', container);
-            var element, iframe, svg;
+            var element, iframe, svg, connection;
             if (container && container instanceof GraphicContainer) {
                 element = container.getElement();
                 if (element) {
                     iframe = element.querySelector('.GraphicContainer .IframeLayer');
                     svg = element.querySelector('.GraphicContainer .SVGLayer');
-                    this.info(iframe, svg);
+                    connection = element.querySelector('.ConnectionLayer');
+                    this.info(iframe, svg, connection);
                 }
                 if (!iframe) {
                     console.warn('TODO : make IframeLayer');
@@ -68,13 +69,17 @@ define([
             }
         },
 
-        getSVG : function(){
+        getSVG: function () {
             return this.svg;
         },
         
-        getDocument : function(){
+        getDocument: function () {
             return this.document;
         },
+
+        getConnection: function () {
+            return this.connection;
+        }
     });
 
     return GraphicContext;
