@@ -119,14 +119,14 @@ define([
             others.shift();
             if (args.length === 1) {
                 index = -1;
-                constraint = child.bounds().clone();
+                constraint = child.bounds().copy();
             } else if (args.length === 2) {
                 if (args[1] instanceof Object) {
                     index = -1;
                     constraint = args[1];
                 } else if (typeof args[1] === 'number') {
                     index = args[1];
-                    constraint = child.bounds().clone();
+                    constraint = child.bounds().copy();
                 }
             } else if (args.length === 3) {
                 index = args[1];
@@ -452,7 +452,7 @@ define([
             rect.setBounds(this.bounds());
             rect.shrink(this.borderWidth());
             if (this.isLocalCoordinates()) {
-                rect.setLocation(0, 0);
+                rect.location(0, 0);
             }
             this.desc('getClientArea', arguments, rect + '');
             return rect;
@@ -474,6 +474,14 @@ define([
          */
         isShowing: function () {
             return this.isVisible() && (!this.getParent() || this.getParent().isShowing());
+        },
+
+        /**
+         * Sets whether this widget can have background color or not.
+         * @param {boolean} value
+         */
+        setFillable: function (value) {
+            this.setFlag(FLAG_FILLABLE, value);
         },
 
         /**
@@ -1027,6 +1035,16 @@ define([
             result = this.bounds().contains(x, y);
             this.desc('containsPoint', args, result + '');
             return result;
+        },
+
+        /**
+         * Erases this Widget.
+         */
+        erase: function () {
+            if (this.getParent() === null || !this.isVisible()) {
+                return;
+            }
+            this.getParent().redraw();
         },
 
         /**
