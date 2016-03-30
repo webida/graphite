@@ -22,10 +22,14 @@
 
 define([
     'external/genetic/genetic',
-    'graphite/base/Base'
+    'external/math/math',
+    'graphite/base/Base',
+    './Dimension'
 ], function (
     genetic,
-    Base
+    math,
+    Base,
+    Dimension
 ) {
     'use strict';
 
@@ -76,13 +80,64 @@ define([
          * @param {number} dx
          * @param {number} dy
          * @return {Point}
+         *//**
+         * Translates this Point by the given Point.
+         * @param {Point} point
+         * @return {Point}
+         *//**
+         * Translates this Point by the given Dimension.
+         * @param {Dimension} dim
+         * @return {Point}
          */
         translate: function (dx, dy) {
             this.desc('translate', arguments);
-            this.x += dx;
-            this.y += dy;
+            var args = arguments;
+            if (args.length === 1) {
+                var a = args[0];
+                if (a instanceof Point) {
+                    this.x += a.x;
+                    this.y += a.y;
+                } else if (a instanceof Dimension) {
+                    this.x += a.w;
+                    this.y += a.h;
+                }
+            } else if (args.length === 2
+                && math.isAllNumber(args)) {
+                this.x += args[0];
+                this.y += args[1];
+            }
             this.info('translated -> ' + this);
             return this;
+        },
+
+        /**
+         * Creates a new Point which is translated
+         * by the specified x and y values.
+         * @param {number} dx
+         * @param {number} dy
+         * @return {Point}
+         *//**
+         * Creates a new Point which is translated
+         * by the specified Point.
+         * @param {Point} point
+         * @return {Point}
+         *//**
+         * Creates a new Point which is translated
+         * by the specified Dimension.
+         * @param {Dimension} dim
+         * @return {Point}
+         */
+        translated: function () {
+            var copy = this.copy();
+            return copy.traslate.apply(copy, arguments);
+        },
+
+        /**
+         * Returns a copy of this Point
+         * @return {Point}
+         */
+        copy: function () {
+            return new Point(this);
         },
 
         /**
