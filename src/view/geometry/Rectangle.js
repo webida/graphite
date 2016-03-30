@@ -245,7 +245,7 @@ define([
          * translating along each axis
          * @return {Rectangle}
          */
-        getTranslated: function () {
+        translated: function () {
             var copy = this.copy();
             return copy.translate.apply(copy, arguments);
         },
