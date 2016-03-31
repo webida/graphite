@@ -54,7 +54,7 @@ define([
          * @return {boolean}
          * @override
          */
-        containsPoint: function () {
+        containsPoint: function (x, y) {
             if (!Shape.prototype.containsPoint.call(this, x, y)) {
                 return false;
             }
@@ -183,7 +183,6 @@ define([
             if (args.length && args[0] instanceof PointList) {
                 this.erase();
                 this._pointList = args[0];
-                console.warn('this._pointList', this._pointList);
                 this.redraw();
                 return this;
             } else {
@@ -209,7 +208,6 @@ define([
                 } else if (math.isAllNumber(args)
                         && args.length % 2 === 0) {
                     arr = ([]).slice.call(args);
-                    console.warn('arr', arr);
                 }
                 this.pointList(new PointList(arr));
                 return this;
