@@ -336,6 +336,9 @@ define([
         },
 
         /**
+         * Translates this object with the given Point.
+         * @param {Point} point
+         *//**
          * Translates this object horizontally by dx
          * and vertically by dy.
          * @param {number} dx
@@ -353,7 +356,7 @@ define([
                 dx = args[0];
                 dy = args[1];
             }
-            for (var i = 0; i < len * 2; i += 2) {
+            for (var i = 0; i < len; i += 2) {
                 points[i] += dx;
                 points[i + 1] += dy;
             }
