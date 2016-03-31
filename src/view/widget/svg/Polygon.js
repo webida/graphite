@@ -36,26 +36,25 @@ define([
     'use strict';
 
     /**
-     * A Polyline.
+     * A Polygon.
      * @constructor
      */
-    function Polyline() {
+    function Polygon() {
         AbstractPolyShape.apply(this, arguments);
-        this._tolerance = 2;
     }
 
-    genetic.inherits(Polyline, AbstractPolyShape, {
+    genetic.inherits(Polygon, AbstractPolyShape, {
 
         /**
          * Returns tagName for this Widget's element.
          * @return {string}
          */
         nodeName: function () {
-            return 'polyline';
+            return 'polygon';
         },
 
         /**
-         * Locates the svg polyline with it's points.
+         * Locates the svg polygon with it's points.
          * @param {GraphicContext} context
          * @see DomWidget#_locateElement
          * @protected
@@ -63,8 +62,7 @@ define([
         _locateElement: function (context) {
             this.desc('_locateElement', context);
             this.attrCache.put({
-                'points': this.pointList().points().join(','),
-                'fill': 'none'
+                'points': this.pointList().points().join(',')
             });
         },
 
@@ -77,8 +75,8 @@ define([
          * @protected
          */
         _shapeContainsPoint: function (x, y) {
-            return Geometry.polylineContainsPoint(
-                    this.pointList(), new Point(x, y), this._tolerance);
+            return Geometry.polygonContainsPoint(
+                    this.pointList(), new Point(x, y));
         },
 
         /**
@@ -90,54 +88,13 @@ define([
          * @override
          */
         containsPoint: function (x, y) {
-            var tolerance = parseInt(Math.max(
-                this.borderWidth().uniSize() / 2, this._tolerance));
-            var bounds = Rectangle.SINGLETON;
-            bounds.setBounds(this.bounds());
-            bounds.expand(tolerance, tolerance);
-            if (!bounds.contains(x, y)) {
+            if (!this.bounds().contains(x, y)) {
                 return false;
             }
             return this._shapeContainsPoint(x, y)
                     || this._childrenContainsPoint(x, y);
         },
-
-        /**
-         * Sets the tolerance
-         * @param {number} tolerance
-         *//**
-         * Returns the tolerance
-         * @return {number}
-         */
-        tolerance: function () {
-            if (arguments.length) {
-                if (typeof arguments[0] === 'number') {
-                    this._tolerance = arguments[0];
-                }
-            } else {
-                return this._tolerance;
-            }
-        },
-
-        /** @inheritdoc */
-        bgColor: function () {
-            if (arguments.length) {
-                //does nothing
-                return this;
-            } else {
-                return this._bgColor;
-            }
-        },
-
-        /**
-         * Returns false because this widget can not
-         * have background color.
-         * @return {boolean}
-         */
-        isFillable: function () {
-            return false;
-        },
     });
 
-    return Polyline;
+    return Polygon;
 });

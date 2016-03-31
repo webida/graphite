@@ -37,6 +37,7 @@ define([
      */
     function AbstractPolyShape() {
         PointListShape.apply(this, arguments);
+        this.element().setAttribute('shape-rendering', 'auto');
     }
 
     genetic.inherits(AbstractPolyShape, PointListShape, {
