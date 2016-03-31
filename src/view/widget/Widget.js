@@ -600,8 +600,8 @@ define([
          */
         location: function (x, y) {
             this.desc('location', arguments);
+            var bounds = this.bounds();
             if (arguments.length) {
-                var bounds = this.bounds();
                 return this.bounds(x, y, bounds.w, bounds.h);
             } else {
                 return {
@@ -1016,24 +1016,10 @@ define([
          * @param {number} x
          * @param {number} y
          * @return {boolean}
-         *//**
-         * Returns true if the given point is contained
-         * within this Widget's bounds.
-         * @param {Point} p
-         * @return {boolean}
          */
-        containsPoint: function () {
-            var x, y, args = arguments, result;
-            if (args.length === 1
-                    && args[0] instanceof Point) {
-                x = args[0].x;
-                y = args[0].y;
-            } else if (args.length === 2) {
-                x = args[0];
-                y = args[1];
-            }
-            result = this.bounds().contains(x, y);
-            this.desc('containsPoint', args, result + '');
+        containsPoint: function (x, y) {
+            var result = this.bounds().contains(x, y);
+            this.desc('containsPoint', arguments, result + '');
             return result;
         },
 
