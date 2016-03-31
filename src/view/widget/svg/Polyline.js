@@ -55,12 +55,13 @@ define([
         },
 
         /**
-         * Returns tagName for this Widget's element.
+         * Locates the svg polyline with it's points.
          * @param {GraphicContext} context
+         * @see DomWidget#_locateElement
+         * @protected
          */
         _locateElement: function (context) {
             this.desc('_locateElement', context);
-            console.warn(this.pointList().points().join(','));
             this.attrCache.put({
                 'points': this.pointList().points().join(','),
                 'fill': 'none'
@@ -91,7 +92,6 @@ define([
         containsPoint: function (x, y) {
             var tolerance = parseInt(Math.max(
                 this.borderWidth().uniSize() / 2, this._tolerance));
-                    console.warn(tolerance);
             var bounds = Rectangle.SINGLETON;
             bounds.setBounds(this.bounds());
             bounds.expand(tolerance, tolerance);
