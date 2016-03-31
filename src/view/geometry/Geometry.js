@@ -252,7 +252,7 @@ define([
         /**
          * Returns true if a given point is in a given polygon of
          * specified point lists' connection.
-         * This method uses Winding Number Method algorithm to determin
+         * This method uses Winding Number Method algorithm to determine
          * the inclusion of a point P in a 2D planar non-simple polygons.
          * @param {PointList} pointList
          * @param {Point} point
