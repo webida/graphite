@@ -73,7 +73,18 @@ define([
         /** @inheritdoc */
         redraw: function () {
             this._bounds = null;
+            this.rebounds();
             PointListShape.prototype.redraw.call(this);
+        },
+
+        /**
+         * Calculates bounds again using current pointList state.
+         */
+        rebounds: function () {
+            var bordeWidth = this.borderWidth().uniSize();
+            var expand = parseInt(bordeWidth / 2);
+            this._bounds = this.pointList().bounds()
+                    .copy().expand(expand, expand);
         },
 
         /** @inheritdoc */
@@ -83,10 +94,7 @@ define([
                         this, arguments);
             } else {
                 if (this._bounds === null) {
-                    var bordeWidth = this.borderWidth().uniSize();
-                    var expand = parseInt(bordeWidth / 2);
-                    this._bounds = this.pointList().bounds()
-                            .copy().expand(expand, expand);
+                    this.rebounds();
                 }
                 return this._bounds;
             }
