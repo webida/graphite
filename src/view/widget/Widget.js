@@ -612,15 +612,7 @@ define([
         },
 
         /**
-         * Repaints this Widget.
-         * 
-         * @param {Rectangle} newBounds
-         *//**
-         * @param {number} x
-         * @param {number} y
-         * @param {number} w
-         * @param {number} h
-         * @override
+         * Redraws this Widget.
          */
         redraw: function () {
             this.desc('redraw', arguments);
