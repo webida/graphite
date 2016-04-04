@@ -22,9 +22,11 @@
 
 define([
     'external/genetic/genetic',
+    'external/math/math',
     'graphite/base/Base'
 ], function (
     genetic,
+    math,
     Base
 ) {
     'use strict';
@@ -39,9 +41,7 @@ define([
         if (args.length === 1 && args[0] instanceof Dimension) {
             this.w = args[0].w;
             this.h = args[0].h;
-        } else if (args.length === 2
-                && typeof args[0] === 'number'
-                && typeof args[1] === 'number') {
+        } else if (args.length === 2 && math.isAllNumber(args)) {
             this.w = args[0];
             this.h = args[1];
         }

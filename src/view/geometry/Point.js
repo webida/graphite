@@ -43,9 +43,7 @@ define([
         if (args.length === 1 && args[0] instanceof Point) {
             this.x = args[0].x;
             this.y = args[0].y;
-        } else if (args.length === 2
-                && typeof args[0] === 'number'
-                && typeof args[1] === 'number') {
+        } else if (args.length === 2 && math.isAllNumber(args)) {
             this.x = args[0];
             this.y = args[1];
         }

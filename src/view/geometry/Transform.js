@@ -15,7 +15,7 @@
  */
 
 /**
- * @file Introduction
+ * @file Provides support for transformation of scaling, translation and rotation.
  * @since 1.0.0
  * @author youngd.hwang@samsung.com
  */
@@ -37,9 +37,9 @@ define([
      */
     function Transform() {
         Base.apply(this, arguments);
-        this._scaleX = 1.0;
-        this._scaleY = 1.0;
-        this._cos = 1.0;
+        this._scaleX = 1;
+        this._scaleY = 1;
+        this._cos = 1;
     }
 
     genetic.inherits(Transform, Base, {
