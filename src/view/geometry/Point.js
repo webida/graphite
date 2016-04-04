@@ -43,9 +43,7 @@ define([
         if (args.length === 1 && args[0] instanceof Point) {
             this.x = args[0].x;
             this.y = args[0].y;
-        } else if (args.length === 2
-                && typeof args[0] === 'number'
-                && typeof args[1] === 'number') {
+        } else if (args.length === 2 && math.isAllNumber(args)) {
             this.x = args[0];
             this.y = args[1];
         }
@@ -138,6 +136,25 @@ define([
          */
         copy: function () {
             return new Point(this);
+        },
+
+        /**
+         * Negates the x and y values of this Point
+         * @return {Point}
+         */
+        negate: function () {
+            this.x = -this.x;
+            this.y = -this.y;
+            return this;
+        },
+
+        /**
+         * Calculaates the difference in between this Point and the one specified
+         * @param {Point} point
+         * @return {Dimension}
+         */
+        difference: function (point) {
+            return new Dimension(this.x - point.x, this.y - point.y);
         },
 
         /**

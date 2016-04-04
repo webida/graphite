@@ -397,6 +397,14 @@ define([
         },
 
         /**
+         * Returns the center-coordinate of this Rectangle.
+         * @return {Point}
+         */
+        center: function () {
+            return new Point(this.x + this.w / 2, this.y + this.h / 2);
+        },
+
+        /**
          * Returns whether the given coordinates are within the boundaries
          * of this Rectangle. The boundaries are inclusive of the top and
          * left edges, but exclusive of the bottom and right edges.
