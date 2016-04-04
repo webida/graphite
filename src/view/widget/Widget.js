@@ -694,8 +694,11 @@ define([
          */
         translateToAbsolute: function (t) {
             this.desc('translateToAbsolute', t);
-            this.warn('TODO');
-            //TODO : Calculate bounds from this Widget's settings and environment
+            if (this.getParent() === null) {
+                return;
+            }
+            this.getParent().translateToParent(t);
+            this.getParent().translateToAbsolute(t);
         },
 
         /**
@@ -712,6 +715,20 @@ define([
             if (this.isLocalCoordinates()) {
                 t.translate(-1*(bounds.x + border.left), -1*(bounds.y + border.top));
             }
+        },
+
+        /**
+         * Translates a Translatable in absolute coordinates
+         * to be relative to this widget's bounds.
+         * @param {Translatable} t
+         */
+        translateToRelative: function (t) {
+            this.desc('translateToRelative', t);
+            if (this.getParent() === null) {
+                return;
+            }
+            this.getParent().translateToRelative(t);
+            this.getParent().translateFromParent(t);
         },
 
         /**
