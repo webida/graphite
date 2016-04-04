@@ -141,6 +141,25 @@ define([
         },
 
         /**
+         * Negates the x and y values of this Point
+         * @return {Point}
+         */
+        negate: function () {
+            this.x = -this.x;
+            this.y = -this.y;
+            return this;
+        },
+
+        /**
+         * Calculaates the difference in between this Point and the one specified
+         * @param {Point} point
+         * @return {Dimension}
+         */
+        difference: function (point) {
+            return new Dimension(this.x - point.x, this.y - point.y);
+        },
+
+        /**
          * For convenience, this tells position for
          * x,y of this Rectangle.
          * @return {string}
