@@ -35,6 +35,16 @@ define([
      */
     function Dimension() {
         Base.apply(this, arguments);
+        var args = arguments;
+        if (args.length === 1 && args[0] instanceof Dimension) {
+            this.w = args[0].w;
+            this.h = args[0].h;
+        } else if (args.length === 2
+                && typeof args[0] === 'number'
+                && typeof args[1] === 'number') {
+            this.w = args[0];
+            this.h = args[1];
+        }
     }
 
     genetic.inherits(Dimension, Base, {
@@ -54,6 +64,8 @@ define([
             return this.bbb;
         }
     });
+
+    Dimension.SINGLETON = new Dimension();
 
     return Dimension;
 });
