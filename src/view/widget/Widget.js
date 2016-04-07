@@ -179,6 +179,31 @@ define([
         },
 
         /**
+         * Removes the given child Widget from this Widget's hierarchy and
+         * revalidates this Widget. The child Widget's onRemoved()
+         * method is also called.
+         * 
+         * @param {Widget} widget
+         */
+        remove: function (widget) {
+            var layout = this.getLayout();
+            var children = this.getChildren();
+            if ((widget.getParent() !== this)) {
+                throw new Error("Widget is not a child");
+            }
+            if (this.getFlag(Widget.FLAG_REALIZED)) {
+                widget.onRemoved();
+            }
+            if (layout !== null) {
+                layout.remove(widget);
+            }
+            widget.erase();
+            widget.setParent(null);
+            children.remove(widget);
+            this.revalidate();
+        },
+
+        /**
          * Tells whether this can contain other Widget.
          * In default, Widget can containe other Widget,
          * so returns true.
