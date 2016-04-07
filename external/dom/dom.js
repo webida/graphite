@@ -141,6 +141,16 @@ define(function () {
             return element;
         },
 
+        addElement: function (element, node, pos) {
+            if (!pos || pos === 'after') {
+                node.parentNode.insertBefore(element, node.nextSibling);
+            } else if (pos == 'before') {
+                node.parentNode.insertBefore(element, node);
+            } else if (pos == 'inside') {
+                node.appendChild(element);
+            }
+        },
+
         addEvent: function (element, eventName, handler, useCapture) {
             if (element.addEventListener) {
                 if (typeof useCapture === 'undefined') {
