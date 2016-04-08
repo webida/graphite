@@ -103,6 +103,17 @@ define([
             var constraint = this._constraints.get(widget);
             this.desc('getConstraint', widget, constraint + '');
             return constraint;
+        },
+
+        /**
+         * Removes the given widget from this
+         * LayoutManager's list of widgets.
+         * @param {Widget} widget
+         */
+        remove: function (widget) {
+            this.desc('remove', arguments);
+            Layout.prototype.remove.apply(this, arguments);
+            this._constraints.delete(widget);
         }
     });
 

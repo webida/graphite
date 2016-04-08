@@ -40,8 +40,7 @@ define([
     function DomWidget() {
         Widget.apply(this, arguments);
         this.element(this._createElement());
-        this.cssCache = new CssCache(this);
-        this.attrCache = new AttributeCache(this);
+        this._createPropertyCache(this.element());
     }
 
     genetic.inherits(DomWidget, Widget, {
@@ -65,6 +64,17 @@ define([
         _createElement: function () {
             throw new Error('_createElement() should be '
                     + 'implemented by ' + this.constructor.name);
+        },
+
+        /**
+         * Creates then returns HTMLElement for this Widget.
+         * @param {HTMLElement} element
+         * @abstract
+         * @protected
+         */
+        _createPropertyCache: function (element) {
+            this.cssCache = new CssCache(element);
+            this.attrCache = new AttributeCache(element);
         },
 
         /**
@@ -181,9 +191,9 @@ define([
      * Abstract class for caching values.
      * @constructor
      */
-    function AbstractCache(widget) {
+    function AbstractCache(element) {
         Base.apply(this, arguments);
-        this._widget = widget;
+        this._element = element;
         this._cache = {};
     }
 
@@ -233,7 +243,7 @@ define([
      * Class for caching css values.
      * @constructor
      */
-    function CssCache(widget) {
+    function CssCache(element) {
         AbstractCache.apply(this, arguments);
     }
 
@@ -244,10 +254,10 @@ define([
          */
         flush: function () {
             this.desc('flush');
-            if (!this._widget || !this._widget.element()) {
+            if (!this._element) {
                 return;
             }
-            dom.setStyles(this._widget.element(), this._cache);
+            dom.setStyles(this._element, this._cache);
             this.clear();
         }
     });
@@ -266,10 +276,10 @@ define([
          */
         flush: function () {
             this.desc('flush');
-            if (!this._widget || !this._widget.element()) {
+            if (!this._element) {
                 return;
             }
-            dom.setAttributes(this._widget.element(), this._cache);
+            dom.setAttributes(this._element, this._cache);
             this.clear();
         }
     });

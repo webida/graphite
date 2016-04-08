@@ -65,6 +65,16 @@ define([
         getConstraint: function (widget) {
             this.desc('getConstraint', arguments);
             return null;
+        },
+
+        /**
+         * Removes the given widget from this
+         * LayoutManager's list of widgets.
+         * @param {Widget} widget
+         */
+        remove: function (widget) {
+            this.desc('remove', arguments);
+            this.invalidate();
         }
     });
 

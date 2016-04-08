@@ -28,6 +28,7 @@ define([
     'graphite/view/widget/html/Div',
     'graphite/view/widget/svg/Circle',
     'graphite/view/widget/svg/Ellipse',
+    'graphite/view/widget/svg/G',
     'graphite/view/widget/svg/Polygon',
     'graphite/view/widget/svg/PolygonShape',
     'graphite/view/widget/svg/Polyline',
@@ -48,6 +49,7 @@ define([
     Div,
     Circle,
     Ellipse,
+    G,
     Polygon,
     PolygonShape,
     Polyline,
@@ -88,6 +90,7 @@ define([
                 svg: {
                     Circle: Circle,
                     Ellipse: Ellipse,
+                    G: G,
                     Polygon: Polygon,
                     PolygonShape: PolygonShape,
                     Polyline: Polyline,
