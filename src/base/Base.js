@@ -41,20 +41,20 @@ define([
         });
     }
 
+    function filterArgs(args) {
+        if (args && typeof args === 'object' && 'length' in args) {
+            args = this.explain(args);
+        }
+        if ( typeof args === 'undefined') {
+            args = '';
+        }
+        return args;
+    }
+
     genetic.inherits(Base, Object, {
 
-        _filterArgs: function (args) {
-            if (typeof args === 'object' && 'length' in args) {
-                args = this.explain(args);
-            }
-            if ( typeof args === 'undefined') {
-                args = '';
-            }
-            return args;
-        },
-
         desc: function (fnName, args, result, color) {
-            args = this._filterArgs(args);
+            args = filterArgs.call(this, args);
             var msgs = [this + '.' + fnName + '(' + args + ')'];
             if (result) {
                 msgs[0] += ' =>';
@@ -103,7 +103,7 @@ define([
         },
 
         isInterface: function (method, args) {
-            args = this._filterArgs(args);
+            args = filterArgs.call(this, args);
             throw new Error(method + '(' + args + ') should be '
                     + 'implemented by ' + this.constructor.name);
         },
