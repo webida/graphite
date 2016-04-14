@@ -54,6 +54,7 @@ define([
             this.desc('setElement', element);
             this._element = element;
             element.classList.add('graphite');
+            element.classList.add('graphite-select-none');
             this.mask = dom.bySelector('#mask', element)[0];
         },
 
@@ -84,7 +85,8 @@ define([
                         "min-width: 100px;" +
                         "min-height: 100px;" +
                     "}" +
-                    ".graphite .mask {" +
+                    ".graphite-select-none {" +
+                        "outline: none;" +
                         "-moz-user-select: -moz-none;" +
                         "-khtml-user-select: none;" +
                         "-webkit-user-select: none;" +
@@ -103,7 +105,7 @@ define([
                         "<svg class='feedback layer'></svg>" +
                     "</div>" +
                     "<svg class='handle layer'></svg>" +
-                    "<div class='mask layer' tabindex='1000'></div>" +
+                    "<div class='mask layer graphite-select-none' tabindex='1000'></div>" +
                 "</div>";
             container.innerHTML = markup;
             this.master = $('.master');
