@@ -65,13 +65,14 @@ define(function () {
             var stacks = stack.split('\n');
             var lineOfNew, callLine, callMethod = '';
             if (options && options.type === 'constructor') {
+                //console.warn(stack);
                 for (var i in stacks) {
                     if (stacks[i].indexOf('new '+ cls) > -1) {
                         lineOfNew = parseInt(i) + 1;
                         break;
                     }
                 }
-                if (lineOfNew) {
+                if (lineOfNew && stacks[lineOfNew]) {
                     callLine = stacks[lineOfNew];
                     //console.log(callLine);
                     if (callLine.indexOf('[as constructor]') > -1) {
