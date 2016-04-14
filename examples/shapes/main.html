@@ -4,151 +4,19 @@
 		<meta charset=utf-8 />
 		<title>graphite</title>
 		<style>
-			div {
-			}
 			body {
 				margin: 20px;
 				padding: 20px;
 			}
-			#info {
-				position: relative;
-				font-size: 8pt;
-				font-family: consolas;
-				height: 100px;
-			}
-			#info > #console {
-				position: absolute;
-				width: 80%;
-				background-color: #eee;
-			}
-			#console ul {
-				line-height: 11pt;
-				padding-left: 30px;
-			}
-			#console span {
-				background-color: #fff;
-				padding: 0px 3px;
-			}
-			#info > #control {
-				position: relative;
-				padding-left: 10px;
-				left: 80%;
-			}
 			#container {
-				background-color: #A2E2F1;
-				position: absolute;
-				top: 130px;
-				width: 90%;
-				height: 70%;
-				margin-bottom: 100%;
-				overflow: hidden;
-			}
-			#scrollable {
-				position: absolute;
-				overflow: auto;
-				width: 100%;
-				height: 100%;
-			}
-			#scalable {
-				position: absolute;
-				width: 100%;
-				height: 100%;
-			}
-			#printable {
-				position: absolute;
-				width: 150%;
-				height: 150%;
-				background-color: salmon;
-			}
-			#primary {
-				position: absolute;
-				width: 100%;
-				height: 100%;
-			}
-			#mask {
-				position: absolute;
-				background-color: salmon;
-				width: 100%;
-				height: 100%;
-				opacity: 0.1;
-			}
-			.unselectable {
-				-moz-user-select: -moz-none;
-				-khtml-user-select: none;
-				-webkit-user-select: none;
-				-o-user-select: none;
-				user-select: none;
-			}
-			.graphite .Layer {
-				position: absolute;
-				width: 100%;
-				height: 100%;
-			}
-			.graphite .ConnectionLayer {
-				position: absolute;
-				width: 100%;
-				height: 100%;
-			}
-			#iframe1 {
-				position: absolute;
-				width: 100%;
-				height: 100%;
-				border: 0;
-			}
-			#svg1 {
-				position: absolute;
-				width: 574px;
-				height: 580px;
-				border: 0;
-			}
-			#handle, #grid, #feedback {
-				position: absolute;
-				width: 100%;
-				height: 100%;
-				border: 0;
+				border: 1px solid #ccc;
+				width: 500px;
+				height: 500px;
 			}
 		</style>
 	</head>
 	<body>
-		<div id='info'>
-			<div id='console'>
-				<ul>
-					<li>
-						layerX,Y <span id='layerXY'>n/a</span>
-					</li>
-					<li>
-						dragStartPos <span id='dragStartPos'>n/a</span>
-					</li>
-					<li>
-						dragDelta <span id='dragDelta'>n/a</span>
-					</li>
-					<li>
-						dragStopPos <span id='dragStopPos'>n/a</span>
-					</li>
-				</ul>
-			</div>
-			<div id='control'>
-				<button id='btnRun'>
-					run
-				</button>
-			</div>
-		</div>
-		<div id='container' class='graphite'>
-			<div id='scrollable' class='Layer'>
-				<div id='scalable' class='Layer'>
-					<div id='printable' class='Layer'>
-						<div id='primary' class='LayerPane GraphicContainer'>
-							<iframe id='iframe1' class='IframeLayer' src='iframe.html'></iframe>
-							<svg id='svg1' class='SVGLayer' shape-rendering='crispEdges'></svg>
-						</div>
-						<svg id='connection' class='ConnectionLayer'></svg>
-					</div>
-					<svg id='feedback' class='FeedbackLayer'></svg>
-				</div>
-				<svg id='handle' class='Layer'></svg>
-				<div id='mask' class='Layer unselectable' tabindex='1000'></div>
-			</div>
-		</div>
+		<div id='container'></div>
 		<script src="../../external/requirejs/require.js"></script>
 		<script src="configs/requirejs-config.js"></script>
 		<script src="main.js"></script>
