@@ -241,6 +241,18 @@ define(function () {
                 'top': offset.top - parentOffset.top,
                 'left': offset.left - parentOffset.left
             };
+        },
+
+        /**
+         * Returns event's offset position. 
+         * @param {Event} event
+         * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Event|Event}
+         */
+        getEventPos: function (event) {
+            return {
+                'x': event.offsetX || event.layerX,
+                'y': event.offsetY || event.layerY
+            };
         }
     };
 });
