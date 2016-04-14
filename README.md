@@ -97,6 +97,15 @@ require(['path/to/graphite'], function(graphite) {
 ```
 ![image](https://cloud.githubusercontent.com/assets/7447396/14417472/ed450f68-fff0-11e5-999e-2a228e642a2c.png)
 
+#### Setting up debug mode
+
+Just load your app url with #mode=debug
+```html
+http://localhost/examples/intersection/main.html#mode=debug
+```
+![image](https://cloud.githubusercontent.com/assets/7447396/14526380/c9baa280-027d-11e6-901e-917b3cc2d3ca.png)
+
+
 ### Graphite Control
 
 now working ...
