@@ -103,7 +103,7 @@ Just load your app url with #mode=debug
 ```html
 http://localhost/examples/intersection/main.html#mode=debug
 ```
-![image](https://cloud.githubusercontent.com/assets/7447396/14526380/c9baa280-027d-11e6-901e-917b3cc2d3ca.png)
+![image](https://cloud.githubusercontent.com/assets/7447396/14526491/870f1f1e-027e-11e6-8116-bdcb8262d36e.png)
 
 
 ### Graphite Control
