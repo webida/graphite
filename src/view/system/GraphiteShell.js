@@ -29,7 +29,8 @@ define([
     'graphite/view/system/GraphicContainer',
     'graphite/view/system/GraphicContext',
     'graphite/view/update-manager/AsyncUpdateManager',
-    'graphite/view/widget/Widget'
+    'graphite/view/widget/Widget',
+    './Environment'
 ], function (
     EventEmitter,
     genetic,
@@ -39,7 +40,8 @@ define([
     GraphicContainer,
     GraphicContext,
     AsyncUpdateManager,
-    Widget
+    Widget,
+    Environment
 ) {
     'use strict';
 
@@ -53,6 +55,7 @@ define([
      */
     function GraphiteShell(container) {
         Base.apply(this, arguments);
+        Environment.setLocationHash();
         this.setUpdateManager(new AsyncUpdateManager());
         this.setRootWidget(this.createRootWidget());
         if (container) {
@@ -67,11 +70,17 @@ define([
          * @param {GraphicContainer|HTMLElement|string} c
          */
         setContainer: function (c) {
+            var shell = this;
             if(typeof c === 'string' && document.getElementById(c)){
                 c = document.getElementById(c);
             }
             if(c instanceof HTMLElement){
                 c = new GraphicContainer(c);
+                c.on('ready', function () {
+                    if (Environment.global.get('mode') === 'debug') {
+                        Environment.loadDebugMode(shell);
+                    }
+                });
             }
             if(c instanceof GraphicContainer){
                 if (this._container === c){
