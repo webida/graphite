@@ -279,7 +279,7 @@ define([
             this.desc('_setHoverTarget', arguments);
             this._hoverTarget = widget;
             //TODO shows tool tip
-            this.warn('TODO shows tool tip');
+            //this.warn('TODO shows tool tip');
         },
 
         /**
