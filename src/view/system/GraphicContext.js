@@ -38,7 +38,7 @@ define([
      */
     function GraphicContext(container) {
         Base.apply(this, arguments);
-        this.initContext(container);
+        this.init(container);
     }
 
     genetic.inherits(GraphicContext, Base, {
@@ -47,24 +47,13 @@ define([
          * Explain
          * @param {GraphicContainer} container
          */
-        initContext: function(container) {
-            this.desc('initContext', container);
-            var element, iframe, svg, connection;
+        init: function(container) {
+            this.desc('init', container);
+            var iframe;
             if (container && container instanceof GraphicContainer) {
-                element = container.getElement();
-                if (element) {
-                    iframe = element.querySelector('.GraphicContainer .IframeLayer');
-                    svg = element.querySelector('.GraphicContainer .SVGLayer');
-                    connection = element.querySelector('.ConnectionLayer');
-                    this.info(iframe, svg, connection);
-                }
-                if (!iframe) {
-                    console.warn('TODO : make IframeLayer');
-                }
-                if (!svg) {
-                    console.warn('TODO : make SVGLayer');
-                }
-                this.svg = svg;
+                this.container = container;
+                this.svg = this.container.svg;
+                iframe = this.container.iframe;
                 this.document = iframe.contentDocument || iframe.contentWindow.document;
             }
         },
@@ -75,10 +64,6 @@ define([
         
         getDocument: function () {
             return this.document;
-        },
-
-        getConnection: function () {
-            return this.connection;
         }
     });
 
