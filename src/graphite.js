@@ -24,7 +24,10 @@ define([
     'graphite/view/layout/XYLayout',
     'graphite/view/system/GraphiteShell',
     'graphite/view/widget/connection/anchor/CardinalAnchor',
+    'graphite/view/widget/connection/anchor/EdgeAnchor',
     'graphite/view/widget/connection/Connection',
+    'graphite/view/widget/connection/decoration/PolygonDecoration',
+    'graphite/view/widget/connection/decoration/PolylineDecoration',
     'graphite/view/widget/html/Div',
     'graphite/view/widget/svg/Circle',
     'graphite/view/widget/svg/Ellipse',
@@ -45,7 +48,10 @@ define([
     XYLayout,
     GraphiteShell,
     CardinalAnchor,
+    EdgeAnchor,
     Connection,
+    PolygonDecoration,
+    PolylineDecoration,
     Div,
     Circle,
     Ellipse,
@@ -80,7 +86,12 @@ define([
             widget: {
                 connection: {
                     anchor: {
-                        CardinalAnchor: CardinalAnchor
+                        CardinalAnchor: CardinalAnchor,
+                        EdgeAnchor: EdgeAnchor
+                    },
+                    decoration : {
+                        PolygonDecoration: PolygonDecoration,
+                        PolylineDecoration: PolylineDecoration
                     },
                     Connection: Connection
                 },
