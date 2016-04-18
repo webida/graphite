@@ -51,8 +51,9 @@ define([
     genetic.inherits(DelegatingLayout, Layout, {
 
         /**
-         * Lays out the given widget.
-         * @see Layout#layout(Widget)
+         * Lays out the given widget's children 
+         * based on their {@link Locator} constraint.
+         * @param  {Widget} widget
          */
         layout: function (widget) {
             this.desc('layout', widget);
@@ -68,7 +69,7 @@ define([
         /**
          * Sets the constraint for the given Widget.
          * @param {Widget} widget
-         * @param {Rectangle} constraint
+         * @param {Object} constraint
          */
         setConstraint: function (widget, constraint) {
             this.desc('setConstraint', arguments);
@@ -82,7 +83,7 @@ define([
         /**
          * Returns the constraint for the given Widget.
          * @param {Widget} widget
-         * @return {Rectangle}
+         * @return {Object}
          */
         getConstraint: function (widget) {
             var constraint = this._constraints.get(widget);
