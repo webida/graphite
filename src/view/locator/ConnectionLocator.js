@@ -34,17 +34,16 @@ define([
 ) {
     'use strict';
 
-
     /**
-     * Alignment Constants.
+     * @constant {number} Alignment Constants.
      */
     var SOURCE = 2;
     var TARGET = 3;
     var MIDDLE = 4;
 
     /**
-     * Constants representing cardinal directions 
-     * and relative positions.
+     * @constant {Object}  Constants representing 
+     * cardinal directions and relative positions.
      */
     var PositionContants = {
         NONE: 0,
@@ -89,7 +88,6 @@ define([
         EAST_WEST: function() {
             return EAST | WEST;
         },
-
         NSEW: function() {
             return NORTH_SOUTH | EAST_WEST;
         },
@@ -120,7 +118,7 @@ define([
     genetic.inherits(ConnectionLocator, Locator, {
 
         /**
-         * Recalculate the position of the widget
+         * Recalculates the position of the widget
          * and returns the updated bounds.
          * @param {Widget}
          * @override
@@ -134,7 +132,7 @@ define([
         },
 
         /**
-         * Recalculate the position of the widget
+         * Recalculates the position of the widget
          * according to its desired poistion 
          * relative to the center point.
          * @param {Dimension} size

@@ -16,7 +16,7 @@
 
 /**
  * @file Locator used to place a {@link PolylineDecoration} 
- * on a {@link Connection|.
+ * or a {@link PolygonDecoration} on a {@link Connection|.
  * @since 1.0.0
  * @author youngd.hwang@samsung.com
  */
@@ -41,9 +41,9 @@ define([
     genetic.inherits(ArrowLocator, ConnectionLocator, {
 
         /**
-         * Relocate the passed in widget at either the source
+         * Relocates the passed in widget at either the source
          * or target of the connection
-         * @param {PolylineDecoration}
+         * @param {PolylineDecoration} or {PolygonDecoration}
          */
         relocate: function (decoration) {
             var pointList = this.connection().pointList();
