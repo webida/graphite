@@ -37,12 +37,27 @@ define([
      */
     function Transform() {
         Base.apply(this, arguments);
-        this._scaleX = 1;
-        this._scaleY = 1;
-        this._cos = 1;
     }
 
     genetic.inherits(Transform, Base, {
+
+        /** @member {number} */
+        _scaleX: 1,
+
+        /** @member {number} */
+        _scaleY: 1,
+
+        /** @member {number} */
+        _cos: 1,
+
+        /** @member {number} */
+        _sin: 0,
+
+        /** @member {number} */
+        _dx: 0,
+
+        /** @member {number} */
+        _dy: 0,
 
         /**
          * Sets the value for the amount of scaling to be done.
