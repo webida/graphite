@@ -18,6 +18,7 @@
  * @file Introduction
  * @since 1.0.0
  * @author hw.shim@samsung.com
+ * @author youngd.hwang@samsung.com
  */
 
 define([
@@ -68,6 +69,20 @@ define([
             } else {
                 return this._owner;
             }
+        },
+
+        /**
+         * Returns the anchor's reference point,
+         * Default  point is the center of the anchor's owner.
+         * @return {Point}
+         */
+        referencePoint: function () {
+            if (this.owner() === null) {
+                return null;
+            }
+            var ref = this.owner().bounds().center();
+            this.owner().translateToAbsolute(ref);
+            return ref;
         }
     });
 
