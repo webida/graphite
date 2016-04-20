@@ -18,13 +18,16 @@
  * @file Introduction
  * @since 1.0.0
  * @author hw.shim@samsung.com
+ * @author youngd.hwang@samsung.com
  */
 
 define([
     'external/genetic/genetic',
+    'graphite/view/geometry/Point',
     'graphite/base/BaseEmitter'
 ], function (
     genetic,
+    Point,
     BaseEmitter
 ) {
     'use strict';
@@ -35,6 +38,8 @@ define([
      */
     function ConnectionRouter() {
         BaseEmitter.apply(this, arguments);
+        this._start = new Point();
+        this._end = new Point();
     }
 
     genetic.inherits(ConnectionRouter, BaseEmitter, {
@@ -74,20 +79,39 @@ define([
          */
         remove: function (connection) {
             this.emit('remove', connection);
+        },
+
+        /**
+         * Obtains a connection's start point.
+         * @param {Connection} connection
+         */
+        startPoint: function (connection) {
+            var ref = connection.targetAnchor().referencePoint();
+            var start = connection.sourceAnchor().getLocation(ref);
+            return this._start.location(start.x, start.y);
+        },
+
+        /**
+         * Obtains a connection's end point.
+         * @param {Connection} connection
+         */
+        endPoint: function (connection) {
+            var ref = connection.sourceAnchor().referencePoint();
+            var end = connection.targetAnchor().getLocation(ref);
+            return this._end.location(end.x, end.y);
         }
     });
 
     ConnectionRouter.DEFAULT = new ConnectionRouter();
     ConnectionRouter.DEFAULT.route = function (connection) {
         var p;
-        var points = connection.points();
+        var points = connection.pointList();
         ConnectionRouter.prototype.route.call(this, connection);
         points.clear();
         connection.translateToRelative(p = this.startPoint(connection));
-        points.add(p);
+        points.add(p.x, p.y);
         connection.translateToRelative(p = this.endPoint(connection));
-        points.add(p);
-        connection.points(points);
+        points.add(p.x, p.y);
     }
 
     return ConnectionRouter;

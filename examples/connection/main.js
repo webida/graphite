@@ -3,6 +3,8 @@ require(['graphite/graphite', 'external/dom/dom'], function(graphite, dom) {
     var GraphiteShell = graphite.view.system.GraphiteShell;
     var Connection = graphite.view.widget.connection.Connection;
     var CardinalAnchor = graphite.view.widget.connection.anchor.CardinalAnchor;
+    var PolygonDecoration = graphite.view.widget.connection.decoration.PolygonDecoration;
+    var PolylineDecoration = graphite.view.widget.connection.decoration.PolylineDecoration;
     var Rect = graphite.view.widget.svg.Rect;
     var Svg = graphite.view.widget.svg.Svg;
 
@@ -40,11 +42,15 @@ require(['graphite/graphite', 'external/dom/dom'], function(graphite, dom) {
     var conn1 = new Connection();
     conn1.sourceAnchor(new CardinalAnchor(r1, {pos: 'E'}));
     conn1.targetAnchor(new CardinalAnchor(r2, {pos: 'W'})); 
+    conn1.targetDecoration(new PolygonDecoration());
+    conn1.border(1, 'black').bgColor('black')
     svg.append(conn1);
 
     var conn2 = new Connection();
     conn2.sourceAnchor(new CardinalAnchor(r1, {pos: 'S'}));
     conn2.targetAnchor(new CardinalAnchor(r3, {pos: 'N'})); 
+    conn2.targetDecoration(new PolylineDecoration());
+    conn2.border(1, 'black');
     svg.append(conn2);
 
     (function () {

@@ -18,13 +18,22 @@
  * @file Introduction
  * @since 1.0.0
  * @author hw.shim@samsung.com
+ * @author youngd.hwang@samsung.com
  */
 
 define([
     'external/genetic/genetic',
+    'graphite/view/geometry/Point',
+    'graphite/view/geometry/PointList',
+    'graphite/view/geometry/Transform',
+    './PolylineDecoration',
     '../../svg/Polygon'
 ], function (
     genetic,
+    Point,
+    PointList,
+    Transform,
+    PolylineDecoration,
     Polygon
 ) {
     'use strict';
@@ -35,9 +44,19 @@ define([
      */
     function PolygonDecoration() {
         Polygon.apply(this, arguments);
+        this._location = new Point();
+        this.TRIANGLE = new PointList([0, 0, -1, 1, -1, -1]);
+        this.INVERTED_TRIANGLE_TIP = new PointList([0, 1, 0, -1, -1, 0]);
+        this._template = this.TRIANGLE;
+        this._transform = new Transform();
+        this.setFillable(true);
+        this.scale(6, 4);
     }
 
     var proto = genetic.mixin(Polygon.prototype, PolylineDecoration.prototype, {
+
+        /** @member {PointList} */
+        INVERTED_TRIANGLE_TIP: null,
 
         /**
          * Explain

@@ -18,59 +18,80 @@
  * @file CardinalAnchor
  * @since 1.0.0
  * @author hw.shim@samsung.com
+ * @author youngd.hwang@samsung.com
  */
 
 define([
     'external/genetic/genetic',
-    './ConnectionAnchor'
+    'graphite/view/geometry/Point',
+    './EdgeAnchor'
 ], function (
     genetic,
-    ConnectionAnchor
+    Point,
+    EdgeAnchor
 ) {
     'use strict';
 
     /**
      * A CardinalAnchor.
      * @constructor
+     * @param {Object} option
+     * @param {string} option.pos - The direction of a
+     *        connected anchor point.
+     *        (One of N,NE,E,SE,S,SW,W,NW)
      */
     function CardinalAnchor(owner, option) {
-        ConnectionAnchor.apply(this, arguments);
-        if (typeof option === 'object') {
-            this.option(option);
-        }
+        EdgeAnchor.apply(this, arguments);
     }
 
-    genetic.inherits(CardinalAnchor, ConnectionAnchor, {
+    genetic.inherits(CardinalAnchor, EdgeAnchor, {
 
         /**
-         * Sets the options of this anchor.
-         * @param {Object} option
-         * @param {string} option.pos - The direction of a
-         *        connected anchor point.
-         *        (One of N,NE,E,SE,S,SW,W,NW,O)
-         * @return {Anchor}
-         *//**
-         * Returns the options of this anchor.
-         * @return {Object} option
-         */
-        option: function (option) {
-            if (arguments.length) {
-                this._option = arguments[0];
-                return this;
-            } else {
-                return this._option;
-            }
-        },
-
-        /**
-         * Returns the location where the Connection should be
-         * anchored in absolute coordinates. The anchor may use
-         * the given reference Point to calculate this location.
+         * Returns the anchor's reference point.
          * @param {Point} reference
          * @return {Point}
+         * @override
          */
-        getLocation: function (reference) {
-            
+        _getReferencePoint: function () {
+            var r = this.owner().bounds().copy();
+            var x = 0, y = 0;
+            switch (this._option.pos) {
+                case 'N':
+                    x = r.x + r.w / 2;
+                    y = r.y;
+                    break;
+                case 'NE':
+                    x = r.x + r.w;
+                    y = r.y;
+                    break;
+                case 'E':
+                    x = r.x + r.w;
+                    y = r.y + r.h / 2;
+                    break;
+                case 'SE':
+                    x = r.x + r.w;
+                    y = r.y + r.h;
+                    break;
+                case 'S':
+                    x = r.x + r.w / 2;
+                    y = r.y + r.h;
+                    break;
+                case 'SW':
+                    x = r.x;
+                    y = r.y + r.h;
+                    break;
+                case 'W':
+                    x = r.x;
+                    y = r.y + r.h / 2;
+                    break;
+                case 'NW':
+                    x = r.x;
+                    y = r.y;
+                    break;
+                default:
+                    ;
+            }
+            return new Point(x, y);
         }
     });
 

@@ -15,17 +15,27 @@
  */
 
 /**
- * @file Introduction
+ * @file Widgets using a DelegatingLayout 
+ * as their layout manager give location responsibilities 
+ * to their children. The children of a Widget 
+ * using a DelegatingLayout should have a {@link Locator} 
+ * as a constraint whose {@link Locator#relocate} method 
+ * is responsible for placing the child.
  * @since 1.0.0
  * @author hw.shim@samsung.com
+ * @author youngd.hwang@samsung.com
  */
 
 define([
     'external/genetic/genetic',
-    'graphite/base/Base'
+    'external/map/Map',
+    'graphite/view/layout/Layout',
+    'graphite/view/locator/Locator'
 ], function (
     genetic,
-    Base
+    Map,
+    Layout,
+    Locator
 ) {
     'use strict';
 
@@ -34,18 +44,51 @@ define([
      * @constructor
      */
     function DelegatingLayout() {
-        Base.apply(this, arguments);
+        Layout.apply(this, arguments);
+        this._constraints = new Map();
     }
 
-    genetic.inherits(DelegatingLayout, Base, {
+    genetic.inherits(DelegatingLayout, Layout, {
 
         /**
-         * Explain
-         * @param {}
-         * @return {Array}
+         * Lays out the given widget's children 
+         * based on their {@link Locator} constraint.
+         * @param  {Widget} widget
          */
-        aaaa: function () {
-            return this.bbb;
+        layout: function (widget) {
+            this.desc('layout', widget);
+            var locator;
+            widget.getChildren().forEach(function(child) {
+                locator = this.getConstraint(child);
+                if (locator && locator instanceof Locator) {
+                    locator.relocate(child);
+                }
+            }, this);
+        },
+
+        /**
+         * Sets the constraint for the given Widget.
+         * @param {Widget} widget
+         * @param {Object} constraint
+         */
+        setConstraint: function (widget, constraint) {
+            this.desc('setConstraint', arguments);
+            Layout.prototype.setConstraint.apply(this, arguments);
+            if (typeof constraint !== 'undefined'
+                    && constraint !== null) {
+                this._constraints.set(widget, constraint);
+            }
+        },
+
+        /**
+         * Returns the constraint for the given Widget.
+         * @param {Widget} widget
+         * @return {Object}
+         */
+        getConstraint: function (widget) {
+            var constraint = this._constraints.get(widget);
+            this.desc('getConstraint', widget, constraint + '');
+            return constraint;
         }
     });
 
