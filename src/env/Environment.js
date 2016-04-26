@@ -74,7 +74,7 @@ define([
     };
 
     Environment.loadDebugMode = function (shell) {
-        require(['graphite/view/system/debug/DebugTools'], function (DebugTools) {
+        require(['graphite/env/DebugTools'], function (DebugTools) {
             DebugTools.load(shell);
         });
     }
