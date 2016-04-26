@@ -106,10 +106,10 @@ define([
     }
 
     /**
-     * A DebugTools.
+     * A Debugger.
      * @module
      */
-    var DebugTools = {
+    var Debugger = {
 
         /**
          * @param {GraphiteShell} shell
@@ -120,5 +120,5 @@ define([
         }
     };
 
-    return DebugTools;
+    return Debugger;
 });
