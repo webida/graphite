@@ -16,6 +16,7 @@
 
 define([
     'graphite/base/Color',
+    'graphite/env/Debugger',
     'graphite/view/geometry/Geometry',
     'graphite/view/geometry/Point',
     'graphite/view/geometry/PointList',
@@ -23,6 +24,8 @@ define([
     'graphite/view/layout/StackLayout',
     'graphite/view/layout/XYLayout',
     'graphite/view/system/GraphiteShell',
+    'graphite/view/update-manager/AsyncUpdateManager',
+    'graphite/view/update-manager/UpdateManager',
     'graphite/view/widget/connection/anchor/CardinalAnchor',
     'graphite/view/widget/connection/anchor/EdgeAnchor',
     'graphite/view/widget/connection/Connection',
@@ -40,6 +43,7 @@ define([
     'graphite/view/widget/Widget'
 ], function (
     Color,
+    Debugger,
     Geometry,
     Point,
     PointList,
@@ -47,6 +51,8 @@ define([
     StackLayout,
     XYLayout,
     GraphiteShell,
+    AsyncUpdateManager,
+    UpdateManager,
     CardinalAnchor,
     EdgeAnchor,
     Connection,
@@ -69,6 +75,9 @@ define([
         base: {
             Color: Color
         },
+        env: {
+            Debugger: Debugger
+        },
         view: {
             geometry: {
                 Geometry: Geometry,
@@ -82,6 +91,10 @@ define([
             },
             system: {
                 GraphiteShell: GraphiteShell
+            },
+            updateManager: {
+                AsyncUpdateManager: AsyncUpdateManager,
+                UpdateManager: UpdateManager
             },
             widget: {
                 connection: {

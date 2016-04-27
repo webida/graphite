@@ -24,24 +24,24 @@ define([
     'external/eventEmitter/EventEmitter',
     'external/genetic/genetic',
     'graphite/base/Base',
+    'graphite/env/Environment',
     'graphite/view/layout/StackLayout',
     'graphite/view/system/event/EventTransmitter',
     'graphite/view/system/GraphicContainer',
     'graphite/view/system/GraphicContext',
     'graphite/view/update-manager/AsyncUpdateManager',
-    'graphite/view/widget/Widget',
-    './Environment'
+    'graphite/view/widget/Widget'
 ], function (
     EventEmitter,
     genetic,
     Base,
+    Environment,
     StackLayout,
     EventTransmitter,
     GraphicContainer,
     GraphicContext,
     AsyncUpdateManager,
-    Widget,
-    Environment
+    Widget
 ) {
     'use strict';
 
@@ -55,7 +55,6 @@ define([
      */
     function GraphiteShell(container) {
         Base.apply(this, arguments);
-        Environment.setLocationHash();
         this.setUpdateManager(new AsyncUpdateManager());
         this.setRootWidget(this.createRootWidget());
         if (container) {

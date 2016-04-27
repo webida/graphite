@@ -23,11 +23,15 @@
 define([
     'external/dom/dom',
     'external/genetic/genetic',
-    'graphite/base/Base'
+    'graphite/base/Base',
+    'graphite/base/logger/Logger',
+    './Environment'
 ], function (
     dom,
     genetic,
-    Base
+    Base,
+    Logger,
+    Environment
 ) {
     'use strict';
 
@@ -105,11 +109,37 @@ define([
         });
     }
 
+    function updateLogLevel(obj, level) {
+        var proto, props;
+        if (typeof obj === 'function') {
+            proto = obj.prototype;
+            if (typeof proto.invoke === 'function') {
+                proto.logLevel = level;
+            }
+        } else {
+            props = Object.getOwnPropertyNames(obj);
+            var len = props.length;
+            for (var i = 0; i < len; i++) {
+                updateLogLevel(obj[props[i]], level);
+            }
+        }
+    }
+
     /**
-     * A DebugTools.
+     * A Debugger.
      * @module
      */
-    var DebugTools = {
+    var Debugger = {
+
+        LOG_LEVEL: {
+            'OFF': Logger.LEVEL.off,
+            'LOG': Logger.LEVEL.log,
+            'INFO': Logger.LEVEL.info,
+            'WARN': Logger.LEVEL.warn,
+            'ERROR': Logger.LEVEL.error,
+            'TRACE': Logger.LEVEL.trace,
+            'ALL': Logger.LEVEL.all
+        },
 
         /**
          * @param {GraphiteShell} shell
@@ -117,8 +147,23 @@ define([
         load: function (shell) {
             applyStyles(shell);
             loadMonitor(shell);
+        },
+
+        log: function (config, level) {
+            console.log('log', config, level);
+            if (!Array.isArray(config)) {
+                return;
+            }
+            var len = config.length;
+            for (var i = 0; i < len; i++) {
+                updateLogLevel(config[i], level);
+            }
         }
     };
 
-    return DebugTools;
+    if (typeof Environment.global.get('loglevel') !== 'undefined') {
+        Logger.prototype.logLevel = Environment.global.get('loglevel');
+    }
+
+    return Debugger;
 });

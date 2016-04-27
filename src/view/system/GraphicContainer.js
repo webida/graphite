@@ -24,14 +24,14 @@ define([
     'external/dom/dom',
     'external/genetic/genetic',
     'graphite/base/BaseEmitter',
-    'graphite/view/geometry/Rectangle',
-    './Environment'
+    'graphite/env/Environment',
+    'graphite/view/geometry/Rectangle'
 ], function (
     dom,
     genetic,
     BaseEmitter,
-    Rectangle,
-    Environment
+    Environment,
+    Rectangle
 ) {
     'use strict';
 

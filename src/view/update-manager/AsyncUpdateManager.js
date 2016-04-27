@@ -101,7 +101,7 @@ define([
         _asyncUpdate: function () {
             this.desc('_asyncUpdate');
             setTimeout(function (updateManager) {
-                console.log('----- async -----');
+                updateManager.info('----- async -----');
                 updateManager.update();
             }, 0, this);
         },
@@ -143,7 +143,7 @@ define([
         validate: function () {
             this.desc('validate');
             var invalids = this._invalidWidgets;
-            console.log('invalids = ', invalids);
+            this.info('invalids = ', invalids);
             if (invalids.length === 0 || this._validating)
                 return;
             try {
