@@ -24,6 +24,8 @@ define([
     'graphite/view/layout/StackLayout',
     'graphite/view/layout/XYLayout',
     'graphite/view/system/GraphiteShell',
+    'graphite/view/update-manager/AsyncUpdateManager',
+    'graphite/view/update-manager/UpdateManager',
     'graphite/view/widget/connection/anchor/CardinalAnchor',
     'graphite/view/widget/connection/anchor/EdgeAnchor',
     'graphite/view/widget/connection/Connection',
@@ -49,6 +51,8 @@ define([
     StackLayout,
     XYLayout,
     GraphiteShell,
+    AsyncUpdateManager,
+    UpdateManager,
     CardinalAnchor,
     EdgeAnchor,
     Connection,
@@ -87,6 +91,10 @@ define([
             },
             system: {
                 GraphiteShell: GraphiteShell
+            },
+            updateManager: {
+                AsyncUpdateManager: AsyncUpdateManager,
+                UpdateManager: UpdateManager
             },
             widget: {
                 connection: {
