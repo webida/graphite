@@ -22,10 +22,10 @@
 
 define([
     'external/genetic/genetic',
-    'graphite/base/logger/formater'
+    'graphite/base/logger/Logger'
 ], function (
     genetic,
-    formater
+    Logger
 ) {
     'use strict';
 
@@ -51,7 +51,7 @@ define([
         return args;
     }
 
-    genetic.inherits(Base, Object, {
+    genetic.inherits(Base, Logger, {
 
         desc: function (fnName, args, result, color) {
             args = filterArgs.call(this, args);
@@ -65,41 +65,6 @@ define([
                 msgs.push('color:' + color);
             }
             this.invoke('info', msgs);
-        },
-
-        log: function () {
-            this.invoke('log', arguments);
-        },
-
-        info: function () {
-            this.invoke('info', arguments);
-        },
-
-        warn: function () {
-            this.invoke('warn', arguments);
-        },
-
-        invoke: function (action, args, options) {
-            args = formater(args, action, this, options);
-            console[action].apply(console, args);
-        },
-
-        explain: function(arrayLike, isFunc) {
-            var arr = [];
-            for (var i in arrayLike) {
-                if (typeof arrayLike[i] == 'function') {
-                    if (isFunc) {
-                        arr.push(arrayLike[i]);
-                    }
-                } else {
-                    if (arrayLike[i] === null) {
-                        arr.push('null');
-                    } else {
-                        arr.push(arrayLike[i]);
-                    }
-                }
-            }
-            return arr.join(', ');
         },
 
         isInterface: function (method, args) {
