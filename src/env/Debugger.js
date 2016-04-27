@@ -24,12 +24,14 @@ define([
     'external/dom/dom',
     'external/genetic/genetic',
     'graphite/base/Base',
-    'graphite/base/logger/Logger'
+    'graphite/base/logger/Logger',
+    './Environment'
 ], function (
     dom,
     genetic,
     Base,
-    Logger
+    Logger,
+    Environment
 ) {
     'use strict';
 
@@ -148,6 +150,7 @@ define([
         },
 
         log: function (config, level) {
+            console.log('log', config, level);
             if (!Array.isArray(config)) {
                 return;
             }
@@ -157,6 +160,10 @@ define([
             }
         }
     };
+
+    if (typeof Environment.global.get('loglevel') !== 'undefined') {
+        Logger.prototype.logLevel = Environment.global.get('loglevel');
+    }
 
     return Debugger;
 });

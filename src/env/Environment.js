@@ -61,23 +61,21 @@ define([
         }
     });
 
-    Environment.global = new Environment();
+    Environment.loadDebugMode = function (shell) {
+        require(['graphite/env/Debugger'], function (Debugger) {
+            Debugger.load(shell);
+        });
+    };
 
-    Environment.setLocationHash = function () {
-        var p, g = Environment.global;
+    (function () {
+        var p, g = Environment.global = new Environment();
         var hash = window.location.hash.slice(1);
         var tokens = hash.split('&');
         tokens.forEach(function (token) {
             p = token.split('=');
             g.set(p[0], p[1]);
         });
-    };
-
-    Environment.loadDebugMode = function (shell) {
-        require(['graphite/env/Debugger'], function (Debugger) {
-            Debugger.load(shell);
-        });
-    }
+    })();
 
     return Environment;
 });

@@ -55,7 +55,6 @@ define([
      */
     function GraphiteShell(container) {
         Base.apply(this, arguments);
-        Environment.setLocationHash();
         this.setUpdateManager(new AsyncUpdateManager());
         this.setRootWidget(this.createRootWidget());
         if (container) {
