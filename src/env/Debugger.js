@@ -150,7 +150,6 @@ define([
         },
 
         log: function (config, level) {
-            console.log('log', config, level);
             if (!Array.isArray(config)) {
                 return;
             }

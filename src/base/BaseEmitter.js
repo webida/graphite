@@ -35,6 +35,6 @@ define([
         Base.apply(this, arguments);
     }
     var mixed = genetic.mixin({}, EventEmitter.prototype);
-    genetic.inherits(BaseEmitter, Base, EventEmitter.prototype);
+    genetic.inherits(BaseEmitter, Base, mixed);
     return BaseEmitter;
 });

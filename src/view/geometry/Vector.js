@@ -40,10 +40,11 @@ define([
     function Vector() {
         Base.apply(this, arguments);
         var args = arguments;
-        if (args.length === 1 && args[0] instanceof Point) {
+        var argLen = args.length;
+        if (argLen === 1 && args[0] instanceof Point) {
             this.x = args[0].x;
             this.y = args[0].y;
-        } else if (args.length === 2) {
+        } else if (argLen === 2) {
             if ( (args[0] instanceof Point && args[1] instanceof Point) 
                     || (args[0] instanceof Vector && args[1] instanceof Vector) ) {
                 this.x = args[1].x - args[0].x;

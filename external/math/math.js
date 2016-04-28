@@ -45,7 +45,8 @@ define(function (module) {
 
         isNegativeSome: function () {
             var arg, args = filterArray(arguments);
-            for (var i = 0; i < args.length; i++) {
+            var len = args.length;
+            for (var i = 0; i < len; i++) {
                 arg = args[i];
                 if (typeof arg === 'number'
                         && arg < 0) {
@@ -57,7 +58,8 @@ define(function (module) {
 
         isZeroAll: function () {
             var arg, args = filterArray(arguments);
-            for (var i = 0; i < args.length; i++) {
+            var len = args.length;
+            for (var i = 0; i < len; i++) {
                 arg = args[i];
                 if (arg !== 0) {
                     return false;
@@ -68,7 +70,8 @@ define(function (module) {
 
         isAllNumber: function () {
             var args = filterArray(arguments);
-            for (var i = 0; i < args.length; i++) {
+            var len = args.length;
+            for (var i = 0; i < len; i++) {
                 if (typeof args[i] !== 'number') {
                     return false;
                 }

@@ -15,6 +15,7 @@
  */
 
 define([
+    'graphite/base/Base',
     'graphite/base/Color',
     'graphite/env/Debugger',
     'graphite/view/geometry/Geometry',
@@ -42,6 +43,7 @@ define([
     'graphite/view/widget/svg/Svg',
     'graphite/view/widget/Widget'
 ], function (
+    Base,
     Color,
     Debugger,
     Geometry,
@@ -73,6 +75,7 @@ define([
 
     var graphite = {
         base: {
+            Base: Base,
             Color: Color
         },
         env: {

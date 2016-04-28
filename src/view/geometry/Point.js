@@ -40,10 +40,11 @@ define([
     function Point() {
         Base.apply(this, arguments);
         var args = arguments;
-        if (args.length === 1 && args[0] instanceof Point) {
+        var argLen = args.length;
+        if (argLen === 1 && args[0] instanceof Point) {
             this.x = args[0].x;
             this.y = args[0].y;
-        } else if (args.length === 2 && math.isAllNumber(args)) {
+        } else if (argLen === 2 && math.isAllNumber(args)) {
             this.x = args[0];
             this.y = args[1];
         }
@@ -90,7 +91,8 @@ define([
         translate: function (dx, dy) {
             this.desc('translate', arguments);
             var args = arguments;
-            if (args.length === 1) {
+            var argLen = args.length;
+            if (argLen === 1) {
                 var a = args[0];
                 if (a instanceof Point) {
                     this.x += a.x;
@@ -99,7 +101,7 @@ define([
                     this.x += a.w;
                     this.y += a.h;
                 }
-            } else if (args.length === 2
+            } else if (argLen === 2
                 && math.isAllNumber(args)) {
                 this.x += args[0];
                 this.y += args[1];

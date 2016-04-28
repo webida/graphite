@@ -71,10 +71,11 @@ define([
          */
         scale: function (x, y) {
             this.desc('scale', arguments);
-            if (arguments.length === 2) {
+            var argLen = arguments.length;
+            if (argLen === 2) {
                 this._scaleX = x;
                 this._scaleY = y;
-            } else if (arguments.length === 1) {
+            } else if (argLen === 1) {
                 this._scaleX = this._scaleY = x;
             }
             return this;

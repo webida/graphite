@@ -38,12 +38,13 @@ define([
     function Spaces() {
         Base.apply(this, arguments);
         var args = arguments;
-        if (args.length === 4) {
+        var argLen = args.length;
+        if (argLen === 4) {
             this.top = args[0];
             this.right = args[1];
             this.bottom = args[2];
             this.left = args[3];
-        } else if (args.length === 1) {
+        } else if (argLen === 1) {
             if (args[0] instanceof Spaces) {
                 var spaces = args[0];
                 this.top = spaces.top;

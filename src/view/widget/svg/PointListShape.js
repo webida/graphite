@@ -201,12 +201,13 @@ define([
          */
         points: function () {
             var args = arguments;
+            var argLen = args.length;
             var arr;
-            if (args.length) {
+            if (argLen) {
                 if (Array.isArray(args[0])) {
                     arr = args[0];
                 } else if (math.isAllNumber(args)
-                        && args.length % 2 === 0) {
+                        && argLen % 2 === 0) {
                     arr = ([]).slice.call(args);
                 }
                 this.pointList(new PointList(arr));

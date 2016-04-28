@@ -77,11 +77,12 @@ define([
         setBounds: function (x, y, w, h) {
             this.desc('setBounds', arguments);
             var args = arguments;
-            if (args.length === 1
+            var argLen = args.length;
+            if (argLen === 1
                     && Rectangle.like(args[0])) {
                 var r = args[0];
                 return this.setBounds(r.x, r.y, r.w, r.h);
-            } else if (args.length === 2) {
+            } else if (argLen === 2) {
                 if (args[0] instanceof Point
                         && args[1] instanceof Dimension) {
                     this.x = args[0].x;
@@ -99,7 +100,7 @@ define([
                     this.h = Math.abs(p2.y - p1.y) + 1;
                     return this;
                 }
-            } else if (args.length === 4) {
+            } else if (argLen === 4) {
                 this.x = x;
                 this.y = y;
                 this.w = w;
@@ -183,11 +184,12 @@ define([
          */
         size: function () {
             var args = arguments;
-            if (args.length) {
+            var argLen = args.length;
+            if (argLen) {
                 if (args[0] instanceof Dimension) {
                     this.w = args[0].w;
                     this.h = args[0].h;
-                } else if (args.length === 2 && math.isAllNumber(args)) {
+                } else if (argLen === 2 && math.isAllNumber(args)) {
                     this.w = args[0];
                     this.h = args[1];
                 }
@@ -215,14 +217,14 @@ define([
          * @return {Point}
          */
         location: function () {
-            var args;
-            if (arguments.length) {
+            var args = arguments;
+            var argLen = args.length;
+            if (argLen) {
                 this.desc('location', arguments);
-                args = arguments;
-                if (args.length === 1 && args[0] instanceof Point) {
+                if (argLen === 1 && args[0] instanceof Point) {
                     this.x = args[0].x;
                     this.y = args[0].y;
-                } else if (args.length === 2 && math.isAllNumber(args)) {
+                } else if (argLen === 2 && math.isAllNumber(args)) {
                     this.x = args[0];
                     this.y = args[1];
                 }
@@ -265,11 +267,12 @@ define([
         translate: function () {
             this.desc('translate', arguments);
             var args = arguments;
-            if (args.length === 1 && args[0] instanceof Point) {
+            var argLen = args.length;
+            if (argLen === 1 && args[0] instanceof Point) {
                 this.x += args[0].x;
                 this.y += args[0].y;
                 return this;
-            } else if (args.length === 2
+            } else if (argLen === 2
                     && typeof args[0] === 'number'
                     && typeof args[1] === 'number') {
                 this.x += args[0];
@@ -426,7 +429,8 @@ define([
         contains: function () {
             var args = arguments;
             var x, y, p, r, result;
-            if (args.length === 1) {
+            var argLen = args.length;
+            if (argLen === 1) {
                 if (args[0] instanceof Point) {
                     p = args[0];
                     return this.contains(p.x, p.y);
@@ -439,7 +443,7 @@ define([
                     this.desc('contains', arguments, result + '');
                     return result;
                 }
-            } else if (args.length === 2) {
+            } else if (argLen === 2) {
                 x = parseInt(args[0]);
                 y = parseInt(args[1]);
                 result = y >= this.y
