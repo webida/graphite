@@ -54,16 +54,17 @@ define([
             right: '',
             bottom: ''
         };
-        if (props.length === 1) {
+        var len = props.length;
+        if (len === 1) {
             r.left = r.top = r.right = r.bottom = props[0];
-        } else if (props.length === 2) {
+        } else if (len === 2) {
             r.top = r.bottom = props[0];
             r.left = r.right = props[1];
-        } else if (props.length === 3) {
+        } else if (len === 3) {
             r.top = props[0];
             r.left = r.right = props[1];
             r.bottom = props[2];
-        } else if (props.length === 4) {
+        } else if (len === 4) {
             r.top = props[0];
             r.right = props[1];
             r.bottom = props[2];

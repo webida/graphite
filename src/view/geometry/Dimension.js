@@ -38,10 +38,11 @@ define([
     function Dimension() {
         Base.apply(this, arguments);
         var args = arguments;
-        if (args.length === 1 && args[0] instanceof Dimension) {
+        var argLen = args.length;
+        if (argLen === 1 && args[0] instanceof Dimension) {
             this.w = args[0].w;
             this.h = args[0].h;
-        } else if (args.length === 2 && math.isAllNumber(args)) {
+        } else if (argLen === 2 && math.isAllNumber(args)) {
             this.w = args[0];
             this.h = args[1];
         }

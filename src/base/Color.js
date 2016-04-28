@@ -31,10 +31,9 @@ define([
 ) {
     'use strict';
 
-    var singleton = {};
-
     function getColor(args) {
-        if (args.length === 1) {
+        var argLen = args.length;
+        if (argLen === 1) {
             var rgb, hex, str, prefix;
             if (args[0] instanceof Color) {
                 return args[0];
@@ -59,10 +58,10 @@ define([
                     console.warn('Invalid color argument');
                 }
             }
-        } else if (args.length > 2 && math.isAllNumber(args)) {
-            if (args.length === 3) {
+        } else if (argLen > 2 && math.isAllNumber(args)) {
+            if (argLen === 3) {
                 prefix = 'rgb';
-            } else if (args.length === 4) {
+            } else if (argLen === 4) {
                 prefix = 'rgba';
             }
             return {
@@ -123,6 +122,15 @@ define([
         }
     }
 
+    var singleton = {};
+
+    var regExp = {
+        hash: / |#/g,
+        repeat: /(.)/g,
+        twoChar: /../g,
+        validColor: /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i
+    };
+
     genetic.inherits(Color, Base, {
 
         /**
@@ -166,10 +174,11 @@ define([
      * @return {boolean}
      */
     Color.isValid = function (hexCode) {
-        if (hexCode.length === 3 || hexCode.length === 6) {
+        var argLen = hexCode.length;
+        if (argLen === 3 || argLen === 6) {
             hexCode = '#' + hexCode;
         }
-        return /(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(hexCode);
+        return regExp.validColor.test(hexCode);
     }
 
     /**
@@ -180,17 +189,18 @@ define([
      */
     Color.hex2rgb = function (hexCode) {
         var result = [];
-        var hex = hexCode.trim().replace(/ |#/g, '');
-        if (hex.length !== 3 && hex.length !== 6) {
+        var hex = hexCode.trim().replace(regExp.hash, '');
+        var len = hex.length;
+        if (len !== 3 && len !== 6) {
             throw new Error('Color hex code length should be 3 or 6');
         }
-        if (hex.length === 3) {
-            hex = hex.replace(/(.)/g, '$1$1');
+        if (len === 3) {
+            hex = hex.replace(regExp.repeat, '$1$1');
         }
-        hex = hex.match(/../g);
-        result.push(parseInt(hex[0], 16));
-        result.push(parseInt(hex[1], 16));
-        result.push(parseInt(hex[2], 16));
+        hex = hex.match(regExp.twoChar);
+        result[0] = parseInt(hex[0], 16);
+        result[1] = parseInt(hex[1], 16);
+        result[2] = parseInt(hex[2], 16);
         result['r'] = result[0];
         result['g'] = result[1];
         result['b'] = result[2];

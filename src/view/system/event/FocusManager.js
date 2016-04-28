@@ -44,8 +44,9 @@ define([
     }
 
     function getDeepestRightmostChild(widget) {
-        while (widget.getChildren().length !== 0) {
-            widget = widget.getChildren()[widget.getChildren().length - 1];
+        var children = widget.getChildren();
+        while (children.length !== 0) {
+            widget = children[children.length - 1];
         }
         return widget;
     }

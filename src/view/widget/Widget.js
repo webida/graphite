@@ -113,14 +113,15 @@ define([
                         + ' is not container widget');
             }
             var args = arguments;
+            var argLen = args.length;
             var child = args[0];
             var index, constraint;
             var others = ([]).slice.call(args);
             others.shift();
-            if (args.length === 1) {
+            if (argLen === 1) {
                 index = -1;
                 constraint = child.bounds().copy();
-            } else if (args.length === 2) {
+            } else if (argLen === 2) {
                 if (args[1] instanceof Object) {
                     index = -1;
                     constraint = args[1];
@@ -128,14 +129,14 @@ define([
                     index = args[1];
                     constraint = child.bounds().copy();
                 }
-            } else if (args.length === 3) {
+            } else if (argLen === 3) {
                 index = args[1];
                 constraint = args[2];
-            } else if (args.length === 5
+            } else if (argLen === 5
                     && math.isAllNumber(others)) {
                 index = -1;
                 constraint = genetic.getInstanceOf(Rectangle, others);
-            } else if (args.length === 6
+            } else if (argLen === 6
                     && math.isAllNumber(others)) {
                 index = args[1];
                 others.shift();
@@ -542,11 +543,12 @@ define([
          * @return {Rectangle}
          */
         bounds: function () {
-            if (arguments.length) {
+            var argLen = arguments.length;
+            if (argLen) {
                 this.desc('bounds', arguments);
-                if (arguments.length === 4) {
+                if (argLen === 4) {
                     return this.bounds(genetic.getInstanceOf(Rectangle, arguments));
-                } else if (arguments.length === 1) {
+                } else if (argLen === 1) {
                     var newBounds = arguments[0];
                 }
 

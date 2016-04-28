@@ -103,9 +103,10 @@ define([
     function ConnectionLocator() {
         Locator.apply(this, arguments);
         var args = arguments;
-        if (args.length) {
+        var argLen = args.length;
+        if (argLen) {
             this.connection(args[0]);
-            if (args.length > 1) {
+            if (argLen > 1) {
                 this.align(args[1]);
             } else {
                 this.align(MIDDLE);

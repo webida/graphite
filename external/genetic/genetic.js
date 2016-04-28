@@ -29,15 +29,17 @@ define(function () {
          * and add new prototypes.
          */
         inherits: function (child, parent, props) {
+            var propsKey, propsKeyLen, key;
             child.prototype = Object.create(parent.prototype);
-            child.prototype.constructor = child;
             if (typeof props === 'object') {
-                Object.keys(props).forEach(function (key) {
-                    if (key !== 'constructor') {
-                        child.prototype[key] = props[key];
-                    }
-                });
+                propsKey = Object.getOwnPropertyNames(props);
+                propsKeyLen = propsKey.length;
+                for (var i = 0; i < propsKeyLen; i++) {
+                    key = propsKey[i];
+                    child.prototype[key] = props[key];
+                }
             }
+            child.prototype.constructor = child;
         },
 
         /**
@@ -47,14 +49,16 @@ define(function () {
          * // mixed will be {a:1, b:2}
          */
         mixin: function () {
-            var source;
-            var target = {};
-            for (var i = 0; i < arguments.length; i++) {
+            var source, target = {};
+            var argLen = arguments.length;
+            var propLen, props, j, prop;
+            for (var i = 0; i < argLen; i++) {
                 source = arguments[i];
-                for (var prop in source) {
-                    if (source.hasOwnProperty(prop)) {
-                        target[prop] = source[prop];
-                    }
+                props = Object.getOwnPropertyNames(source);
+                propLen = props.length;
+                for (j = 0; j < propLen; j++) {
+                    prop = props[j];
+                    target[prop] = source[prop];
                 }
             }
             return target;

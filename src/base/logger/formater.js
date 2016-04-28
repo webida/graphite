@@ -32,20 +32,22 @@ define(function () {
         function getNow() {
             var result = [],
                 now = new Date();
-            result.push(now.getHours());
-            result.push(now.getMinutes());
-            result.push(now.getSeconds());
+            result[0] = now.getHours();
+            result[1] = now.getMinutes();
+            result[2] = now.getSeconds();
             var resultToString;
-            for (var i = 0; i < result.length; i++) {
+            var resultLen = result.length;
+            for (var i = 0; i < resultLen; i++) {
                 resultToString = result[i].toString();
                 if (resultToString.length === 1) {
                     result[i] = '0' + resultToString;
                 }
             }
-            result.push(now.getMilliseconds().toString());
-            if (result[3].length === 1) {
+            result[3] = now.getMilliseconds().toString();
+            var res3Len = result[3].length;
+            if (res3Len === 1) {
                 result[3] = '00' + result[3];
-            } else if (result[3].length === 2) {
+            } else if (res3Len === 2) {
                 result[3] = '0' + result[3];
             }
             return result.join(':');

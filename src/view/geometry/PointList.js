@@ -60,13 +60,15 @@ define([
          * @return {Array} points
          */
         points: function (points) {
+            var pointsLen;
             if (Array.isArray(points)) {
-                if (points.length % 2) {
+                pointsLen = points.length;
+                if (pointsLen % 2) {
                     throw new Error(
                         'PointList needs two consecutive integer points.');
                 }
                 this._points = points;
-                this._size = points.length / 2;
+                this._size = pointsLen / 2;
             } else {
                 return this._points;
             }
@@ -183,11 +185,12 @@ define([
          */
         get: function (i) {
             var args = arguments;
+            var argLen = args.length;
             var points = this._points;
             i *= 2;
-            if (args.length === 1) {
+            if (argLen === 1) {
                 return new Point(points[i], points[i + 1]);
-            } else if (args.length === 2
+            } else if (argLen === 2
                     && args[1] instanceof Point) {
                 var point = args[1];
                 point.x = points[i];
@@ -289,7 +292,7 @@ define([
         intersects: function (r) {
             if (r.isEmpty()) return false;
             var points = this.points();
-            var len = this._points.length;
+            var len = points.length;
             var size = this.size();
             for (var i = 0; i < len; i += 2) {
                 if (r.contains(points[i], points[i + 1])) {
@@ -346,13 +349,14 @@ define([
          */
         translate: function () {
             var args = arguments;
+            var argLen = args.length;
             var dx, dy;
             var len = this.size() * 2;
             var points = this.points();
-            if (args.length === 1 && args[0] instanceof Point) {
+            if (argLen === 1 && args[0] instanceof Point) {
                 dx = args[0].x;
                 dy = args[0].y;
-            } else if (args.length === 2 && math.isAllNumber(args)) {
+            } else if (argLen === 2 && math.isAllNumber(args)) {
                 dx = args[0];
                 dy = args[1];
             }
