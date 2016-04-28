@@ -1,8 +1,9 @@
 # graphite
-The Graphical Editing Framework for HTML and SVG.
-Graphite consists of Graphite View & Graphite Control.
+Graphite is the Graphical Editing Framework. With this framework you can easily build your own WYSIWYG graphical editor such as flow-chart, prototype tool, ui builder and modeling tool. Graphite keeps an eye on your model, major purpose of this framework is editing your model graphically. To support this effectively, Graphite is composed of MVC. [Graphite View](#graphite-view) takes charge for View and [Graphite Control](#graphite-control) is for Controller. [Graphite Control](#graphite-control) is now in developing.
 
 ### Graphite View
+
+Graphite View takes the responsibility for Widget's rendering. The advantage of using Graphite Widget is it's flexibility. Graphite Widget implements it's drawing as not only HTML and SVG, but also Canvas(There is no widget implementaion for canvas yet) because it has it's own bound calculation and layout algorithm. This means you can easily reuse existing code to similar but different context such as HTML Project to SVG Project.
 
 #### Including graphite
 
