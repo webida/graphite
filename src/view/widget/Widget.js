@@ -176,7 +176,6 @@ define([
             if (this.getFlag(Widget.FLAG_REALIZED)) {
                 child.onAdded();
             }
-            child.redraw();
         },
 
         /**
