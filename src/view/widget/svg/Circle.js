@@ -64,7 +64,7 @@ define([
             var radius = Math.min(r.w, r.h) / 2.0;
             var cx = r.x + radius;
             var cy = r.y + radius;
-            this.cssCache.put({
+            this.attrCache.put({
                 'cx': cx,
                 'cy': cy,
                 'r': radius

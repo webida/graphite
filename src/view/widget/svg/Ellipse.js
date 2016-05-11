@@ -65,7 +65,7 @@ define([
             var ry = r.h / 2;
             var cx = r.x + rx;
             var cy = r.y + ry;
-            this.cssCache.put({
+            this.attrCache.put({
                 'cx': cx,
                 'cy': cy,
                 'rx': rx,
