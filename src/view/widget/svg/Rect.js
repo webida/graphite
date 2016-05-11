@@ -58,7 +58,7 @@ define([
         _locateElement: function (context) {
             this.desc('_locateElement', context);
             var r = this._getRevisedBounds();
-            this.cssCache.put({
+            this.attrCache.put({
                 'x': r.x,
                 'y': r.y,
                 'width': r.w,

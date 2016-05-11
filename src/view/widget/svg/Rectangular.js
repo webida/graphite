@@ -48,7 +48,7 @@ define([
         _drawWidget: function (context) {
             this.desc('_drawWidget', context, undefined, 'green');
             var bounds = this.bounds();
-            this.cssCache.put({
+            this.attrCache.put({
                 'x': bounds.x,
                 'y': bounds.y,
                 'width': bounds.w,
