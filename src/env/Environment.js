@@ -45,8 +45,8 @@ define([
     genetic.inherits(Environment, Base, {
 
         /**
-         * @param {object} key
-         * @param {object} value
+         * @param {Object} key
+         * @param {Object} value
          */
         set: function (key, value) {
             this.env.set(key, value);
@@ -54,7 +54,7 @@ define([
         },
 
         /**
-         * @param {object} key
+         * @param {Object} key
          */
         get: function (key) {
             return this.env.get(key);
