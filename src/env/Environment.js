@@ -24,12 +24,14 @@ define([
     'external/dom/dom',
     'external/genetic/genetic',
     'external/map/Map',
-    'graphite/base/Base'
+    'graphite/base/Base',
+    './browser'
 ], function (
     dom,
     genetic,
     Map,
-    Base
+    Base,
+    browser
 ) {
     'use strict';
 
@@ -45,8 +47,8 @@ define([
     genetic.inherits(Environment, Base, {
 
         /**
-         * @param {object} key
-         * @param {object} value
+         * @param {Object} key
+         * @param {Object} value
          */
         set: function (key, value) {
             this.env.set(key, value);
@@ -54,7 +56,7 @@ define([
         },
 
         /**
-         * @param {object} key
+         * @param {Object} key
          */
         get: function (key) {
             return this.env.get(key);
@@ -75,6 +77,7 @@ define([
             p = token.split('=');
             g.set(p[0], p[1]);
         });
+        g.set('browser', browser);
     })();
 
     return Environment;
