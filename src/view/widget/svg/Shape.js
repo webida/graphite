@@ -23,6 +23,7 @@
 define([
     'external/dom/dom',
     'external/genetic/genetic',
+    'graphite/env/Environment',
     'graphite/view/geometry/Rectangle',
     'graphite/view/widget/Widget',
     './Structural',
@@ -30,6 +31,7 @@ define([
 ], function (
     dom,
     genetic,
+    Environment,
     Rectangle,
     Widget,
     Structural,
@@ -46,6 +48,27 @@ define([
     }
 
     genetic.inherits(Shape, SvgWidget, {
+
+        /**
+         * Creates then returns SVGElement for this Widget.
+         * Shapes uses 'pointer-events' attribute to support IE10.
+         * Without this attribute in IE10, svg captures event.
+         * This leads to missing event for mask layer.
+         * 
+         * @see SvgWidget#_createElement
+         * @override
+         * @return {SVGElement}
+         */
+        _createElement: function () {
+            var option = {};
+            var browser = Environment.global.get('browser');
+            if (browser.name === 'ie') {
+                option = {
+                    'pointer-events': 'none'
+                };
+            }
+            return dom.makeSvgElement(this.nodeName(), option);
+        },
 
         /**
          * Tells whether this can contain other SvgWidget.
