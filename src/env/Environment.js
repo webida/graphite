@@ -24,12 +24,14 @@ define([
     'external/dom/dom',
     'external/genetic/genetic',
     'external/map/Map',
-    'graphite/base/Base'
+    'graphite/base/Base',
+    './browser'
 ], function (
     dom,
     genetic,
     Map,
-    Base
+    Base,
+    browser
 ) {
     'use strict';
 
@@ -75,6 +77,7 @@ define([
             p = token.split('=');
             g.set(p[0], p[1]);
         });
+        g.set('browser', browser);
     })();
 
     return Environment;
