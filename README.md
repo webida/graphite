@@ -1,5 +1,5 @@
 # graphite
-Graphite is the Graphical Editing Framework. With this framework you can easily build your own WYSIWYG graphical editor such as flow-chart, prototype tool, ui builder and modeling tool. Graphite keeps an eye on your model, major purpose of this framework is editing your model graphically. To support this effectively, Graphite is composed of MVC. [Graphite View](#graphite-view) takes charge for View and [Graphite Control](#graphite-control) is for Controller. [Graphite Control](#graphite-control) is now in developing.
+Graphite is the Graphical Editing Framework. With this framework you can easily build your own WYSIWYG graphical editor such as flow-chart, prototype tool, ui builder and modeling tool. Graphite keeps an eye on your model, major purpose of this framework is editing your model graphically. To support this effectively, Graphite is composed of MVC. [Graphite View](#graphite-view) takes charge for View and [Graphite Editor](#graphite-editor) is for Controller. [Graphite Editor](#graphite-editor) is now in developing.
 
 ### Graphite View
 
@@ -151,7 +151,7 @@ http://localhost/examples/intersection/main.html#mode=debug
 ![image](https://cloud.githubusercontent.com/assets/7447396/14526491/870f1f1e-027e-11e6-8116-bdcb8262d36e.png)
 
 
-### Graphite Control
+### Graphite Editor
 
 This module is for WYSIWYG edit for graphical model. now working ...
 
