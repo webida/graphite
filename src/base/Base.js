@@ -31,9 +31,14 @@ define([
 
     var id = 0;
 
+    function getFnName(fn) {
+        var cName = fn.toString();
+        return cName.substring(9, cName.indexOf('('));
+    }
+
     function Base() {
         this._uid_ = id++;
-        var cls = this.constructor.name;
+        var cls = this.constructor.name || getFnName(this.constructor);
         var args = ['%c#' + this._uid_ + ' <= new ' + cls
                 + '(' + this.explain(arguments) + ')', 'color:green'];
         this.invoke('info', args, {
@@ -74,7 +79,9 @@ define([
         },
 
         toString: function () {
-            return '<' + this.constructor.name + '>#' + this._uid_;
+            var cName = this.constructor.name
+                    || getFnName(this.constructor);
+            return '<' + cName + '>' + '#' + this._uid_;
         }
     }); 
 
