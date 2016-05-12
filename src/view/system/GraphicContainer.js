@@ -119,6 +119,9 @@ define([
             this.mask = $('.mask');
             this.document = this.iframe.contentDocument
                     || this.iframe.contentWindow.document;
+            if (!this.document.body) {
+                this.document.write("<body></body>");
+            }
             body = this.document.body;
             size = dom.getRect(container);
             dom.setStyles(body, {'margin':0, 'padding':0});
