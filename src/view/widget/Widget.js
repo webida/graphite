@@ -121,6 +121,7 @@ define([
             if (argLen === 1) {
                 index = -1;
                 constraint = child.bounds().copy();
+                return this.append(child, index, constraint);
             } else if (argLen === 2) {
                 if (typeof args[1] === 'number') {
                     index = args[1];
@@ -129,6 +130,7 @@ define([
                     index = -1;
                     constraint = args[1];
                 }
+                return this.append(child, index, constraint);
             } else if (argLen === 3) {
                 index = args[1];
                 constraint = args[2];
@@ -136,11 +138,13 @@ define([
                     && math.isAllNumber(others)) {
                 index = -1;
                 constraint = genetic.getInstanceOf(Rectangle, others);
+                return this.append(child, index, constraint);
             } else if (argLen === 6
                     && math.isAllNumber(others)) {
                 index = args[1];
                 others.shift();
                 constraint = genetic.getInstanceOf(Rectangle, others);
+                return this.append(child, index, constraint);
             } else {
                 throw new Error('Illegal parameters');
             }
@@ -188,7 +192,8 @@ define([
         remove: function (widget) {
             var layout = this.getLayout();
             var children = this.getChildren();
-            if ((widget.getParent() !== this)) {
+            var index = children.indexOf(widget);
+            if ((widget.getParent() !== this) || index === -1) {
                 throw new Error("Widget is not a child");
             }
             if (this.getFlag(Widget.FLAG_REALIZED)) {
@@ -199,7 +204,7 @@ define([
             }
             widget.erase();
             widget.setParent(null);
-            children.remove(widget);
+            this._children.splice(index, 1);
             this.revalidate();
         },
 
