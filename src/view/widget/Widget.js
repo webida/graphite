@@ -78,7 +78,7 @@ define([
          * append(widget, index, constraint)
          * @param {Widget} widget - The Widget to add
          * @param {number} index - Where the new Widget should be added
-         * @param {Object} constraint - The added Widget's constraint
+         * @param {Object|string} constraint - The added Widget's constraint
          *//**
          * append(widget)
          * @param {Widget} widget - The Widget to add
@@ -89,7 +89,7 @@ define([
          *//**
          * append(widget, constraint)
          * @param {Widget} widget - The Widget to add
-         * @param {Object} constraint - The added Widget's constraint
+         * @param {Object|string} constraint - The added Widget's constraint
          *//**
          * append(widget, x, y, w, h)
          * @param {Widget} widget - The Widget to add
@@ -122,12 +122,12 @@ define([
                 index = -1;
                 constraint = child.bounds().copy();
             } else if (argLen === 2) {
-                if (args[1] instanceof Object) {
-                    index = -1;
-                    constraint = args[1];
-                } else if (typeof args[1] === 'number') {
+                if (typeof args[1] === 'number') {
                     index = args[1];
                     constraint = child.bounds().copy();
+                } else {
+                    index = -1;
+                    constraint = args[1];
                 }
             } else if (argLen === 3) {
                 index = args[1];
