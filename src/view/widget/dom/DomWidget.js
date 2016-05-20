@@ -35,11 +35,12 @@ define([
 
     /**
      * A Widget which has a DOM element as it's presentation.
+     * @param {HTMLElement|SVGElement} [element]
      * @constructor
      */
-    function DomWidget() {
+    function DomWidget(element) {
         Widget.apply(this, arguments);
-        this.element(this._createElement());
+        this.element(element || this._createElement());
         this._createPropertyCache(this.element());
     }
 
