@@ -109,6 +109,22 @@ define([
          */
         setContentsMapRule: function (rule) {
             this._mapRule = rule;
+        },
+
+        /**
+         * Sets element which will receive all events on context.
+         * @param {HTMLElement} receiver
+         */
+        setEventReceiver: function (receiver) {
+            this._receiver = receiver;
+        },
+
+        /**
+         * Returns event receiver element.
+         * @return {HTMLElement}
+         */
+        getEventReceiver: function () {
+            return this._receiver;
         }
     });
 
