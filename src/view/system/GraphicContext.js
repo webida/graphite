@@ -38,32 +38,77 @@ define([
      */
     function GraphicContext(container) {
         Base.apply(this, arguments);
-        this.init(container);
+        this._root = null;
+        this._layers = {};
+        this._mapRule = new Map(); //empty map
     }
 
     genetic.inherits(GraphicContext, Base, {
 
         /**
-         * Explain
-         * @param {GraphicContainer} container
+         * Sets Layer with given string of id.
+         * @param {string} id
+         * @param {Layer} layer
          */
-        init: function(container) {
-            this.desc('init', container);
-            var iframe;
-            if (container && container instanceof GraphicContainer) {
-                this.container = container;
-                this.svg = this.container.svg;
-                iframe = this.container.iframe;
-                this.document = iframe.contentDocument || iframe.contentWindow.document;
+        setLayer: function (id, layer) {
+            this._layers[id] = layer;
+        },
+
+        /**
+         * Returns Layer with given string of id.
+         * This gives a way to access specific graphic context.
+         * @param {string} id
+         * @return {Layer}
+         */
+        getLayer: function (id) {
+            return this._layers[id];
+        },
+
+        /**
+         * Sets context's root widget or layer.
+         * @param {Widget} root
+         */
+        setContextRoot: function (root) {
+            this._root = root;
+        },
+
+        /**
+         * Returns context's root.
+         * @return {Widget}
+         */
+        getContextRoot: function () {
+            return this._root;
+        },
+
+        /**
+         * Append contents to the context.
+         * The appending location will be decided by
+         * ContentsMapRule Map Object.
+         * @see setContentsMapRule(Map rule) 
+         * @param {Widget} contents
+         */
+        setContents: function (contents) {
+            var key, layer;
+            this._mapRule.forEach(function (KEY_NAME, Type) {
+                if (contents instanceof Type) {
+                    key = KEY_NAME;
+                }
+            });
+            if (!key) return;
+            layer = this.getLayer(key);
+            if (layer) {
+                layer.append(contents);
             }
         },
 
-        getSVG: function () {
-            return this.svg;
-        },
-        
-        getDocument: function () {
-            return this.document;
+        /**
+         * Sets contents mapping rule. The appending
+         * location will be decided by this rule.
+         * @see setContents(Widget contents) 
+         * @param {Map} rule
+         */
+        setContentsMapRule: function (rule) {
+            this._mapRule = rule;
         }
     });
 
