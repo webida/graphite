@@ -64,18 +64,6 @@ define([
                 'width': r.w,
                 'height': r.h
             });
-        },
-
-        /**
-         * For convenience, this tells position for
-         * x,y,w,h of this Rectangle.
-         * @return {string}
-         */
-        toString: function () {
-            var bounds = this.bounds();
-            return Shape.prototype.toString.call(this) + 
-                    '(' + bounds.x + ',' + bounds.y + ',' +
-                            bounds.w + ',' + bounds.h + ')';
         }
     });
 

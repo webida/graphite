@@ -1059,7 +1059,7 @@ define([
          */
         containsPoint: function (x, y) {
             var result = this.bounds().contains(x, y);
-            this.desc('containsPoint', arguments, result + '');
+            this.desc('containsPoint '+ this.bounds(), arguments, result + '');
             return result;
         },
 
@@ -1145,6 +1145,18 @@ define([
          */
         _canReceiveMouseEvent: function () {
             return true;
+        },
+
+        /**
+         * For convenience, returns position for
+         * x,y,w,h of this Widget.
+         * @return {string}
+         */
+        toString: function () {
+            var bounds = this.bounds();
+            return BaseEmitter.prototype.toString.call(this) + 
+                    '(' + bounds.x + ',' + bounds.y + ',' +
+                            bounds.w + ',' + bounds.h + ')';
         }
     });
 
