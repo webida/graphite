@@ -23,10 +23,12 @@
 define([
     'external/genetic/genetic',
     'graphite/view/layout/XYLayout',
+    '../dom/DomWidget',
     './HtmlWidget'
 ], function (
     genetic,
     XYLayout,
+    DomWidget,
     HtmlWidget
 ) {
     'use strict';
@@ -42,24 +44,18 @@ define([
     genetic.inherits(Container, HtmlWidget, {
 
         /**
-         * Sets this Widget's parent.
-         * @param {Widget} parent
-         * @override 
+         * @inheritdoc
+         * @override
          */
-        setParent: function (parent) {
-            this.desc('setParent', parent);
-            HtmlWidget.prototype.setParent.call(this, parent);
-            if (parent instanceof Container) {
-                parent.element().appendChild(this.element());
-                if (parent.getLayout() instanceof XYLayout) {
-                    this.css({'position': 'absolute'});
+        append: function () {
+            var child = arguments[0];
+            if (child instanceof DomWidget) {
+                if (this.getLayout() instanceof XYLayout) {
+                    child.css({'position': 'absolute'});
                 }
-            } else {
-                var err = new Error('Only Container can be a parent for Container');
-                err.name = 'InvalidParent';
-                throw err;
+                HtmlWidget.prototype.append.apply(this, arguments);
             }
-        },
+        }
     });
 
     return Container;
