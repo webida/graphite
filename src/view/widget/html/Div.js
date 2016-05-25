@@ -15,7 +15,7 @@
  */
 
 /**
- * @file Introduction
+ * @file Html Div Widget
  * @since 1.0.0
  * @author hw.shim@samsung.com
  */
@@ -23,15 +23,11 @@
 define([
     'external/dom/dom',
     'external/genetic/genetic',
-    'graphite/view/system/GraphiteShell',
-    './Container',
-    './HtmlWidget'
+    './Container'
 ], function (
     dom,
     genetic,
-    GraphiteShell,
-    Container,
-    HtmlWidget
+    Container
 ) {
     'use strict';
 
@@ -51,30 +47,7 @@ define([
          */
         nodeName: function () {
             return 'div';
-        },
-
-        /**
-         * Sets this Widget's parent.
-         * @param {Widget} parent
-         * @override 
-         */
-        setParent: function (parent) {
-            this.desc('setParent', parent);
-            try {
-                Container.prototype.setParent.call(this, parent);
-            } catch (e) {
-                if (e.name === 'InvalidParent') {
-                    if (parent instanceof GraphiteShell.RootWidget) {
-                        var upman = this.getUpdateManager();
-                        var context = upman.getGraphicContext();
-                        var document = context.getDocument();;
-                        document.body.appendChild(this.element());
-                    }
-                } else {
-                    throw e;
-                }
-            }
-        },
+        }
     });
 
     return Div;
