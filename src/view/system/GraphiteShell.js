@@ -23,23 +23,21 @@
 define([
     'external/eventEmitter/EventEmitter',
     'external/genetic/genetic',
-    'graphite/base/Base',
+    'graphite/base/BaseEmitter',
     'graphite/env/Environment',
     'graphite/view/layout/StackLayout',
     'graphite/view/system/event/EventTransmitter',
     'graphite/view/system/GraphicContainer',
-    'graphite/view/system/GraphicContext',
     'graphite/view/update-manager/AsyncUpdateManager',
     'graphite/view/widget/Widget'
 ], function (
     EventEmitter,
     genetic,
-    Base,
+    BaseEmitter,
     Environment,
     StackLayout,
     EventTransmitter,
     GraphicContainer,
-    GraphicContext,
     AsyncUpdateManager,
     Widget
 ) {
@@ -51,31 +49,39 @@ define([
      * This translates browser events then dispatches to corresponding
      * widgets, or layouts, paints inside of widgets according to
      * layout-events such as move, resize.
+     * @param {GraphicContainer|HTMLElement|string} c
+     * @param {GraphicContextFactory} GCFactory
      * @constructor
      */
-    function GraphiteShell(container) {
-        Base.apply(this, arguments);
+    function GraphiteShell(container, GCFactory) {
+        BaseEmitter.apply(this, arguments);
+        this._root = null;
+        this._container = null;
+        this._transmitter = null;
+        this._rootContents = null;
+        this._updateManager = null;
         this.setUpdateManager(new AsyncUpdateManager());
         this.setRootWidget(this.createRootWidget());
         if (container) {
-            this.setContainer(container);
+            this.setContainer(container, GCFactory);
         }
     }
 
-    genetic.inherits(GraphiteShell, Base, {
+    genetic.inherits(GraphiteShell, BaseEmitter, {
 
         /**
          * Sets the GraphicContainer.
          * @param {GraphicContainer|HTMLElement|string} c
+         * @param {GraphicContextFactory} GCFactory
          */
-        setContainer: function (c) {
+        setContainer: function (c, GCFactory) {
             var shell = this;
             if(typeof c === 'string' && document.getElementById(c)){
                 c = document.getElementById(c);
             }
             if(c instanceof HTMLElement){
-                c = new GraphicContainer(c);
-                c.on('ready', function () {
+                c = new GraphicContainer(c, GCFactory);
+                c.once('ready', function () {
                     if (Environment.global.get('mode') === 'debug') {
                         Environment.loadDebugMode(shell);
                     }
@@ -85,11 +91,15 @@ define([
                 if (this._container === c){
                     return;
                 }
+                if (this._container) {
+                    this._container.clear();
+                }
                 this._container = c;
-                this.getUpdateManager().setGraphicContext(
-                        new GraphicContext(c));
+                var context = c.getGraphicContext();
+                this.getUpdateManager().setGraphicContext(context);
                 this.setEventTransmitter(new EventTransmitter());
                 this.getRootWidget().bounds(c.getClientArea());
+                this.rootContents(context.getContextRoot());
             }
         },
 
@@ -132,25 +142,46 @@ define([
         },
 
         /**
-         * Sets user's widget model's root node.
-         * @param {Widget} root
+         * Sets root widget's first child.
+         * Usually GraphicContainer uses this method to
+         * construct layers.
+         * @param {Widget} widget
          * @return {GraphiteShell}
          *//**
-         * Returns user's widget model's root node.
+         * Returns root widget's first child.
          * @return {Widget}
          */
-        contents: function (widget) {
+        rootContents: function (widget) {
             if (arguments.length) {
-                this.desc('contents', widget);
+                this.desc('rootContents', widget);
                 var root = this.getRootWidget();
-                if (this._contents) {
-                    root.remove(this._contents);
+                if (this._rootContents) {
+                    root.remove(this._rootContents);
                 }
-                this._contents = widget;
+                this._rootContents = widget;
                 root.append(widget);
                 return this;
             } else {
-                return this._contents;
+                return this._rootContents;
+            }
+        },
+
+        /**
+         * Sets user's widget model's root node.
+         * @param {Widget} root
+         * @return {GraphiteShell}
+         * @see GraphicContainer#contents(Widget)
+         *//**
+         * Returns user's widget model's root node.
+         * @see GraphicContainer#contents()
+         * @return {Widget}
+         */
+        contents: function (widget) {
+            if (widget) {
+                this.desc('contents', widget);
+                this.getContainer().setContents(widget);
+            } else {
+                return this.getContainer().getContents();
             }
         },
 
@@ -178,9 +209,14 @@ define([
          * @param {EventTransmitter} transmitter
          */
         setEventTransmitter: function (transmitter) {
+            var container = this.getContainer();
+            var old = this._transmitter;
+            if (old) {
+                old.ignore(container);
+            }
             this._transmitter = transmitter;
             transmitter.setRoot(this.getRootWidget());
-            transmitter.listen(this.getContainer());
+            transmitter.listen(container);
         },
 
         /**
@@ -189,6 +225,19 @@ define([
          */
         getEventTransmitter: function () {
             return this._transmitter;
+        },
+
+        /**
+         * Clears related resources.
+         */
+        clear: function () {
+            var that = this;
+            var container = this.getContainer();
+            this.getEventTransmitter().ignore(container);
+            container.once('cleared', function () {
+                that.emit('cleared', that);
+            });
+            container.clear();
         }
     });
 
