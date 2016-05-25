@@ -25,14 +25,12 @@ define([
     'external/genetic/genetic',
     'graphite/view/geometry/BoxModel',
     'graphite/view/layout/XYLayout',
-    'graphite/view/system/GraphiteShell',
     'graphite/view/widget/dom/DomWidget'
 ], function (
     dom,
     genetic,
     BoxModel,
     XYLayout,
-    GraphiteShell,
     DomWidget
 ) {
     'use strict';
@@ -91,18 +89,6 @@ define([
          */
         _drawWidget: function (context) {
             DomWidget.prototype._drawWidget.call(this, context);
-        },
-
-        /**
-         * Sets this Widget's parent.
-         * @param {Widget} parent
-         * @override 
-         */
-        setParent: function (parent) {
-            DomWidget.prototype.setParent.call(this, parent);
-            if (parent instanceof GraphiteShell.RootWidget) {
-                this.css({position: 'absolute'});
-            }
         },
 
         /**
@@ -260,13 +246,15 @@ define([
             var left = r.left;
             var top = r.top;
             try {
-                if (this.isLocalCoordinates()) {
+                if (parent instanceof HtmlWidget
+                        && this.isLocalCoordinates()
+                        && parent.nodeName() !== 'iframe') {
                     parentR = parent.element().getBoundingClientRect();
                     left -= parentR.left;
                     top -= parentR.top;
                 }
             } catch (e) {
-                //do nothing
+                console.warn(e);
             } finally {
                 this.location(left, top);
             }
