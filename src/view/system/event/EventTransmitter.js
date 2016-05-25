@@ -45,6 +45,7 @@ define([
      */
     function EventTransmitter() {
         Base.apply(this, arguments);
+        this._mask = null;
         this._focusManager = new FocusManager();
     }
 
@@ -125,7 +126,8 @@ define([
         listen: function (container) {
             this.desc('listen', container);
             var that = this;
-            var mask = container.getEventMask();
+            var context = container.getGraphicContext();
+            var mask = this._mask = context.getEventReceiver();
             this.setContainer(container);
             dom.addEvent(mask, 'focus', function (e) {
                 that.transmitFocus(e);
@@ -239,9 +241,8 @@ define([
          * @protected
          */
         _updateCursor: function () {
-            var mask = this.getContainer().getEventMask();
             if (this._cursorTarget) {
-                dom.setStyles(mask, {
+                dom.setStyles(this._mask, {
                     'cursor': this._cursorTarget.cursor()
                 });
             }
