@@ -209,9 +209,9 @@ define([
         },
 
         /**
-         * Tells whether this can contain other Widget.
-         * In default, Widget can containe other Widget,
-         * so returns true.
+         * Returns whether this can contain other Widget.
+         * Basically returns true because most of the Widgets
+         * can contain Widgets.
          * @return {boolean}
          */
         isContainer: function () {
@@ -891,7 +891,6 @@ define([
                 this._borderWidth = genetic.getInstanceOf(Spaces, arguments);
                 return this;
             } else {
-                this.desc('borderWidth', arguments, this._borderWidth + '');
                 return this._borderWidth;
             }
         },
