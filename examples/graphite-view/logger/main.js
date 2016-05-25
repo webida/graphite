@@ -6,7 +6,7 @@ require(['graphite/graphite', 'external/dom/dom'], function(graphite, dom) {
     var Svg = graphite.view.widget.svg.Svg;
 
     Debugger.log([
-        graphite.view.system.GraphiteShell,
+        graphite.view.system.event.EventTransmitter,
         graphite.view.updateManager,
         Rect
     ], Debugger.LOG_LEVEL.ALL);
@@ -47,8 +47,9 @@ require(['graphite/graphite', 'external/dom/dom'], function(graphite, dom) {
             isDrag = false;
         });
         svg.on('drag', function (ev) {
-            var pos = dom.getEventPos(ev.uiEvent);
+            var pos;
             if (isDrag) {
+                pos = dom.getEventPos(ev.uiEvent);
                 rearrange(pos.x, pos.y);
             }
         });

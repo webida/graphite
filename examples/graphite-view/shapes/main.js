@@ -14,6 +14,7 @@ require(['graphite/graphite'], function(graphite) {
     var shell = new GraphiteShell('container');
 
     var div = new Div();
+
     //div.css({opacity: 0.1}).bgColor('blue');;
     shell.contents(div);
 
@@ -32,6 +33,9 @@ require(['graphite/graphite'], function(graphite) {
     r1.border(10, 'salmon').bgColor('moccasin').bounds(10, 10, 100, 100);
     r1.on('focus', function (x) {
         console.log('focus >> r1' + r1);
+    });
+    r1.on('mousedown', function (x) {
+        console.log('mousedown >> r1' + r1);
     });
     svg1.append(r1);
 
