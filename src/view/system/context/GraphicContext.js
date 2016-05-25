@@ -15,7 +15,7 @@
  */
 
 /**
- * @file Introduction
+ * @file GraphicContext
  * @since 1.0.0
  * @author hw.shim@samsung.com
  */
@@ -23,16 +23,18 @@
 define([
     'external/genetic/genetic',
     'graphite/base/Base',
+    'graphite/view/layout/StackLayout',
     'graphite/view/system/GraphicContainer'
 ], function (
     genetic,
     Base,
+    StackLayout,
     GraphicContainer
 ) {
     'use strict';
 
     /**
-     * A GraphicContext.
+     * A GraphicContext is a place which user's contents will be painted.
      * @constructor
      * @param {GraphicContainer} container
      */
@@ -88,6 +90,7 @@ define([
          * @param {Widget} contents
          */
         setContents: function (contents) {
+            this.desc('setContents', contents);
             var key, layer;
             this._mapRule.forEach(function (KEY_NAME, Type) {
                 if (contents instanceof Type) {
@@ -97,6 +100,7 @@ define([
             if (!key) return;
             layer = this.getLayer(key);
             if (layer) {
+                layer.setLayout(new StackLayout());
                 layer.append(contents);
             }
         },
