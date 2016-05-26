@@ -22,41 +22,33 @@
 
 define([
     'external/genetic/genetic',
-    'graphite/view/layout/XYLayout',
-    '../dom/DomWidget',
-    './HtmlWidget'
+    'graphite/view/geometry/Point',
+    './SvgLayer'
 ], function (
     genetic,
-    XYLayout,
-    DomWidget,
-    HtmlWidget
+    Point,
+    SvgLayer
 ) {
     'use strict';
 
     /**
-     * A Container.
+     * A GuideLayer.
      * @constructor
      */
-    function Container() {
-        HtmlWidget.apply(this, arguments);
+    function GuideLayer() {
+        SvgLayer.apply(this, arguments);
     }
 
-    genetic.inherits(Container, HtmlWidget, {
+    genetic.inherits(GuideLayer, SvgLayer, {
 
         /**
-         * @inheritdoc
-         * @override
+         * Draws grid lines.
+         * @param {GraphicContext} context
          */
-        append: function () {
-            var child = arguments[0];
-            if (child instanceof DomWidget) {
-                if (this.getLayout() instanceof XYLayout) {
-                    child.css({'position': 'absolute'});
-                }
-                HtmlWidget.prototype.append.apply(this, arguments);
-            }
+        aaa: function (bbb) {
+            
         }
     });
 
-    return Container;
+    return GuideLayer;
 });

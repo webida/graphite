@@ -78,7 +78,7 @@ define([
          * append(widget, index, constraint)
          * @param {Widget} widget - The Widget to add
          * @param {number} index - Where the new Widget should be added
-         * @param {Object} constraint - The added Widget's constraint
+         * @param {Object|string} constraint - The added Widget's constraint
          *//**
          * append(widget)
          * @param {Widget} widget - The Widget to add
@@ -89,7 +89,7 @@ define([
          *//**
          * append(widget, constraint)
          * @param {Widget} widget - The Widget to add
-         * @param {Object} constraint - The added Widget's constraint
+         * @param {Object|string} constraint - The added Widget's constraint
          *//**
          * append(widget, x, y, w, h)
          * @param {Widget} widget - The Widget to add
@@ -121,14 +121,16 @@ define([
             if (argLen === 1) {
                 index = -1;
                 constraint = child.bounds().copy();
+                return this.append(child, index, constraint);
             } else if (argLen === 2) {
-                if (args[1] instanceof Object) {
-                    index = -1;
-                    constraint = args[1];
-                } else if (typeof args[1] === 'number') {
+                if (typeof args[1] === 'number') {
                     index = args[1];
                     constraint = child.bounds().copy();
+                } else {
+                    index = -1;
+                    constraint = args[1];
                 }
+                return this.append(child, index, constraint);
             } else if (argLen === 3) {
                 index = args[1];
                 constraint = args[2];
@@ -136,11 +138,13 @@ define([
                     && math.isAllNumber(others)) {
                 index = -1;
                 constraint = genetic.getInstanceOf(Rectangle, others);
+                return this.append(child, index, constraint);
             } else if (argLen === 6
                     && math.isAllNumber(others)) {
                 index = args[1];
                 others.shift();
                 constraint = genetic.getInstanceOf(Rectangle, others);
+                return this.append(child, index, constraint);
             } else {
                 throw new Error('Illegal parameters');
             }
@@ -188,7 +192,8 @@ define([
         remove: function (widget) {
             var layout = this.getLayout();
             var children = this.getChildren();
-            if ((widget.getParent() !== this)) {
+            var index = children.indexOf(widget);
+            if ((widget.getParent() !== this) || index === -1) {
                 throw new Error("Widget is not a child");
             }
             if (this.getFlag(Widget.FLAG_REALIZED)) {
@@ -199,14 +204,14 @@ define([
             }
             widget.erase();
             widget.setParent(null);
-            children.remove(widget);
+            this._children.splice(index, 1);
             this.revalidate();
         },
 
         /**
-         * Tells whether this can contain other Widget.
-         * In default, Widget can containe other Widget,
-         * so returns true.
+         * Returns whether this can contain other Widget.
+         * Basically returns true because most of the Widgets
+         * can contain Widgets.
          * @return {boolean}
          */
         isContainer: function () {
@@ -886,7 +891,6 @@ define([
                 this._borderWidth = genetic.getInstanceOf(Spaces, arguments);
                 return this;
             } else {
-                this.desc('borderWidth', arguments, this._borderWidth + '');
                 return this._borderWidth;
             }
         },
@@ -1054,7 +1058,7 @@ define([
          */
         containsPoint: function (x, y) {
             var result = this.bounds().contains(x, y);
-            this.desc('containsPoint', arguments, result + '');
+            this.desc('containsPoint '+ this.bounds(), arguments, result + '');
             return result;
         },
 
@@ -1140,6 +1144,18 @@ define([
          */
         _canReceiveMouseEvent: function () {
             return true;
+        },
+
+        /**
+         * For convenience, returns position for
+         * x,y,w,h of this Widget.
+         * @return {string}
+         */
+        toString: function () {
+            var bounds = this.bounds();
+            return BaseEmitter.prototype.toString.call(this) + 
+                    '(' + bounds.x + ',' + bounds.y + ',' +
+                            bounds.w + ',' + bounds.h + ')';
         }
     });
 

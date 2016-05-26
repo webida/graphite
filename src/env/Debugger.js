@@ -37,12 +37,18 @@ define([
 
     function applyStyles(shell) {
         var container = shell.getContainer();
-        dom.setStyles(container.mask, {'background-color': 'salmon', 'opacity': 0.1});
-        dom.setStyles(container.document.body, {'background-color': '#a2e2f1'});
+        var context = container.getGraphicContext();
+        var mask = context.getEventReceiver();
+        var iframeLayer = context.getLayer('IFRAME_LAYER');
+        dom.setStyles(mask, {'background-color': 'salmon', 'opacity': 0.1});
+        if (iframeLayer) {
+            dom.setStyles(iframeLayer.body(), {'background-color': '#a2e2f1'});
+        }
     }
 
     function loadMonitor(shell) {
         var container = shell.getContainer();
+        var mask = container.getGraphicContext().getEventReceiver();
         var markup = "" +
         "<style>" +
             ".graphite-monitor {" +
@@ -85,7 +91,7 @@ define([
         dragStart = monitor.querySelector('.drag-start');
         dragDelta = monitor.querySelector('.drag-delta');
         dragStop = monitor.querySelector('.drag-stop');
-        container.mask.addEventListener('mousemove', function (ev) {
+        mask.addEventListener('mousemove', function (ev) {
             var delta, pos = dom.getEventPos(ev);
             if (isDrag) {
                 delta = {
@@ -96,13 +102,13 @@ define([
             }
             layerXY.textContent = pos.x+', '+pos.y;
         });
-        container.mask.addEventListener('mousedown', function (ev) {
+        mask.addEventListener('mousedown', function (ev) {
             isDrag = true;
             start = dom.getEventPos(ev);
             dragStart.textContent = start.x+', '+start.y;
             dragStop.textContent = 'n/a';
         });
-        container.mask.addEventListener('mouseup', function (ev) {
+        mask.addEventListener('mouseup', function (ev) {
             isDrag = false;
             var pos = dom.getEventPos(ev);
             dragStop.textContent = pos.x+', '+pos.y;

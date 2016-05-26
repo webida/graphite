@@ -22,41 +22,39 @@
 
 define([
     'external/genetic/genetic',
-    'graphite/view/layout/XYLayout',
-    '../dom/DomWidget',
-    './HtmlWidget'
+    '../html/Div',
+    './Layer',
+    './LayeredPane'
 ], function (
     genetic,
-    XYLayout,
-    DomWidget,
-    HtmlWidget
+    Div,
+    Layer,
+    LayeredPane
 ) {
     'use strict';
 
     /**
-     * A Container.
+     * A DivLayeredPane.
      * @constructor
      */
-    function Container() {
-        HtmlWidget.apply(this, arguments);
+    function DivLayeredPane() {
+        Div.apply(this, arguments);
+        LayeredPane.apply(this, arguments);
     }
 
-    genetic.inherits(Container, HtmlWidget, {
+    var proto = genetic.mixin(Div.prototype, LayeredPane.prototype, Layer.prototype, {
 
         /**
-         * @inheritdoc
-         * @override
+         * Explain
+         * @param {}
+         * @return {Array}
          */
-        append: function () {
-            var child = arguments[0];
-            if (child instanceof DomWidget) {
-                if (this.getLayout() instanceof XYLayout) {
-                    child.css({'position': 'absolute'});
-                }
-                HtmlWidget.prototype.append.apply(this, arguments);
-            }
+        aaaa: function () {
+            return this.bbb;
         }
     });
 
-    return Container;
+    genetic.inherits(DivLayeredPane, Div, proto);
+
+    return DivLayeredPane;
 });

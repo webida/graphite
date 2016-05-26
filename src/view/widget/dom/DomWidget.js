@@ -35,11 +35,12 @@ define([
 
     /**
      * A Widget which has a DOM element as it's presentation.
+     * @param {HTMLElement|SVGElement} [element]
      * @constructor
      */
-    function DomWidget() {
+    function DomWidget(element) {
         Widget.apply(this, arguments);
-        this.element(this._createElement());
+        this.element(element || this._createElement());
         this._createPropertyCache(this.element());
     }
 
@@ -185,6 +186,27 @@ define([
             this.cssCache.flush();
             this.attrCache.flush();
         },
+
+        /**
+         * @inheritdoc
+         * @override
+         */
+        append: function () {
+            var child = arguments[0];
+            var index = arguments[1];
+            var element, childElement, children;
+            if (this.isContainer() && child instanceof DomWidget) {
+                element = this.element();
+                childElement = child.element();
+                if (typeof index === 'number' && index > -1) {
+                    children = element.children;
+                    element.insertBefore(childElement, children[index]);
+                } else {
+                    element.appendChild(childElement);
+                }
+                Widget.prototype.append.apply(this, arguments);
+            }
+        }
     });
 
     /**

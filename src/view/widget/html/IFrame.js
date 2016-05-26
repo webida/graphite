@@ -22,26 +22,34 @@
 
 define([
     'external/genetic/genetic',
-    'graphite/view/layout/XYLayout',
     '../dom/DomWidget',
-    './HtmlWidget'
+    '../Widget',
+    './Container'
 ], function (
     genetic,
-    XYLayout,
     DomWidget,
-    HtmlWidget
+    Widget,
+    Container
 ) {
     'use strict';
 
     /**
-     * A Container.
+     * A IFrame.
      * @constructor
      */
-    function Container() {
-        HtmlWidget.apply(this, arguments);
+    function IFrame(iframe) {
+        Container.apply(this, arguments);
     }
 
-    genetic.inherits(Container, HtmlWidget, {
+    genetic.inherits(IFrame, Container, {
+
+        /**
+         * Returns tagName for this Widget.
+         * @return {string}
+         */
+        nodeName: function () {
+            return 'iframe';
+        },
 
         /**
          * @inheritdoc
@@ -50,13 +58,21 @@ define([
         append: function () {
             var child = arguments[0];
             if (child instanceof DomWidget) {
-                if (this.getLayout() instanceof XYLayout) {
-                    child.css({'position': 'absolute'});
-                }
-                HtmlWidget.prototype.append.apply(this, arguments);
+                this.body().appendChild(child.element());
+                Widget.prototype.append.apply(this, arguments);
             }
+        },
+
+        document: function () {
+            var iframe = this.element();
+            return iframe.contentDocument
+                    || iframe.contentWindow.document;
+        },
+
+        body: function () {
+            return this.document().body;
         }
     });
 
-    return Container;
+    return IFrame;
 });

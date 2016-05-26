@@ -22,41 +22,43 @@
 
 define([
     'external/genetic/genetic',
-    'graphite/view/layout/XYLayout',
-    '../dom/DomWidget',
-    './HtmlWidget'
+    'graphite/view/geometry/Point',
+    './SvgLayer',
+    './SnapToGrid'
 ], function (
     genetic,
-    XYLayout,
-    DomWidget,
-    HtmlWidget
+    Point,
+    SvgLayer,
+    SnapToGrid
 ) {
     'use strict';
 
     /**
-     * A Container.
+     * A GridLayer.
      * @constructor
      */
-    function Container() {
-        HtmlWidget.apply(this, arguments);
+    function GridLayer() {
+        SvgLayer.apply(this, arguments);
+        this.gridX = SnapToGrid.DEFAULT_GRID_SIZE;
+        this.gridY = SnapToGrid.DEFAULT_GRID_SIZE;
+        this.origin = new Point();
     }
 
-    genetic.inherits(Container, HtmlWidget, {
+    genetic.inherits(GridLayer, SvgLayer, {
 
         /**
-         * @inheritdoc
-         * @override
+         * Draws grid lines.
+         * @param {GraphicContext} context
          */
-        append: function () {
-            var child = arguments[0];
-            if (child instanceof DomWidget) {
-                if (this.getLayout() instanceof XYLayout) {
-                    child.css({'position': 'absolute'});
-                }
-                HtmlWidget.prototype.append.apply(this, arguments);
-            }
+        _drawWidget: function (context) {
+            console.trace('TODO paintGrid');
+            //this.paintGrid(context);
+        },
+        
+        setSpacing: function (dimension) {
+            
         }
     });
 
-    return Container;
+    return GridLayer;
 });

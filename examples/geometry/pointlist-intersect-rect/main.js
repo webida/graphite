@@ -14,9 +14,9 @@ require(['graphite/graphite', 'external/dom/dom'], function(graphite, dom) {
 
     var pointList = new PointList([200,100, 200,200, 350,100, 400,200, 300,400]);
 
-    var rect = new Rect();
-    rect.bgColor('salmon').border(20, 'bisque').bounds(80, 80, 100, 100);
-    svg.append(rect);
+    var r1 = new Rect();
+    r1.bgColor('salmon').border(20, 'bisque').bounds(80, 80, 100, 100);
+    svg.append(r1);
 
     var polyline = dom.makeSvgElement('polyline', {
         'points': pointList.points().join(','),
@@ -30,32 +30,34 @@ require(['graphite/graphite', 'external/dom/dom'], function(graphite, dom) {
         var start;
         var startBounds;
         var isDrag = false;
-        var mask = shell.getContainer().mask;
         function rearrange(x, y) {
             var dx = x - start.x;
             var dy = y - start.y;
-            rect.location(startBounds.x + dx, startBounds.y + dy);
-            var interset = pointList.intersects(rect.bounds());
+            r1.location(startBounds.x + dx, startBounds.y + dy);
+            var interset = pointList.intersects(r1.bounds());
             if (interset) {
                 polyline.setAttribute('stroke', 'red');
             } else {
                 polyline.setAttribute('stroke', 'black');
             }
         }
-        mask.addEventListener('mousedown', function(ev) {
-            start = dom.getEventPos(ev);
-            startBounds = rect.bounds().copy();
+        r1.on('mousedown', function(ev) {
             isDrag = true;
+            startBounds = r1.bounds().copy();
+            start = dom.getEventPos(ev.uiEvent);
         });
-        mask.addEventListener('mousemove', function(ev) {
-            var pos = dom.getEventPos(ev);
+        r1.on('drag', function (ev) {
+            svg.emit('drag', ev);
+        });
+        r1.on('mouseup', function(ev) {
+            isDrag = false;
+        });
+        svg.on('drag', function(ev) {
+            var pos;
             if (isDrag) {
+                pos = dom.getEventPos(ev.uiEvent);
                 rearrange(pos.x, pos.y);
             }
-        });
-        mask.addEventListener('mouseup', function(ev) {
-            start = null;
-            isDrag = false;
         });
     })();
 });

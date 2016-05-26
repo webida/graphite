@@ -15,7 +15,7 @@
  */
 
 /**
- * @file Introduction
+ * @file GraphicContainer
  * @since 1.0.0
  * @author hw.shim@samsung.com
  */
@@ -25,24 +25,32 @@ define([
     'external/genetic/genetic',
     'graphite/base/BaseEmitter',
     'graphite/env/Environment',
-    'graphite/view/geometry/Rectangle'
+    'graphite/view/geometry/Rectangle',
+    './context/DefaultGraphicContextFactory'
 ], function (
     dom,
     genetic,
     BaseEmitter,
     Environment,
-    Rectangle
+    Rectangle,
+    DefaultGraphicContextFactory
 ) {
     'use strict';
 
     /**
-     * A GraphicContainer.
+     * A GraphicContainer wraps and manages a given HTMLElement
+     * which will contain graphical contents.
+     * @param {HTMLElement} element
+     * @param {Function} GraphicContextFactory
      * @constructor
      */
-    function GraphicContainer(element) {
+    function GraphicContainer(element, GraphicContextFactory) {
         BaseEmitter.apply(this, arguments);
+        this._contents = null;
+        this._gcFactory = null;
+        this._graphicContext = null;
         this.setElement(element);
-        this.createLayers(element);
+        this.setGraphicContextFactory(GraphicContextFactory);
     }
 
     genetic.inherits(GraphicContainer, BaseEmitter, {
@@ -53,95 +61,76 @@ define([
         setElement: function (element) {
             this.desc('setElement', element);
             this._element = element;
-            element.classList.add('graphite');
-            element.classList.add('graphite-select-none');
-            this.mask = dom.bySelector('#mask', element)[0];
+            element.className = element.className
+                    + ' graphite graphite-select-none';
         },
 
-        /***
+        /**
          * @return {HTMLElement}
          */
         getElement: function () {
-            this.desc('getElement');
             return this._element;
         },
 
         /**
-         * Creates Layers with in GraphicContainer's DOM element.
-         * @param {HTMLElement} container
+         * Sets user's content root. This delegates
+         * how to append the root to the GraphicContext.
+         * @param {Widget} contents
          */
-        createLayers: function (container) {
-            var body, size;
-            var $ = container.querySelector.bind(container);
-            var markup = "" +
-                "<style>" +
-                    ".graphite .layer {" +
-                        "position: absolute;" +
-                        "overflow: hidden;" +
-                        "width: 100%;" +
-                        "height: 100%;" +
-                    "}" +
-                    ".graphite .master {" +
-                        "min-width: 100px;" +
-                        "min-height: 100px;" +
-                    "}" +
-                    ".graphite-select-none {" +
-                        "outline: none;" +
-                        "-moz-user-select: -moz-none;" +
-                        "-khtml-user-select: none;" +
-                        "-webkit-user-select: none;" +
-                        "-o-user-select: none;" +
-                        "user-select: none;" +
-                    "}" +
-                "</style>" +
-                "<div class='master scrollable layer'>" +
-                    "<div class='scalable layer'>" +
-                        "<div class='printable layer'>" +
-                            "<div class='primary layer'>" +
-                                "<iframe class='layer' style='border:0'></iframe>" +
-                                "<svg class='layer' shape-rendering='crispEdges'></svg>" +
-                            "</div>" +
-                        "</div>" +
-                        "<svg class='feedback layer'></svg>" +
-                    "</div>" +
-                    "<svg class='handle layer'></svg>" +
-                    "<div class='mask layer graphite-select-none' tabindex='1000'></div>" +
-                "</div>";
-            container.innerHTML = markup;
-            this.master = $('.master');
-            this.scalable = $('.scalable');
-            this.printable = $('.printable');
-            this.primary = $('.primary');
-            this.iframe = $('.primary > iframe');
-            this.svg = $('.primary > svg');
-            this.feedback = $('.feedback');
-            this.handle = $('.handle');
-            this.mask = $('.mask');
-            this.document = this.iframe.contentDocument
-                    || this.iframe.contentWindow.document;
-            if (!this.document.body) {
-                this.document.write("<body></body>");
-            }
-            body = this.document.body;
-            size = dom.getRect(container);
-            dom.setStyles(body, {'margin':0, 'padding':0});
-            dom.setStyles(this.master, {
-                'width': size.width + 'px', 'height': size.height + 'px'});
-            setTimeout(function (c) {
-                /**
-                 * ready event.
-                 * @event GraphicContainer#ready
-                 * @type {GraphicContainer}
-                 */
-                c.emit('ready', c);
-            }, 0, this);
+        setContents: function (contents) {
+            this.desc('setContents', contents);
+            this.getGraphicContext().setContents(contents);
+            this._contents = contents;
         },
 
-        /***
-         * @return {HTMLElement}
+        /**
+         * Retuens user's content root.
+         * @return {Widget}
          */
-        getEventMask: function () {
-            return this.mask;
+        getContents: function () {
+            return this._contents;
+        },
+
+        /**
+         * Sets GraphicContextFactory constructor
+         * which will create GraphicContext.
+         * @param {Function} Factory
+         */
+        setGraphicContextFactory: function (Factory) {
+            if (typeof Factory !== 'function') {
+                Factory = DefaultGraphicContextFactory;
+            }
+            this._gcFactory = new Factory(this);
+        },
+
+        /**
+         * Returns GraphicContextFactory.
+         * @return {GraphicContextFactory}
+         */
+        getGraphicContextFactory: function () {
+            return this._gcFactory;
+        },
+
+        /**
+         * Returns GraphicContext.
+         * @return {GraphicContext}
+         */
+        getGraphicContext: function () {
+            var factory;
+            var container = this;
+            if (!this._graphicContext) {
+                factory = this.getGraphicContextFactory();
+                this._graphicContext = factory.createGraphicContext();
+                setTimeout(function (container) {
+                    /**
+                     * ready event.
+                     * @event GraphicContainer#ready
+                     * @type {GraphicContainer}
+                     */
+                    container.emit('ready', container);
+                }, 0, container);
+            }
+            return this._graphicContext;
         },
 
         /**
@@ -150,12 +139,27 @@ define([
         getClientArea: function () {
             var e = this.getElement();
             var css = window.getComputedStyle(e);
-            //console.log('getClientArea', JSON.stringify(css));
             var rect = dom.getRect(e, true);
             var r = new Rectangle(0, 0, rect.width,rect.height);
             this.desc('getClientArea', [], r + '');
             return r;
         },
+
+        /***
+         * Clears resources for GC.
+         */
+        clear: function () {
+            this.desc('clear');
+            this._contents = null;
+            this._gcFactory = null;
+            this._graphicContext = null;
+            /**
+             * event notes clearing finished.
+             * @event GraphicContainer#cleared
+             * @type {GraphicContainer}
+             */
+            this.emit('cleared', this);
+        }
     });
 
     return GraphicContainer;

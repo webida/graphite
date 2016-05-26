@@ -25,8 +25,6 @@ define([
     'external/genetic/genetic',
     'graphite/view/geometry/BoxModel',
     'graphite/view/geometry/Rectangle',
-    'graphite/view/system/GraphiteShell',
-    'graphite/view/widget/html/Container',
     'graphite/view/widget/html/HtmlWidget',
     './Structural',
     './SvgWidget',
@@ -36,8 +34,6 @@ define([
     genetic,
     BoxModel,
     Rectangle,
-    GraphiteShell,
-    Container,
     HtmlWidget,
     Structural,
     SvgWidget,
@@ -73,22 +69,15 @@ define([
 
         /**
          * Sets this Widget's parent.
+         * If this svg is empty, it extents to parent.
          * @param {Widget} parent
          * @override 
          */
         setParent: function (parent) {
             this.desc('setParent', parent);
             SvgWidget.prototype.setParent.call(this, parent);
-            if (parent instanceof Structural || parent instanceof Container) {
-                parent.element().appendChild(this.element());
-                if (this.bounds().isEmpty()) {
-                    this.fillParent(true);
-                }
-            } else if (parent instanceof GraphiteShell.RootWidget) {
-                var upman = this.getUpdateManager();
-                var context = upman.getGraphicContext();
-                var root = context.getSVG();;
-                root.appendChild(this.element());
+            if (this.bounds().isEmpty()) {
+                this.fillParent(true);
             }
         },
 
@@ -154,18 +143,6 @@ define([
             }
             this.boxModel.castInBounds();
             Structural.prototype.layout.apply(this, arguments);
-        },
-
-        /**
-         * For convenience, this tells position for
-         * x,y,w,h of this Rectangle.
-         * @return {string}
-         */
-        toString: function () {
-            var bounds = this.bounds();
-            return Structural.prototype.toString.call(this) + 
-                    '(' + bounds.x + ',' + bounds.y + ',' +
-                            bounds.w + ',' + bounds.h + ')';
         }
     });
 

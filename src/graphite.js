@@ -15,8 +15,18 @@
  */
 
 define([
+    'external/genetic/genetic',
     'graphite/base/Base',
     'graphite/base/Color',
+    'graphite/editor/controller/Controller',
+    'graphite/editor/controller/ControllerFactory',
+    'graphite/editor/controller/ControllerRuleFactory',
+    'graphite/editor/model/BaseModel',
+    'graphite/editor/model/ModelFactory',
+    'graphite/editor/system/Domain',
+    'graphite/editor/system/GraphicEditor',
+    'graphite/editor/system/GraphicViewer',
+    'graphite/editor/tool/Tool',
     'graphite/env/Debugger',
     'graphite/view/geometry/Geometry',
     'graphite/view/geometry/Point',
@@ -24,6 +34,8 @@ define([
     'graphite/view/geometry/Rectangle',
     'graphite/view/layout/StackLayout',
     'graphite/view/layout/XYLayout',
+    'graphite/view/system/context/DefaultGraphicContextFactory',
+    'graphite/view/system/event/EventTransmitter',
     'graphite/view/system/GraphiteShell',
     'graphite/view/update-manager/AsyncUpdateManager',
     'graphite/view/update-manager/UpdateManager',
@@ -43,8 +55,18 @@ define([
     'graphite/view/widget/svg/Svg',
     'graphite/view/widget/Widget'
 ], function (
+    genetic,
     Base,
     Color,
+    Controller,
+    ControllerFactory,
+    ControllerRuleFactory,
+    BaseModel,
+    ModelFactory,
+    Domain,
+    GraphicEditor,
+    GraphicViewer,
+    Tool,
     Debugger,
     Geometry,
     Point,
@@ -52,6 +74,8 @@ define([
     Rectangle,
     StackLayout,
     XYLayout,
+    DefaultGraphicContextFactory,
+    EventTransmitter,
     GraphiteShell,
     AsyncUpdateManager,
     UpdateManager,
@@ -78,8 +102,29 @@ define([
             Base: Base,
             Color: Color
         },
+        editor: {
+            controller: {
+                Controller: Controller,
+                ControllerFactory: ControllerFactory
+            },
+            model: {
+                BaseModel: BaseModel,
+                ModelFactory: ModelFactory
+            },
+            system: {
+                Domain: Domain,
+                GraphicEditor: GraphicEditor,
+                GraphicViewer: GraphicViewer
+            },
+            tool: {
+                Tool: Tool
+            }
+        },
         env: {
             Debugger: Debugger
+        },
+        util: {
+            genetic: genetic
         },
         view: {
             geometry: {
@@ -93,6 +138,12 @@ define([
                 XYLayout: XYLayout
             },
             system: {
+                context : {
+                    DefaultGraphicContextFactory: DefaultGraphicContextFactory
+                },
+                event: {
+                    EventTransmitter: EventTransmitter
+                },
                 GraphiteShell: GraphiteShell
             },
             updateManager: {

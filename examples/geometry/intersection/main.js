@@ -4,7 +4,9 @@ require(['graphite/graphite', 'external/dom/dom'], function(graphite, dom) {
     var Geometry = graphite.view.geometry.Geometry;
 
     var shell = new GraphiteShell('container');
-    var svg = shell.getContainer().svg;
+    var container = shell.getContainer();
+    var context = container.getGraphicContext();
+    var svg = context.getLayer('SVG_LAYER').element();
     svg.setAttribute('shape-rendering', 'auto');
 
     var points1 = [100, 100, 200, 300];
@@ -51,7 +53,7 @@ require(['graphite/graphite', 'external/dom/dom'], function(graphite, dom) {
 
     (function() {
         var isDrag = false;
-        var mask = shell.getContainer().mask;
+        var mask = context.getEventReceiver();
         function rearrange(x, y) {
             points1 = [100, 100, x, y];
             var node = Geometry.getLineIntersection(

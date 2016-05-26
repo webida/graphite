@@ -7,7 +7,9 @@ require(['graphite/graphite', 'external/dom/dom'], function(graphite, dom) {
     var PointList = graphite.view.geometry.PointList;
 
     var shell = new GraphiteShell('container');
-    var svg = shell.getUpdateManager().getGraphicContext().getSVG();
+    var container = shell.getContainer();
+    var context = container.getGraphicContext();
+    var svg = context.getLayer('SVG_LAYER').element();
     svg.setAttribute('shape-rendering', 'auto');
 
     var points1 = [200,100, 200,200, 350,100, 400,200, 300,400];
@@ -36,7 +38,7 @@ require(['graphite/graphite', 'external/dom/dom'], function(graphite, dom) {
 
     (function() {
         var isDrag = false;
-        var mask = shell.getContainer().mask;
+        var mask = context.getEventReceiver();
         function rearrange(x, y) {
             var point = new Point(x, y);
             var containsPoint = Geometry.polylineContainsPoint(

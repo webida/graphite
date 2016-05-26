@@ -22,41 +22,32 @@
 
 define([
     'external/genetic/genetic',
-    'graphite/view/layout/XYLayout',
-    '../dom/DomWidget',
-    './HtmlWidget'
+    'graphite/base/Base'
 ], function (
     genetic,
-    XYLayout,
-    DomWidget,
-    HtmlWidget
+    Base
 ) {
     'use strict';
 
     /**
-     * A Container.
+     * A SnapToGrid.
      * @constructor
      */
-    function Container() {
-        HtmlWidget.apply(this, arguments);
+    function SnapToGrid() {
+        Base.apply(this, arguments);
     }
 
-    genetic.inherits(Container, HtmlWidget, {
+    genetic.inherits(SnapToGrid, Base, {
 
         /**
-         * @inheritdoc
-         * @override
+         * Explain
+         * @param {}
+         * @return {Array}
          */
-        append: function () {
-            var child = arguments[0];
-            if (child instanceof DomWidget) {
-                if (this.getLayout() instanceof XYLayout) {
-                    child.css({'position': 'absolute'});
-                }
-                HtmlWidget.prototype.append.apply(this, arguments);
-            }
+        aaaa: function () {
+            return this.bbb;
         }
     });
 
-    return Container;
+    return SnapToGrid;
 });

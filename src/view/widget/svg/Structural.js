@@ -43,19 +43,15 @@ define([
     genetic.inherits(Structural, SvgWidget, {
 
         /**
-         * Sets this Widget's parent.
-         * @param {Widget} parent
-         * @override 
+         * @inheritdoc
+         * @override
          */
-        setParent: function (parent) {
-            this.desc('setParent', parent);
-            SvgWidget.prototype.setParent.call(this, parent);
-            if (parent instanceof Structural) {
-                parent.element().appendChild(this.element());
-            } else {
-                throw new Error('Only Structural can be a parent for Structural');
+        append: function () {
+            var child = arguments[0];
+            if (child instanceof SvgWidget) {
+                SvgWidget.prototype.append.apply(this, arguments);
             }
-        },
+        }
     });
 
     return Structural;
