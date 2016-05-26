@@ -23,25 +23,23 @@
 define([
     'external/genetic/genetic',
     'graphite/view/geometry/Point',
-    './SvgLayer',
-    './SnapToGrid'
+    './SvgLayer'
 ], function (
     genetic,
     Point,
-    SvgLayer,
-    SnapToGrid
+    SvgLayer
 ) {
     'use strict';
 
     /**
-     * A ConnectionLayer.
+     * A GuideLayer.
      * @constructor
      */
-    function ConnectionLayer() {
+    function GuideLayer() {
         SvgLayer.apply(this, arguments);
     }
 
-    genetic.inherits(ConnectionLayer, SvgLayer, {
+    genetic.inherits(GuideLayer, SvgLayer, {
 
         /**
          * Draws grid lines.
@@ -52,5 +50,5 @@ define([
         }
     });
 
-    return ConnectionLayer;
+    return GuideLayer;
 });
