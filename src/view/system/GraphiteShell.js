@@ -111,7 +111,7 @@ define([
                 this.getUpdateManager().setGraphicContext(context);
                 this.setEventTransmitter(new EventTransmitter());
                 this.getRootWidget().bounds(c.getClientArea());
-                this.rootContents(context.getContextRoot());
+                this.rootContents(context.root());
             }
         },
 
