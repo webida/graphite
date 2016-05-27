@@ -35,6 +35,7 @@ define([
     'graphite/view/layout/StackLayout',
     'graphite/view/layout/XYLayout',
     'graphite/view/system/context/DefaultGraphicContextFactory',
+    'graphite/view/system/context/GraphicContext',
     'graphite/view/system/event/EventTransmitter',
     'graphite/view/system/GraphiteShell',
     'graphite/view/update-manager/AsyncUpdateManager',
@@ -75,6 +76,7 @@ define([
     StackLayout,
     XYLayout,
     DefaultGraphicContextFactory,
+    GraphicContext,
     EventTransmitter,
     GraphiteShell,
     AsyncUpdateManager,
@@ -139,7 +141,8 @@ define([
             },
             system: {
                 context : {
-                    DefaultGraphicContextFactory: DefaultGraphicContextFactory
+                    DefaultGraphicContextFactory: DefaultGraphicContextFactory,
+                    GraphicContext: GraphicContext
                 },
                 event: {
                     EventTransmitter: EventTransmitter
