@@ -65,9 +65,11 @@ require(['graphite/graphite', 'external/dom/dom'], function(graphite, dom) {
             target.location(startBounds.x + dx, startBounds.y + dy);
         }
         mask.addEventListener('mousedown', function (ev) {
-            startBounds = target.bounds().copy();
-            start = dom.getEventPos(ev);
-            isDrag = true;
+            if (target) {
+                startBounds = target.bounds().copy();
+                start = dom.getEventPos(ev);
+                isDrag = true;
+            }
         });
         mask.addEventListener('mousemove', function (ev) {
             var pos = dom.getEventPos(ev);
