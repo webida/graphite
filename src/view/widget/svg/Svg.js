@@ -139,7 +139,7 @@ define([
          */
         layout: function () {
             if (this.getParent() && this.fillParent()) {
-                this.bounds(this.getParent().getClientArea());
+                this.bounds(this.getParent().clientArea());
             }
             this.boxModel.castInBounds();
             Structural.prototype.layout.apply(this, arguments);

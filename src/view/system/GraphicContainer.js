@@ -136,12 +136,12 @@ define([
         /**
          * @return {Rectangle}
          */
-        getClientArea: function () {
+        clientArea: function () {
             var e = this.getElement();
             var css = window.getComputedStyle(e);
             var rect = dom.getRect(e, true);
             var r = new Rectangle(0, 0, rect.width,rect.height);
-            this.desc('getClientArea', [], r + '');
+            this.desc('clientArea', [], r + '');
             return r;
         },
 

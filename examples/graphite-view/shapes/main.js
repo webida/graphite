@@ -229,7 +229,7 @@ require(['graphite/graphite'], function(graphite) {
     setTimeout(function () {
         console.log(svg.bounds());
         //console.log('root --> ', root);
-        //console.log('r1.getClientArea() --> ', r1.getClientArea());
+        //console.log('r1.clientArea() --> ', r1.clientArea());
     }, 2000);
 
     return;

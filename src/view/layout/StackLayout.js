@@ -52,7 +52,7 @@ define([
          */
         layout: function(widget) {
             this.desc('layout', widget);
-            var r = widget.getClientArea();
+            var r = widget.clientArea();
             widget.getChildren().forEach(function (child) {
                 child.bounds(r);
             });

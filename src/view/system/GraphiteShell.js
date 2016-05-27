@@ -110,7 +110,7 @@ define([
                 var context = c.graphicContext();
                 this.getUpdateManager().setGraphicContext(context);
                 this.setEventTransmitter(new EventTransmitter());
-                this.getRootWidget().bounds(c.getClientArea());
+                this.getRootWidget().bounds(c.clientArea());
                 this.rootContents(context.root());
             }
         },
