@@ -79,7 +79,7 @@ define([
          */
         setContents: function (contents) {
             this.desc('setContents', contents);
-            this.getGraphicContext().setContents(contents);
+            this.graphicContext().setContents(contents);
             this._contents = contents;
         },
 
@@ -115,7 +115,7 @@ define([
          * Returns GraphicContext.
          * @return {GraphicContext}
          */
-        getGraphicContext: function () {
+        graphicContext: function () {
             var factory;
             var container = this;
             if (!this._graphicContext) {

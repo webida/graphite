@@ -5,7 +5,7 @@ require(['graphite/graphite', 'external/dom/dom'], function(graphite, dom) {
 
     var shell = new GraphiteShell('container');
     var container = shell.container();
-    var context = container.getGraphicContext();
+    var context = container.graphicContext();
     var svg = context.getLayer('SVG_LAYER').element();
     svg.setAttribute('shape-rendering', 'auto');
 

@@ -107,7 +107,7 @@ define([
                     this._container.clear();
                 }
                 this._container = c;
-                var context = c.getGraphicContext();
+                var context = c.graphicContext();
                 this.getUpdateManager().setGraphicContext(context);
                 this.setEventTransmitter(new EventTransmitter());
                 this.getRootWidget().bounds(c.getClientArea());
