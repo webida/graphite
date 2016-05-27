@@ -70,6 +70,18 @@ define([
     genetic.inherits(GraphiteShell, BaseEmitter, {
 
         /**
+         * Conveinient method for setContainer and getContainer.
+         */
+        container: function () {
+            if (arguments.length) {
+                this.setContainer.apply(this, arguments);
+                return this;
+            } else {
+                return this.getContainer();
+            }
+        },
+
+        /**
          * Sets the GraphicContainer.
          * @param {GraphicContainer|HTMLElement|string} c
          * @param {GraphicContextFactory} GCFactory

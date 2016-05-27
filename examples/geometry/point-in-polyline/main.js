@@ -7,7 +7,7 @@ require(['graphite/graphite', 'external/dom/dom'], function(graphite, dom) {
     var PointList = graphite.view.geometry.PointList;
 
     var shell = new GraphiteShell('container');
-    var container = shell.getContainer();
+    var container = shell.container();
     var context = container.getGraphicContext();
     var svg = context.getLayer('SVG_LAYER').element();
     svg.setAttribute('shape-rendering', 'auto');

@@ -57,7 +57,7 @@ require(['graphite/graphite', 'external/dom/dom'], function(graphite, dom) {
         var start;
         var startBounds;
         var isDrag = false;
-        var context = shell.getContainer().getGraphicContext();
+        var context = shell.container().getGraphicContext();
         var mask = context.getEventReceiver();
         function rearrange(x, y) {
             var dx = x - start.x;

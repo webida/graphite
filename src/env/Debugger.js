@@ -36,7 +36,7 @@ define([
     'use strict';
 
     function applyStyles(shell) {
-        var container = shell.getContainer();
+        var container = shell.container();
         var context = container.getGraphicContext();
         var mask = context.getEventReceiver();
         var iframeLayer = context.getLayer('IFRAME_LAYER');
@@ -47,7 +47,7 @@ define([
     }
 
     function loadMonitor(shell) {
-        var container = shell.getContainer();
+        var container = shell.container();
         var mask = container.getGraphicContext().getEventReceiver();
         var markup = "" +
         "<style>" +
