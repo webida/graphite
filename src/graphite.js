@@ -18,15 +18,6 @@ define([
     'external/genetic/genetic',
     'graphite/base/Base',
     'graphite/base/Color',
-    'graphite/editor/controller/Controller',
-    'graphite/editor/controller/ControllerFactory',
-    'graphite/editor/controller/ControllerRuleFactory',
-    'graphite/editor/model/BaseModel',
-    'graphite/editor/model/ModelFactory',
-    'graphite/editor/system/Domain',
-    'graphite/editor/system/GraphicEditor',
-    'graphite/editor/system/GraphicViewer',
-    'graphite/editor/tool/Tool',
     'graphite/env/Debugger',
     'graphite/view/geometry/Geometry',
     'graphite/view/geometry/Point',
@@ -59,15 +50,6 @@ define([
     genetic,
     Base,
     Color,
-    Controller,
-    ControllerFactory,
-    ControllerRuleFactory,
-    BaseModel,
-    ModelFactory,
-    Domain,
-    GraphicEditor,
-    GraphicViewer,
-    Tool,
     Debugger,
     Geometry,
     Point,
@@ -103,24 +85,6 @@ define([
         base: {
             Base: Base,
             Color: Color
-        },
-        editor: {
-            controller: {
-                Controller: Controller,
-                ControllerFactory: ControllerFactory
-            },
-            model: {
-                BaseModel: BaseModel,
-                ModelFactory: ModelFactory
-            },
-            system: {
-                Domain: Domain,
-                GraphicEditor: GraphicEditor,
-                GraphicViewer: GraphicViewer
-            },
-            tool: {
-                Tool: Tool
-            }
         },
         env: {
             Debugger: Debugger
