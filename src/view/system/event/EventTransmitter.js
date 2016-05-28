@@ -126,7 +126,7 @@ define([
         listen: function (container) {
             this.desc('listen', container);
             var that = this;
-            var context = container.getGraphicContext();
+            var context = container.graphicContext();
             var mask = this._mask = context.getEventReceiver();
             this.setContainer(container);
             dom.addEvent(mask, 'focus', function (e) {

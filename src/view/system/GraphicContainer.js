@@ -79,7 +79,7 @@ define([
          */
         setContents: function (contents) {
             this.desc('setContents', contents);
-            this.getGraphicContext().setContents(contents);
+            this.graphicContext().setContents(contents);
             this._contents = contents;
         },
 
@@ -115,7 +115,7 @@ define([
          * Returns GraphicContext.
          * @return {GraphicContext}
          */
-        getGraphicContext: function () {
+        graphicContext: function () {
             var factory;
             var container = this;
             if (!this._graphicContext) {
@@ -136,12 +136,12 @@ define([
         /**
          * @return {Rectangle}
          */
-        getClientArea: function () {
+        clientArea: function () {
             var e = this.getElement();
             var css = window.getComputedStyle(e);
             var rect = dom.getRect(e, true);
             var r = new Rectangle(0, 0, rect.width,rect.height);
-            this.desc('getClientArea', [], r + '');
+            this.desc('clientArea', [], r + '');
             return r;
         },
 

@@ -36,8 +36,8 @@ define([
     'use strict';
 
     function applyStyles(shell) {
-        var container = shell.getContainer();
-        var context = container.getGraphicContext();
+        var container = shell.container();
+        var context = container.graphicContext();
         var mask = context.getEventReceiver();
         var iframeLayer = context.getLayer('IFRAME_LAYER');
         dom.setStyles(mask, {'background-color': 'salmon', 'opacity': 0.1});
@@ -47,8 +47,8 @@ define([
     }
 
     function loadMonitor(shell) {
-        var container = shell.getContainer();
-        var mask = container.getGraphicContext().getEventReceiver();
+        var container = shell.container();
+        var mask = container.graphicContext().getEventReceiver();
         var markup = "" +
         "<style>" +
             ".graphite-monitor {" +

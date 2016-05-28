@@ -69,17 +69,16 @@ define([
         /**
          * Sets context's root widget or layer.
          * @param {Widget} root
-         */
-        setContextRoot: function (root) {
-            this._root = root;
-        },
-
-        /**
+         *//**
          * Returns context's root.
          * @return {Widget}
          */
-        getContextRoot: function () {
-            return this._root;
+        root: function (root) {
+            if (arguments.length) {
+                this._root = root;
+            } else {
+                return this._root;
+            }
         },
 
         /**

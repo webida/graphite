@@ -475,7 +475,7 @@ define([
          * @param {Rectangle} [rect]
          * @return {Rectangle}
          */
-        getClientArea: function (rect) {
+        clientArea: function (rect) {
             if (!(rect instanceof Rectangle)) {
                 rect = new Rectangle();
             }
@@ -484,7 +484,7 @@ define([
             if (this.isLocalCoordinates()) {
                 rect.location(0, 0);
             }
-            this.desc('getClientArea', arguments, rect + '');
+            this.desc('clientArea', arguments, rect + '');
             return rect;
         },
 
@@ -1032,7 +1032,7 @@ define([
             var child, children = this.getChildren();
             Point.SINGLETON.location(x, y);
             this.translateFromParent(Point.SINGLETON);
-            if (!this.getClientArea(Rectangle.SINGLETON).contains(Point.SINGLETON)) {
+            if (!this.clientArea(Rectangle.SINGLETON).contains(Point.SINGLETON)) {
                 return null;
             }
             x = Point.SINGLETON.x;
@@ -1122,7 +1122,7 @@ define([
             var child, children = this.getChildren();
             Point.SINGLETON.location(x, y);
             this.translateFromParent(Point.SINGLETON);
-            if (!this.getClientArea(Rectangle.SINGLETON).contains(Point.SINGLETON)) {
+            if (!this.clientArea(Rectangle.SINGLETON).contains(Point.SINGLETON)) {
                 return null;
             }
             for (var i = children.length - 1; i >= 0; i--) {

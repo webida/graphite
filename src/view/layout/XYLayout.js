@@ -75,7 +75,7 @@ define([
          * @return {Point}
          */
         getOrigin: function (widget) {
-            var origin = widget.getClientArea().location();
+            var origin = widget.clientArea().location();
             this.desc('getOrigin', widget, origin + '');
             return origin;
         },

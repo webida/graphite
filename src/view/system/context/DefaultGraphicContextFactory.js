@@ -71,7 +71,7 @@ define([
         createGraphicContext: function () {
             var context = this._getContext();
             this._createDom(this._getContainer().getElement());
-            context.setContextRoot(this._createContextRoot());
+            context.root(this._createContextRoot());
             this._createContentsMapRule();
             return context;
         },
