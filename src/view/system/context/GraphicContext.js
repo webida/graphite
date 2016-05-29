@@ -23,13 +23,11 @@
 define([
     'external/genetic/genetic',
     'graphite/base/Base',
-    'graphite/view/layout/StackLayout',
-    'graphite/view/system/GraphicContainer'
+    'graphite/view/layout/StackLayout'
 ], function (
     genetic,
     Base,
-    StackLayout,
-    GraphicContainer
+    StackLayout
 ) {
     'use strict';
 
