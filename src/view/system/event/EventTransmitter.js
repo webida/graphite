@@ -27,7 +27,8 @@ define([
     './FocusManager',
     './InternalFocusEvent',
     './InternalKeyEvent',
-    './InternalMouseEvent'
+    './InternalMouseEvent',
+    './ToolTipHelper'
 ], function (
     dom,
     genetic,
@@ -35,7 +36,8 @@ define([
     FocusManager,
     InternalFocusEvent,
     InternalKeyEvent,
-    InternalMouseEvent
+    InternalMouseEvent,
+    ToolTipHelper
 ) {
     'use strict';
 
@@ -120,6 +122,19 @@ define([
         },
 
         /**
+         * Creates ToolTipHelper.
+         * @param {GraphicContext} context
+         * @protected
+         */
+        _createToolTipHelper: function (context) {
+            var toolTipLayer = context.getLayer('TOOLTIP_LAYER');
+            if (toolTipLayer) {
+                this._toolTipHelper = new ToolTipHelper(
+                    toolTipLayer.element());
+            }
+        },
+
+        /**
          * Listens to the given container events.
          * @param {GraphicContainer} container
          */
@@ -128,6 +143,7 @@ define([
             var that = this;
             var context = container.graphicContext();
             var mask = this._mask = context.getEventReceiver();
+            this._createToolTipHelper(context);
             this.setContainer(container);
             dom.addEvent(mask, 'focus', function (e) {
                 that.transmitFocus(e);
@@ -279,8 +295,7 @@ define([
         _setHoverTarget: function (widget, e) {
             this.desc('_setHoverTarget', arguments);
             this._hoverTarget = widget;
-            //TODO shows tool tip
-            //this.warn('TODO shows tool tip');
+            this._toolTipHelper.update(widget);
         },
 
         /**
@@ -411,6 +426,7 @@ define([
                 }
             }
             if (next) {
+                e.doit = false;
                 this._setFocused(next);
             }
         },
@@ -470,6 +486,7 @@ define([
         transmitMouseMove: function (e) {
             receive.call(this, e);
             if (this._mouseTarget) {
+                this._toolTipHelper.show();
                 if (e.buttons & InternalMouseEvent.LEFT) {
                     this._mouseTarget.emit('drag', this._currentEvent);
                 } else {
@@ -498,7 +515,7 @@ define([
                 this._release();
                 this._mouseTarget = null;
             }
-        },
+        }
     });
 
     return EventTransmitter;

@@ -21,6 +21,7 @@
  */
 
 define([
+    'external/dom/dom',
     'external/genetic/genetic',
     'external/math/math',
     'graphite/base/BaseEmitter',
@@ -30,6 +31,7 @@ define([
     'graphite/view/geometry/Rectangle',
     'graphite/view/geometry/Spaces'
 ], function (
+    dom,
     genetic,
     math,
     BaseEmitter,
@@ -301,7 +303,7 @@ define([
             /**
              * moved event.
              * @event Widget#moved
-             * @type {object}
+             * @type {Object}
              * @dx {number} dx
              * @dy {number} dy
              */
@@ -318,14 +320,14 @@ define([
         setParent: function (parent) {
             this.desc('setParent', arguments);
             if (!parent.isContainer()) {
-                throw new Error('parent is not container widget');
+                throw new Error('parent is not a container widget');
             }
             var old = this.getParent();
             this._parent = parent;
             /**
              * setParent event.
              * @event Widget#setParent
-             * @type {object}
+             * @type {Object}
              * @property {Widget} oldParent
              * @property {Widget} newParent
              */
@@ -690,7 +692,7 @@ define([
                 /**
                  * moved event.
                  * @event Widget#moved
-                 * @type {object}
+                 * @type {Object}
                  * @dx {number} dx
                  * @dy {number} dy
                  */
@@ -1074,11 +1076,11 @@ define([
 
         /**
          * Sets tool tip for this Widget.
-         * @param {Widget} toolTip
+         * @param {HTMLElement} toolTip
          * @return {Widget}
          *//**
          * Returns tool tip for this Widget.
-         * @return {Widget}
+         * @return {HTMLElement}
          */
         toolTip: function () {
             if (arguments.length) {
@@ -1087,6 +1089,28 @@ define([
             } else {
                 return this._toolTip;
             }
+        },
+
+        /**
+         * Returns Div toolTip with the given content.
+         * @param {string} content
+         * @param {Object} style
+         * @return {Widget}
+         */
+        textToolTip: function (content, style) {
+            var toolTip = dom.makeElement('div');
+            if (!style) {
+                style = {
+                    'position': 'absolute',
+                    'padding': '2px 4px',
+                    'font-size': '8pt',
+                    'border': '1px solid #d9b38c',
+                    'background-color': 'lightgoldenrodyellow'
+                };
+            }
+            dom.setStyles(toolTip, style);
+            toolTip.textContent = content;
+            return this.toolTip(toolTip);
         },
 
         /**

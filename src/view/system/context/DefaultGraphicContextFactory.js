@@ -119,6 +119,7 @@ define([
                         "</div>" +
                         "<svg class='handle layer'></svg>" +
                         "<svg class='guide layer'></svg>" +
+                        "<div class='tooltip layer'></div>" +
                         "<div class='mask layer select-none' tabindex='1000'></div>" +
                     "</div>";
                 "</div>";
@@ -171,6 +172,7 @@ define([
             this._addToPane(pane, this._createScalableLayers(), 'SCALABLE_LAYERS');
             this._addToPane(pane, new SvgLayer($('.handle')), 'HANDLE_LAYER');
             this._addToPane(pane, new GuideLayer($('.guide')), 'GUIDE_LAYER');
+            this._addToPane(pane, new DivLayer($('.tooltip')), 'TOOLTIP_LAYER');
             this._addToPane(pane, new DivLayer(mask), 'MASK_LAYER');
             this._getContext().setEventReceiver(mask);
             return pane;
