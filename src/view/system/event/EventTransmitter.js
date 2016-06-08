@@ -258,10 +258,18 @@ define([
          */
         _updateCursor: function () {
             if (this._cursorTarget) {
-                dom.setStyles(this._mask, {
-                    'cursor': this._cursorTarget.cursor()
-                });
+                this._setCursor(this._cursorTarget.cursor());
             }
+        },
+
+        /**
+         * Sets cursor with the given cursor.
+         * @protected
+         */
+        _setCursor: function (cursor) {
+            dom.setStyles(this._mask, {
+                'cursor': cursor
+            });
         },
 
         /**
