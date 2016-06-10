@@ -83,8 +83,9 @@ define([
          * Hides toolTip.
          */
         hide: function () {
-            if (this._current) {
-                this._layer.removeChild(this._current);
+            var layer = this._layer;
+            if (this._current && layer.hasChildNodes()) {
+                layer.removeChild(this._current);
             }
             this._isShow = false;
         }
