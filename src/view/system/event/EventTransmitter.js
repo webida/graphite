@@ -174,6 +174,7 @@ define([
             });
             dom.addEvent(mask, 'mousemove', function (e) {
                 that.transmitMouseMove(e);
+                that.transmitMouseHover(e);
             });
             dom.addEvent(mask, 'mouseenter', function (e) {
                 that.transmitMouseEnter(e);
@@ -494,12 +495,24 @@ define([
         transmitMouseMove: function (e) {
             receive.call(this, e);
             if (this._mouseTarget) {
-                this._toolTipHelper.show();
                 if (e.buttons & InternalMouseEvent.LEFT) {
                     this._mouseTarget.emit('drag', this._currentEvent);
                 } else {
                     this._mouseTarget.emit('mousemove', this._currentEvent);
                 }
+            }
+        },
+
+        /**
+         * Transmits mousehover event to the mouseTarget.
+         * @param {MouseEvent} e
+         */
+        transmitMouseHover: function (e) {
+            if (this._mouseTarget) {
+                this._mouseTarget.emit('mousehover', this._currentEvent);
+            }
+            if (this._hoverTarget) {
+                this._toolTipHelper.show();
             }
         },
 
