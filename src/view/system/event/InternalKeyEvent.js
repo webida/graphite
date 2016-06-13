@@ -190,5 +190,9 @@ define([
         return traverseKeys.indexOf(key) > -1;
     };
 
+    InternalKeyEvent.ALT = 1 << 15;
+    InternalKeyEvent.CTRL = 1 << 16;
+    InternalKeyEvent.SHIFT = 1 << 17;
+
     return InternalKeyEvent;
 });
