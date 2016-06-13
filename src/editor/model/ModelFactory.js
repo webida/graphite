@@ -15,55 +15,38 @@
  */
 
 /**
- * @file Introduction
+ * @file ModelFactory
  * @since 1.0.0
  * @author hw.shim@samsung.com
  */
 
 define([
     'external/genetic/genetic',
-    './InternalInputEvent'
+    'graphite/base/Base'
 ], function (
     genetic,
-    InternalInputEvent
+    Base
 ) {
     'use strict';
 
     /**
-     * A InternalMouseEvent.
+     * A ModelFactory.
      * @constructor
-     * @param {Widget} widget
-     * @param {MouseEvent} e
      */
-    function InternalMouseEvent(widget, e) {
-        InternalInputEvent.apply(this, arguments);
+    function ModelFactory(editor) {
+        Base.apply(this, arguments);
+        this.editor = editor;
     }
 
-    genetic.inherits(InternalMouseEvent, InternalInputEvent, {
+    genetic.inherits(ModelFactory, Base, {
 
         /**
-         * Explain
-         * @param {}
-         * @return {Array}
+         * @param {Function} callback
          */
-        aaaa: function () {
-            return this.bbb;
+        create: function (callback) {
+            this.isInterface('create');
         }
     });
 
-    InternalMouseEvent.LEFT = 1;
-    InternalMouseEvent.RIGHT = 1 << 1;
-    InternalMouseEvent.WHEEL = 1 << 2;
-
-    /** 
-     * MouseEvent.button
-     * https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
-     */
-    InternalMouseEvent.BUTTON = {
-        'LEFT': 0,
-        'WHEEL': 1,
-        'RIGHT': 2
-    };
-
-    return InternalMouseEvent;
+    return ModelFactory;
 });

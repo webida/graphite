@@ -22,48 +22,33 @@
 
 define([
     'external/genetic/genetic',
-    './InternalInputEvent'
+    'graphite/base/Base'
 ], function (
     genetic,
-    InternalInputEvent
+    Base
 ) {
     'use strict';
 
     /**
-     * A InternalMouseEvent.
+     * A ControllerFactory.
      * @constructor
-     * @param {Widget} widget
-     * @param {MouseEvent} e
      */
-    function InternalMouseEvent(widget, e) {
-        InternalInputEvent.apply(this, arguments);
+    function ControllerFactory() {
+        Base.apply(this, arguments);
     }
 
-    genetic.inherits(InternalMouseEvent, InternalInputEvent, {
+    genetic.inherits(ControllerFactory, Base, {
 
         /**
-         * Explain
-         * @param {}
-         * @return {Array}
+         * Creates new Controller with the given model
+         * @param {Object} context
+         * @param {Object} model
+         * @return {Controller}
          */
-        aaaa: function () {
-            return this.bbb;
+        create: function (context, model) {
+            this.isInterface('create', arguments);
         }
     });
 
-    InternalMouseEvent.LEFT = 1;
-    InternalMouseEvent.RIGHT = 1 << 1;
-    InternalMouseEvent.WHEEL = 1 << 2;
-
-    /** 
-     * MouseEvent.button
-     * https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
-     */
-    InternalMouseEvent.BUTTON = {
-        'LEFT': 0,
-        'WHEEL': 1,
-        'RIGHT': 2
-    };
-
-    return InternalMouseEvent;
+    return ControllerFactory;
 });

@@ -22,24 +22,22 @@
 
 define([
     'external/genetic/genetic',
-    './InternalInputEvent'
+    'graphite/base/Base'
 ], function (
     genetic,
-    InternalInputEvent
+    Base
 ) {
     'use strict';
 
     /**
-     * A InternalMouseEvent.
+     * A LayerManager.
      * @constructor
-     * @param {Widget} widget
-     * @param {MouseEvent} e
      */
-    function InternalMouseEvent(widget, e) {
-        InternalInputEvent.apply(this, arguments);
+    function LayerManager() {
+        Base.apply(this, arguments);
     }
 
-    genetic.inherits(InternalMouseEvent, InternalInputEvent, {
+    genetic.inherits(LayerManager, Base, {
 
         /**
          * Explain
@@ -51,19 +49,7 @@ define([
         }
     });
 
-    InternalMouseEvent.LEFT = 1;
-    InternalMouseEvent.RIGHT = 1 << 1;
-    InternalMouseEvent.WHEEL = 1 << 2;
+    LayerManager.ID = {};
 
-    /** 
-     * MouseEvent.button
-     * https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
-     */
-    InternalMouseEvent.BUTTON = {
-        'LEFT': 0,
-        'WHEEL': 1,
-        'RIGHT': 2
-    };
-
-    return InternalMouseEvent;
+    return LayerManager;
 });

@@ -15,31 +15,29 @@
  */
 
 /**
- * @file Introduction
+ * @file CommandStack
  * @since 1.0.0
  * @author hw.shim@samsung.com
  */
 
 define([
     'external/genetic/genetic',
-    './InternalInputEvent'
+    'graphite/base/BaseEmitter'
 ], function (
     genetic,
-    InternalInputEvent
+    BaseEmitter
 ) {
     'use strict';
 
     /**
-     * A InternalMouseEvent.
+     * A CommandStack.
      * @constructor
-     * @param {Widget} widget
-     * @param {MouseEvent} e
      */
-    function InternalMouseEvent(widget, e) {
-        InternalInputEvent.apply(this, arguments);
+    function CommandStack() {
+        BaseEmitter.apply(this, arguments);
     }
 
-    genetic.inherits(InternalMouseEvent, InternalInputEvent, {
+    genetic.inherits(CommandStack, BaseEmitter, {
 
         /**
          * Explain
@@ -51,19 +49,5 @@ define([
         }
     });
 
-    InternalMouseEvent.LEFT = 1;
-    InternalMouseEvent.RIGHT = 1 << 1;
-    InternalMouseEvent.WHEEL = 1 << 2;
-
-    /** 
-     * MouseEvent.button
-     * https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
-     */
-    InternalMouseEvent.BUTTON = {
-        'LEFT': 0,
-        'WHEEL': 1,
-        'RIGHT': 2
-    };
-
-    return InternalMouseEvent;
+    return CommandStack;
 });

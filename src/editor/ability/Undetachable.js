@@ -22,48 +22,34 @@
 
 define([
     'external/genetic/genetic',
-    './InternalInputEvent'
+    './Nestable'
 ], function (
     genetic,
-    InternalInputEvent
+    Nestable
 ) {
     'use strict';
 
     /**
-     * A InternalMouseEvent.
+     * The root component cannot be removed from its parent.
+     * This Nestable is typically installed on the Viewer's contents.
      * @constructor
-     * @param {Widget} widget
-     * @param {MouseEvent} e
      */
-    function InternalMouseEvent(widget, e) {
-        InternalInputEvent.apply(this, arguments);
+    function Undetachable() {
+        Nestable.apply(this, arguments);
     }
 
-    genetic.inherits(InternalMouseEvent, InternalInputEvent, {
+    genetic.inherits(Undetachable, Nestable, {
 
         /**
-         * Explain
-         * @param {}
-         * @return {Array}
+         * Overridden to prevent the host from being deleted.
+         * @param {GroupRequest} request
+         * @return {Command}
+         * @override
          */
-        aaaa: function () {
-            return this.bbb;
+        _createDeleteCommand: function (request) {
+            return UnexecutableCommand.SINGLETON;
         }
     });
 
-    InternalMouseEvent.LEFT = 1;
-    InternalMouseEvent.RIGHT = 1 << 1;
-    InternalMouseEvent.WHEEL = 1 << 2;
-
-    /** 
-     * MouseEvent.button
-     * https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
-     */
-    InternalMouseEvent.BUTTON = {
-        'LEFT': 0,
-        'WHEEL': 1,
-        'RIGHT': 2
-    };
-
-    return InternalMouseEvent;
+    return Undetachable;
 });

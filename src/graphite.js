@@ -18,6 +18,19 @@ define([
     'external/genetic/genetic',
     'graphite/base/Base',
     'graphite/base/Color',
+    'graphite/editor/ability/Nestable',
+    'graphite/editor/ability/Undetachable',
+    'graphite/editor/ability/XYLayoutable',
+    'graphite/editor/command/Command',
+    'graphite/editor/controller/Controller',
+    'graphite/editor/controller/ControllerFactory',
+    'graphite/editor/controller/ControllerRuleFactory',
+    'graphite/editor/model/BaseModel',
+    'graphite/editor/model/ModelFactory',
+    'graphite/editor/system/Domain',
+    'graphite/editor/system/GraphicEditor',
+    'graphite/editor/system/GraphicViewer',
+    'graphite/editor/tool/Tool',
     'graphite/env/Debugger',
     'graphite/view/geometry/Geometry',
     'graphite/view/geometry/Point',
@@ -50,6 +63,19 @@ define([
     genetic,
     Base,
     Color,
+    Nestable,
+    Undetachable,
+    XYLayoutable,
+    Command,
+    Controller,
+    ControllerFactory,
+    ControllerRuleFactory,
+    BaseModel,
+    ModelFactory,
+    Domain,
+    GraphicEditor,
+    GraphicViewer,
+    Tool,
     Debugger,
     Geometry,
     Point,
@@ -85,6 +111,32 @@ define([
         base: {
             Base: Base,
             Color: Color
+        },
+        editor: {
+            ability: {
+                Nestable: Nestable,
+                Undetachable: Undetachable,
+                XYLayoutable: XYLayoutable
+            },
+            command: {
+                Command: Command
+            },
+            controller: {
+                Controller: Controller,
+                ControllerFactory: ControllerFactory
+            },
+            model: {
+                BaseModel: BaseModel,
+                ModelFactory: ModelFactory
+            },
+            system: {
+                Domain: Domain,
+                GraphicEditor: GraphicEditor,
+                GraphicViewer: GraphicViewer
+            },
+            tool: {
+                Tool: Tool
+            }
         },
         env: {
             Debugger: Debugger

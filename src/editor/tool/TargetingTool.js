@@ -22,24 +22,22 @@
 
 define([
     'external/genetic/genetic',
-    './InternalInputEvent'
+    './Tool'
 ], function (
     genetic,
-    InternalInputEvent
+    Tool
 ) {
     'use strict';
 
     /**
-     * A InternalMouseEvent.
+     * A TargetingTool.
      * @constructor
-     * @param {Widget} widget
-     * @param {MouseEvent} e
      */
-    function InternalMouseEvent(widget, e) {
-        InternalInputEvent.apply(this, arguments);
+    function TargetingTool() {
+        Tool.apply(this, arguments);
     }
 
-    genetic.inherits(InternalMouseEvent, InternalInputEvent, {
+    genetic.inherits(TargetingTool, Tool, {
 
         /**
          * Explain
@@ -51,19 +49,5 @@ define([
         }
     });
 
-    InternalMouseEvent.LEFT = 1;
-    InternalMouseEvent.RIGHT = 1 << 1;
-    InternalMouseEvent.WHEEL = 1 << 2;
-
-    /** 
-     * MouseEvent.button
-     * https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent/button
-     */
-    InternalMouseEvent.BUTTON = {
-        'LEFT': 0,
-        'WHEEL': 1,
-        'RIGHT': 2
-    };
-
-    return InternalMouseEvent;
+    return TargetingTool;
 });

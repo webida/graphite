@@ -32,7 +32,7 @@ define([
     'use strict';
 
     /**
-     * A transparent figure intended to be added exclusively to
+     * A transparent widget intended to be added exclusively to
      * a LayeredPane, who has the responsibilty of managing its layers.
      * @constructor
      */
