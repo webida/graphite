@@ -18,7 +18,19 @@
         
         'next': {
             value: function () {
-                return this._map.get(this._cursor++);
+                var map = this._map;
+                var i = this._cursor++;
+                if (i < map.size) {
+                    return {
+                        value: [map._keys[i], map._values[i]],
+                        done: false
+                    };
+                } else {
+                    return {
+                        value: undefined,
+                        done: true
+                    };
+                }
             }
         },
 
