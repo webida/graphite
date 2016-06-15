@@ -27,6 +27,7 @@ define([
     'graphite/editor/controller/Controller',
     'graphite/editor/controller/ControllerRuleFactory',
     'graphite/editor/controller/RootController',
+    'graphite/editor/system/event/GraphicKeyHandler',
     'graphite/editor/model/BaseModel',
     'graphite/view/system/GraphiteShell',
     './DomainEventTransmitter'
@@ -37,6 +38,7 @@ define([
     Controller,
     ControllerRuleFactory,
     RootController,
+    GraphicKeyHandler,
     BaseModel,
     GraphiteShell,
     DomainEventTransmitter
@@ -49,8 +51,10 @@ define([
      * @param {HTMLElement} container
      * @param {Object} option
      * @property {Function} 'factory' - Factory Class
-     * @property {Object} 'rule' - Factory Rule
+     * @property {Array} 'rule' - Factory Rule
      * @property {Function} 'root' - RootController Class
+     * @property {Function} 'key-handler' - KeyHandler Class
+     * @property {Function} 'context-menu' - ContextMenu Class
      */
     function GraphicViewer(container, option) {
         BaseEmitter.apply(this, arguments);
@@ -58,12 +62,14 @@ define([
         this._shell = null;
         this._domain = null;
         this._factory = null;
+        this._keyHandler = null;
         this._transmitter = null;
         this._modelToController = new Map();
         this._viewToController = new Map();
         this.createShell(container);
         this.createControllerFactory(option);
         this.createRoot(option['root']);
+        this.createKeyHandler(option['key-handler']);
         setTimeout(function (viewer) {
             viewer.emit('viewerReady', viewer);
         }, 0, this);
@@ -107,6 +113,24 @@ define([
             } else {
                 this.root(new RootController());
             }
+        },
+
+        /**
+         * @param {KeyHandler} Handler
+         */
+        createKeyHandler: function (Handler) {
+            if (typeof Handler === 'function') {
+                this._keyHandler = new Handler(this);
+            } else {
+                this._keyHandler = new GraphicKeyHandler(this);
+            }
+        },
+
+        /**
+         * @return {KeyHandler}
+         */
+        getKeyHandler: function () {
+            return this._keyHandler;
         },
 
         /**
@@ -285,6 +309,45 @@ define([
             if (transmitter) {
                 transmitter.overrideCursor(cursor);
             }
+        },
+
+        /**
+         * Returns the Controller at the specified location,
+         * using the given exclusion set and conditional.
+         * This method behaves similarly to {@link #findObjectAt(Point)}.
+         * 
+         * @param {Point} p - The mouse location
+         * @param {Array} except - The set of Controllers to be excluded
+         * @param {Object} condition
+         *  - the Conditional used to evaluate a potential hit
+         * @return {Controller}
+         * @see Widget#getWidgetAtExcept(x, y, except)
+         */
+        findObjectAtExcept: function (p, except, condition) {
+            var that = this;
+            var widget = this.shell().getRootWidget().getWidgetAt(
+                    p.x, p.y, {
+                        prune: function (widget) {
+                            return except.indexOf(widget) > -1;
+                        },
+                        accept: function (widget) {
+                            var ctrl = null;
+                            while (!ctrl && widget) {
+                                ctrl = that.viewControllerMap().get(widget);
+                                widget = widget.getParent();
+                            }
+                            return !!ctrl
+                                    && (!condition || condition.evaluate(ctrl));
+                        }
+                    });
+            var controller = null;
+            while (!controller && widget) {
+                controller = this.viewControllerMap().get(widget);
+                widget = widget.getParent();
+            }
+            if (!controller)
+                return this.contents();
+            return controller;
         }
     });
 
