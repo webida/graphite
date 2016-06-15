@@ -15,7 +15,7 @@
  */
 
 /**
- * @file Introduction
+ * @file InternalKeyEvent
  * @since 1.0.0
  * @author hw.shim@samsung.com
  */
@@ -47,6 +47,7 @@ define([
         29: 'NonConvert',
         30: 'Accept',
         31: 'ModeChange',
+        32: ' ',
         33: 'PageUp',
         34: 'PageDown',
         35: 'End',
@@ -116,6 +117,7 @@ define([
         Right: 'ArrowRight',
         Down: 'ArrowDown',
         Del: 'Delete',
+        Spacebar: ' ',
         Menu: 'ContextMenu',
         MediaNextTrack: 'MediaTrackNext',
         MediaPreviousTrack: 'MediaTrackPrevious',
@@ -165,7 +167,7 @@ define([
     InternalKeyEvent.getKey = function (e) {
         var key;
         if (e.key) {
-            if (keyFix[e.key]) {
+            if (keyFix.hasOwnProperty(e.key)) {
                 key = keyFix[e.key];
             } else {
                 key = e.key;
@@ -177,6 +179,31 @@ define([
             }
         }
         return key;
+    };
+
+    /**
+     * Returns bitmask of modifier keys for the given KeyboardEvent.
+     * @param {KeyboardEvent} e
+     * @return {number} 
+     * @static
+     */
+    InternalKeyEvent.getMask = function (e) {
+        var mask = 0;
+        if (e.altKey) mask |= InternalKeyEvent.ALT;
+        if (e.ctrlKey) mask |= InternalKeyEvent.CTRL;
+        if (e.shiftKey) mask |= InternalKeyEvent.SHIFT;
+        return mask;
+    };
+
+    /**
+     * Returns true if the given mask contains the given modifier key.
+     * @param {number} mask
+     * @param {string} key
+     * @static
+     */
+    InternalKeyEvent.maskHasKey = function (mask, key) {
+        var bit = InternalKeyEvent[key];
+        return bit && (mask & bit) !== 0;
     };
 
     /**
