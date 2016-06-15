@@ -130,23 +130,28 @@ define([
          * @see #deactivate()
          */
         activate: function () {
+            var that = this;
             this.desc('activate');
             this.input = new Input();
             this._resetFlags();
             this._accessibleBegin = -1;
             this._state(Tool.STATE_INITIAL);
             this.setFlag(FLAG_ACTIVE, true);
-            this._stackListener = this._onStackChanged.bind(this);
+            this._stackListener = function (e) {
+                if (e.isPreChange()) {
+                    that._onStackChange();
+                }
+            };
             this.domain().commandStack().on(
-                'stackChanged', this._stackListener);
+                'stackChange', this._stackListener);
         },
 
         /**
-         * Deactivates the tool. This method is called whenever the user switches to
-         * another tool. Use this method to do some clean-up when the tool is
-         * switched. The abstract tool allows cursors for viewers to be changed.
-         * When the tool is deactivated it must revert to normal the cursor of the
-         * last tool it changed.
+         * Deactivates the tool. This method is called whenever the user
+         * switches to another tool. Use this method to do some clean-up
+         * when the tool is switched. The abstract tool allows cursors for
+         * viewers to be changed. When the tool is deactivated it must revert
+         * to normal the cursor of the last tool it changed.
          * @see #activate()
          */
         deactivate: function () {
@@ -158,7 +163,7 @@ define([
             this._operationSet = null;
             this.input = null;
             this.domain().commandStack().off(
-                'stackChanged', this._stackListener);
+                'stackChange', this._stackListener);
         },
 
         /**
@@ -194,11 +199,11 @@ define([
          */
         _executeCommand: function (command) {
             var commandStack = this.domain().commandStack();
-            commandStack.off('stackChanged', this._stackListener);
+            commandStack.off('stackChange', this._stackListener);
             try {
                 commandStack.execute(command);
             } finally {
-                commandStack.on('stackChanged', this._stackListener);
+                commandStack.on('stackChange', this._stackListener);
             }
         },
     
@@ -382,7 +387,7 @@ define([
         },
 
         /**
-         * Called when the command stack has changed,
+         * Called just before the command stack has changed,
          * for instance, when a delete or undo command has been executed.
          * By default, state is set to STATE_INVALID and _onInvalidInput
          * is called. Subclasses may override this method to change
@@ -391,15 +396,13 @@ define([
          * @return {boolean}
          * @protected
          */
-        _onStackChanged: function (event) {
-            if (event.isPreChangeEvent()) {
-                if (!this._isInState(Tool.STATE_INITIAL | Tool.STATE_INVALID)) {
-                    this._state(Tool.STATE_INVALID);
-                    this._onInvalidInput();
-                    return true;
-                }
-                return false;
+        _onStackChange: function () {
+            if (!this._isInState(Tool.STATE_INITIAL | Tool.STATE_INVALID)) {
+                this._state(Tool.STATE_INVALID);
+                this._onInvalidInput();
+                return true;
             }
+            return false;
         },
 
         /**
