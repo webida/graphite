@@ -533,6 +533,39 @@ define([
          */
         _registerView: function () {
             this.viewer().viewControllerMap().set(this.view(), this);
+        },
+
+        /**
+         * Shows or updates target feedback for the given Request.
+         * By default, this responsibility is delegated to this' Abilities.
+         * Subclasses should rarely extend this method.
+         * It is recommended that feedback be handled by Abilities,
+         * and not directly by the Controller.
+         * @param {Request} request
+         * @see Ability#showTargetFeedback(Request)
+         */
+        showTargetFeedback: function(request) {
+            if (!this.isActive()) return;
+            this._abilities.forEach(function (ability) {
+                ability.showTargetFeedback(request);
+            });
+        },
+
+        /**
+         * Erases or updates target feedback for the given Request.
+         * By default, this responsibility is delegated to this' Abilities.
+         * Subclasses should rarely extend this method.
+         * It is recommended that feedback be handled by Abilities,
+         * and not directly by the Controller.
+         * @param {Request} request
+         * @see #showTargetFeedback(Request)
+         */
+        eraseTargetFeedback: function (request) {
+            if (this.isActive()) {
+                this._abilities.forEach(function (ability) {
+                    ability.eraseTargetFeedback(request);
+                });
+            }
         }
     });
 
