@@ -43,6 +43,10 @@ define([
         this._root = null;
         this._layers = {};
         this._mapRule = new Map(); //empty map
+        this._current = {
+            layer: null,
+            contents: null
+        };
     }
 
     genetic.inherits(GraphicContext, Base, {
@@ -83,7 +87,7 @@ define([
 
         /**
          * Append contents to the context.
-         * The appending location will be decided by
+         * The place to be appended will be decided by
          * ContentsMapRule Map Object.
          * @see setContentsMapRule(Map rule) 
          * @param {Widget} contents
@@ -91,6 +95,7 @@ define([
         setContents: function (contents) {
             this.desc('setContents', contents);
             var key, layer;
+            var current = this._current;
             this._mapRule.forEach(function (KEY_NAME, Type) {
                 if (contents instanceof Type) {
                     key = KEY_NAME;
@@ -99,8 +104,16 @@ define([
             if (!key) return;
             layer = this.getLayer(key);
             if (layer) {
+                if (current.layer && current.contents) {
+                    current.layer.remove(current.contents);
+                    this._current = {};
+                }
                 layer.setLayout(new StackLayout());
                 layer.append(contents);
+                this._current = {
+                    'layer': layer,
+                    'contents': contents
+                };
             }
         },
 
