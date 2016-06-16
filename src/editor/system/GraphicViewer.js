@@ -348,6 +348,23 @@ define([
             if (!controller)
                 return this.contents();
             return controller;
+        },
+
+        /**
+         * Returns the Handle at the specified Point.
+         * The specified point should be relative to the
+         * {@link GraphicContainer#clientArea()}
+         * 
+         * @param {Point} p
+         * @return {Handle} 
+         */
+        findHandleAt: function (p) {
+            var container = this.shell().container();
+            var context = container.graphicContext();
+            var layer = context.getLayer('HANDLE_LAYER');
+            if (layer) {
+                return layer.findWidgetAt(p.x, p.y);
+            }
         }
     });
 
