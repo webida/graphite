@@ -76,15 +76,21 @@ define([
         },
 
         /**
+         * By default, a Controller is regarded to be selectable.
+         * @return {boolean}
+         */
+        isSelectable: function () {
+            return true;
+        },
+
+        /**
          * Activates all Abilities installed on this Controller.
          * There is no reason to override this method.
          */
         _activateAbilities: function () {
             this.desc('activateAbilities');
-            var abilities = this._abilities;
-            var props = Object.getOwnPropertyNames(abilities);
-            props.forEach(function (prop) {
-                abilities[prop].activate();
+            this._abilities.forEach(function (ability) {
+                ability.activate();
             });
         },
 
@@ -216,8 +222,8 @@ define([
             if (!(ability instanceof Ability)) {
                 throw new Error('ability should be an instanceof Ability');
             }
-            if (abilities.has(role)) {
-                abilities.abilities(role).deactivate();
+            if (abilities.has(role) && this.isActive()) {
+                abilities.get(role).deactivate();
             }
             abilities.set(role, ability);
             ability.host(this);
@@ -377,6 +383,41 @@ define([
          */
         children: function () {
             return this._children;
+        },
+
+        /**
+         * Returns the <code>EditPart</code> which is the target of the
+         * <code>Request</code>. The default implementation delegates this method to
+         * the installed EditPolicies. The first non-<code>null</code> result
+         * returned by an EditPolicy is returned. Subclasses should rarely extend
+         * this method.
+         * <P>
+         * <table>
+         * <tr>
+         * <td><img src="../doc-files/important.gif"/>
+         * <td>It is recommended that targeting be handled by EditPolicies, and not
+         * directly by the EditPart.
+         * </tr>
+         * </table>
+         * 
+         * @param {Request} request
+         *            Describes the type of target desired.
+         * @return <code>null</code> or the <i>target</i> <code>EditPart</code>
+         * @see EditPart#getTargetEditPart(Request)
+         * @see EditPolicy#getTargetEditPart(Request)
+         */
+        getTarget: function (request) {
+            var check, controller;
+            this._abilities.forEach(function (ability) {
+                check = ability.getTarget(request);
+                if (check) controller = check;
+            });
+            if (controller) return controller; 
+            if (request.type() === 'REQ_SELECTION') {
+                if (this.isSelectable())
+                    return this;
+            }
+            return null;
         },
 
         /**
