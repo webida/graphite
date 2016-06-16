@@ -8245,7 +8245,7 @@
 <XPD:REF name="Owner">0RqRg4v/WUKuac8OuJqlLAAA</XPD:REF>
 </XPD:OBJ>
 <XPD:OBJ name="Operations[51]" type="UMLOperation" guid="oAB7qrsV90SsnmjdV2vNmgAA">
-<XPD:ATTR name="Name" type="string">getWidgetAt</XPD:ATTR>
+<XPD:ATTR name="Name" type="string">findWidgetAt</XPD:ATTR>
 <XPD:REF name="Owner">0RqRg4v/WUKuac8OuJqlLAAA</XPD:REF>
 <XPD:ATTR name="#Parameters" type="integer">3</XPD:ATTR>
 <XPD:OBJ name="Parameters[0]" type="UMLParameter" guid="NQZ04zVM6kqObkchaBrBQAAA">
@@ -8262,7 +8262,7 @@
 </XPD:OBJ>
 </XPD:OBJ>
 <XPD:OBJ name="Operations[52]" type="UMLOperation" guid="KJuY+LwkFEuSjREE+LAxIwAA">
-<XPD:ATTR name="Name" type="string">getWidgetAtExcept</XPD:ATTR>
+<XPD:ATTR name="Name" type="string">findWidgetAtExcept</XPD:ATTR>
 <XPD:REF name="Owner">0RqRg4v/WUKuac8OuJqlLAAA</XPD:REF>
 <XPD:ATTR name="#Parameters" type="integer">3</XPD:ATTR>
 <XPD:OBJ name="Parameters[0]" type="UMLParameter" guid="DBOWkBVLVEahg0cZFTnPXgAA">
@@ -8279,7 +8279,7 @@
 </XPD:OBJ>
 </XPD:OBJ>
 <XPD:OBJ name="Operations[53]" type="UMLOperation" guid="6QKjOc1av0ipTSuEuN/DQgAA">
-<XPD:ATTR name="Name" type="string">_getDescendantAt</XPD:ATTR>
+<XPD:ATTR name="Name" type="string">_findDescendantAt</XPD:ATTR>
 <XPD:ATTR name="Visibility" type="UMLVisibilityKind">vkProtected</XPD:ATTR>
 <XPD:REF name="Owner">0RqRg4v/WUKuac8OuJqlLAAA</XPD:REF>
 <XPD:ATTR name="#Parameters" type="integer">3</XPD:ATTR>
@@ -11943,7 +11943,7 @@
 </XPD:OBJ>
 </XPD:OBJ>
 <XPD:OBJ name="Operations[1]" type="UMLOperation" guid="B5UFTIIsiEmr/Al6npKqXQAA">
-<XPD:ATTR name="Name" type="string">getWidgetAt</XPD:ATTR>
+<XPD:ATTR name="Name" type="string">findWidgetAt</XPD:ATTR>
 <XPD:REF name="Owner">/LCoFT1Xt0WLrWA4hGlT4AAA</XPD:REF>
 <XPD:ATTR name="#Parameters" type="integer">3</XPD:ATTR>
 <XPD:OBJ name="Parameters[0]" type="UMLParameter" guid="KMO5Q69uwUuoqxubAH9vvwAA">

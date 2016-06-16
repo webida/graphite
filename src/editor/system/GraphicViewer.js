@@ -321,11 +321,11 @@ define([
          * @param {Object} condition
          *  - the Conditional used to evaluate a potential hit
          * @return {Controller}
-         * @see Widget#getWidgetAtExcept(x, y, except)
+         * @see Widget#findWidgetAtExcept(x, y, except)
          */
         findObjectAtExcept: function (p, except, condition) {
             var that = this;
-            var widget = this.shell().getRootWidget().getWidgetAt(
+            var widget = this.shell().getRootWidget().findWidgetAt(
                     p.x, p.y, {
                         prune: function (widget) {
                             return except.indexOf(widget) > -1;

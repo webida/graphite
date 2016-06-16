@@ -231,7 +231,7 @@ define([
             var p = mousePos(e);
             this.desc('_updateWidgetUnderMouse', p.x +', '+ p.y);
             if (!this._captured) {
-                var wiz = this.getRoot().getWidgetAt(p.x, p.y);
+                var wiz = this.getRoot().findWidgetAt(p.x, p.y);
                 this._setCursorTarget(wiz);
                 if (this._cursorTarget !== this._hoverTarget) {
                     this._updateHoverTarget(e);
