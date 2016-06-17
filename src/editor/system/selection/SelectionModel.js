@@ -23,10 +23,12 @@
 define([
     'external/genetic/genetic',
     'graphite/base/Base',
+    'graphite/editor/controller/Controller',
     './Selection'
 ], function (
     genetic,
     Base,
+    Controller,
     Selection
 ) {
     'use strict';
@@ -66,9 +68,9 @@ define([
         addToSelected: function (controller) {
             var selected = this._selected;
             var selLen = selected.length;
-            if (controller !== this._focused())
+            if (controller !== this.focused())
                 this._viewer.focused(null);
-            if (selLen === 0) {
+            if (selLen !== 0) {
                 var primary = selected[selLen - 1];
                 primary.selectedState(Controller.SELECTED);
             }
@@ -79,7 +81,7 @@ define([
                 selected.splice(index, 1);
             }
             selected.push(controller);
-            controller.setSelected(Controller.SELECTED_PRIMARY);
+            controller.selectedState(Controller.SELECTED_PRIMARY);
             this._onSelectionChanged();
         },
 
