@@ -571,6 +571,19 @@ define([
         },
 
         /**
+         * Performs the specified Request. This method can be used to
+         * send a generic message to an Controller. If the Controller
+         * interprets this request to mean make a change in the model,
+         * it should still use Commands and the CommandStack so that
+         * the change is undoable. The CommandStack is available from
+         * the Domain.
+         * Subclasses should extend this method to handle Requests.
+         * @param {Request} req 
+         */
+        request: function (req) {
+        },
+
+        /**
          * Creates the Widget to be used as this Controller's view.
          * This is called from view() if the view has not been created.
          * @return {Widget}
