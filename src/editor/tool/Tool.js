@@ -336,9 +336,9 @@ define([
          * Subclasses may override or extend this method to calculate the
          * appropriate cursor based on other conditions.
          * 
-         * @see #getDefaultCursor()
-         * @see #getDisabledCursor()
-         * @see #getCurrentCommand()
+         * @see #defaultCursor()
+         * @see #disabledCursor()
+         * @see #_currentCommand()
          * @return {string}
          * @protected
          */
@@ -491,7 +491,7 @@ define([
          * @protected
          */
         _createOperationSet: function () {
-            return this.viewer().selectedControllers().slice();
+            return this.viewer().selected().slice();
         },
 
         /**

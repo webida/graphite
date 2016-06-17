@@ -30,7 +30,8 @@ define([
     'graphite/editor/system/event/GraphicKeyHandler',
     'graphite/editor/model/BaseModel',
     'graphite/view/system/GraphiteShell',
-    './DomainEventTransmitter'
+    './DomainEventTransmitter',
+    './selection/SelectionModel'
 ], function (
     genetic,
     Map,
@@ -41,7 +42,8 @@ define([
     GraphicKeyHandler,
     BaseModel,
     GraphiteShell,
-    DomainEventTransmitter
+    DomainEventTransmitter,
+    SelectionModel
 ) {
     'use strict';
 
@@ -64,12 +66,14 @@ define([
         this._factory = null;
         this._keyHandler = null;
         this._transmitter = null;
+        this._selectionModel = null;
         this._modelToController = new Map();
         this._viewToController = new Map();
         this.createShell(container);
         this.createControllerFactory(option);
         this.createRoot(option['root']);
         this.createKeyHandler(option['key-handler']);
+        this.selectionModel(new SelectionModel(this));
         setTimeout(function (viewer) {
             viewer.emit('viewerReady', viewer);
         }, 0, this);
@@ -158,7 +162,6 @@ define([
             var viewer = this;
             var shell = this.shell();
             var root = this.root();
-            //TODO override this to use selection manager
             shell.once('cleared', function () {
                 viewer.shell(null);
             });
@@ -166,6 +169,7 @@ define([
                 root.activate();
             }
             //TODO dnd from Palette
+            //TODO contextMenu
         },
 
         /**
@@ -364,6 +368,146 @@ define([
             var layer = context.getLayer('HANDLE_LAYER');
             if (layer) {
                 return layer.findWidgetAt(p.x, p.y);
+            }
+        },
+
+        /**
+         * Reveals the given Controller if it is not visible.
+         * Reveals the specified Controller by using {@link ExposeHelper}s.
+         * A bottom-up scan through the parent-chain is performed,
+         * looking for expose helpers along the way, and asking them
+         * to expose the given Controller.
+         */
+        reveal: function (controller) {
+            console.log('TODO reveal');
+        },
+
+        /**
+         * Sets the SelectionModel for this Viewer.
+         * @param {SelectionModel} model
+         *//**
+         * Returns the viewer's SelectionModel. The SelectionModel has
+         * complete control over the viewer's representation of selection.
+         * It provides the Selection for the viewer, and manages all changes
+         * to the current selection.
+         * @return {SelectionModel}
+         */
+        selectionModel: function (model) {
+            if (arguments.length) {
+                if (this._selectionModel) {
+                    this._selectionModel.clear();
+                }
+                this._selectionModel = model;
+            } else {
+                return this._selectionModel;
+            }
+        },
+
+        /**
+         * This array may be empty. In contrast, the method selection()
+         * should not return an empty selection. When no controller selected,
+         * generally the contents controller is considered to be selected.
+         * This list can be modified indirectly by calling other methods
+         * on the viewer. This returns immutable Array.
+         * @return {Array}
+         */
+        selected: function () {
+            return Object.freeze(this._selectionModel.selected());
+        },
+
+        /**
+         * Replaces the current selection with the specified Controller.
+         * That Controller becomes the primary selection.
+         * Emits 'selectionChanged' event.
+         * @param {Controller} controller
+         */
+        select: function (controller) {
+            var selected = this.selected();
+            if ((selected.length === 1) && (selected[0] === controller))
+                return;
+            this._selectionModel.deselectAll(true); //does not emit
+            this.addToSelected(controller);
+        },
+
+        /**
+         * Appends the specified Controller to the viewer's selection.
+         * The Controller becomes the new primary selection.
+         * Emits 'selectionChanged' event.
+         * @param {Controller} controller
+         */
+        addToSelected: function (controller) {
+            this._selectionModel.addToSelected(controller);
+        },
+
+        /**
+         * Removes the specified Controller from the current selection.
+         * If the selection becomes empty, the viewer's contents
+         * becomes the current selected. 
+         * Emits 'selectionChanged' event.
+         * @param {Controller} controller
+         */
+        deselect: function (controller) {
+            this._selectionModel.deselect(controller);
+        },
+
+        /**
+         * Deselects all Controllers. The viewer's contents becomes
+         * the current selection. Emits 'selectionChanged'.
+         */
+        deselectAll: function () {
+            this._selectionModel.deselectAll();
+        },
+
+        /**
+         * Sets the selection to the given selection and emits an event
+         * 'selectionChanged'.
+         * @param {Selection} selection
+         *//**
+         * Returns an Selection containing a list of one or more Controller.
+         * Whenever {@link #selected()} returns an empty array,
+         * the contents controller is returned as the current selection.
+         * @return {Selection}
+         */
+        selection: function (selection) {
+            if (arguments.length) {
+                this._selectionModel.selection(selection);
+            } else {
+                return this._selectionModel.selection();
+            }
+        },
+
+        /**
+         * Emits 'selectionChanged' event.
+         */
+        onSelectionChanged: function () {
+            this.emit('selectionChanged', this, this.selection());
+        },
+
+        /**
+         * Sets the focused Controller.
+         * @param {Controller} controller
+         *//**
+         * Returns the focused Controller. Focus refers to keyboard focus.
+         * This is the same concept as focus in a native Tree or Table.
+         * The User can change focus using the keyboard without affecting
+         * the currently selected objects. Never returns null.
+         * @return {Controller}
+         */
+        focused: function (controller) {
+            if (arguments.length) {
+                this._selectionModel.focused(controller);
+                this._focused = controller;
+            } else {
+                if (this._focused) return this._focused;
+                var selected = this.selected();
+                var selectedLen = selected.length;
+                if (selectedLen === 0) {
+                    if (this.contents())
+                        return this.contents();
+                    else
+                        return this.root();
+                }
+                return selected[selectedLen - 1];
             }
         }
     });

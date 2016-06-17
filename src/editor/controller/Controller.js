@@ -25,13 +25,15 @@ define([
     'external/map/Map',
     'graphite/base/BaseEmitter',
     'graphite/base/FlagSupport',
-    'graphite/editor/ability/Ability'
+    '../ability/Ability',
+    '../tool/MoveTracker'
 ], function (
     genetic,
     Map,
     BaseEmitter,
     FlagSupport,
-    Ability
+    Ability,
+    MoveTracker
 ) {
     'use strict';
 
@@ -45,6 +47,7 @@ define([
         this._parent = null;
         this._children = [];
         this._abilities = new Map();
+        this._selectState = Controller.SELECTED_NONE;
     }
 
     var proto = genetic.mixin(BaseEmitter.prototype, FlagSupport.prototype, {
@@ -76,16 +79,97 @@ define([
         },
 
         /**
-         * By default, a Controller is regarded to be selectable.
+         * A Controller is regarded to be selectable,
+         * if it is active and its view is showing.
          * @return {boolean}
          */
         isSelectable: function () {
-            return true;
+            return this.isActive() && this.view()
+                    && this.view().isShowing();
+        },
+
+        /**
+         * Sets the selected state for this Controller,
+         * which may be one of:
+         * SELECTED
+         * SELECTED_NONE
+         * SELECTED_PRIMARY
+         * 
+         * As only selectable {@link Controller}s may get selected,
+         * the method may only be called with a selected value of
+         * SELECTED or SELECTED_PRIMARY in case the receiver is selectable.
+         * The method should rarely be overridden. Instead, Abilities that are
+         * selection-aware listen for selectionChanged event.
+         * 
+         * @see SelectionEditPolicy
+         * @param {number} state
+         *//**
+         * Returns the selected state of this EditPart. This method should only be
+         * called internally or by helpers such as EditPolicies.
+         * 
+         * @return {number}
+         * SELECTED
+         * SELECTED_NONE
+         * SELECTED_PRIMARY
+         */
+        selectedState: function (state) {
+            if (arguments.length) {
+                if (this.isSelectable()
+                    || state === Controller.SELECTED_NONE) {
+                    if (this._selectState === state) return;
+                    this._selectState = state;
+                    this._onSelectionChanged();
+                }
+            } else {
+                return this._selectState;
+            }
+        },
+
+        /**
+         * Only be called by GraphicViewer to indicate that
+         * the Controller has been focused or blured keyboard focus.
+         * Focus is considered to be part of the selected state.
+         * Therefore, only selectable Controllers are able to
+         * obtain focus, and the method may thus only be called with
+         * a value of true in case the receiver is selectable.
+         * 
+         * The method should rarely be overridden. Instead, Abilities that are
+         * selection-aware listen for notifications about the change of focus.
+         * 
+         * @param {boolean} value
+         * @see Selectable
+         *//**
+         * Returns true if this Controller has focus.
+         * The focused Controller is a property of the GraphicViewer.
+         * The Viewer keeps this property in sync with its focus.
+         * @see GraphicViewer#focused()
+         * @return {boolean}
+         */
+        isFocus: function (value) {
+            if (arguments.length) {
+                if (this.isSelectable() || !value) {
+                    if (this.isFocus() === value)
+                        return;
+                    this.setFlag(Controller.FLAG_FOCUS, value);
+                    this._onSelectionChanged();
+                }
+            } else {
+                return this.getFlag(Controller.FLAG_FOCUS);
+            }
+        },
+
+        /**
+         * Emits 'selectionChanged' event.
+         * @protected
+         */
+        _onSelectionChanged: function () {
+            this.emit('selectionChanged', this);
         },
 
         /**
          * Activates all Abilities installed on this Controller.
          * There is no reason to override this method.
+         * @protected
          */
         _activateAbilities: function () {
             this.desc('activateAbilities');
@@ -536,6 +620,13 @@ define([
         },
 
         /**
+         * Returns default DragTracker.
+         */
+        getDragTracker: function () {
+            return new MoveTracker(this);
+        },
+
+        /**
          * Shows or updates target feedback for the given Request.
          * By default, this responsibility is delegated to this' Abilities.
          * Subclasses should rarely extend this method.
@@ -576,6 +667,27 @@ define([
      * @constant {number}
      */
     Controller.FLAG_ACTIVE = 1;
+
+    /**
+     * This flag indicates that the Controller has focus.
+     */
+    Controller.FLAG_FOCUS = 2;
+
+    /**
+     * Used to indicate no selection
+     */
+    Controller.SELECTED_NONE = 0;
+
+    /**
+     * Used to indicate non-primary selection
+     */
+    Controller.SELECTED = 1;
+
+    /**
+     * Used to indicate primary selection, or "Anchor" selection.
+     * Primary selection is defined as the last object selected.
+     */
+    Controller.SELECTED_PRIMARY = 2;
 
     return Controller;
 });
