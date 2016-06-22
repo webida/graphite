@@ -96,10 +96,10 @@ define([
         this._domain = null;
         this._viewer = null;
         this._command = null;
-        this._startLoc = null;
+        this._startLoc = new Point(0, 0);
         this._accessibleBegin = 0;
         this._stackListener = null;
-        this._operationSet = null;
+        this._operationSet_ = null;
         this._accessibleBegin = null;
         this._accessibleStep = null;
         this.setFlag(FLAG_UNLOAD, true);
@@ -160,7 +160,7 @@ define([
             this.viewer(null);
             this._currentCommand(null);
             this._state(Tool.STATE_TERMINAL);
-            this._operationSet = null;
+            this._operationSet_ = null;
             this.input = null;
             this.domain().commandStack().off(
                 'stackChange', this._stackListener);
@@ -198,6 +198,7 @@ define([
          * @protected
          */
         _executeCommand: function (command) {
+            this.desc('_executeCommand', command);
             var commandStack = this.domain().commandStack();
             commandStack.off('stackChange', this._stackListener);
             try {
@@ -415,7 +416,7 @@ define([
          * @protected
          */
         _state: function (state) {
-            if (state) {
+            if (arguments.length) {
                 this._state_ = state;
             } else {
                 return this._state_;
@@ -472,15 +473,15 @@ define([
          * @return {Array} the operation set.
          * @protected
          */
-        _getOperationSet: function () {
-            if (this._operationSet == null)
-                this._operationSet = this._createOperationSet();
-            return this._operationSet;
+        _operationSet: function () {
+            if (!this._operationSet_)
+                this._operationSet_ = this._createOperationSet();
+            return this._operationSet_;
         },
     
         /**
          * Returns a new List of Controllers that this tool is operating on.
-         * This method is called once during {@link #_getOperationSet()},
+         * This method is called once during {@link #_operationSet()},
          * and its result is cached.
          * 
          * By default, the operations set is the current viewer's entire
