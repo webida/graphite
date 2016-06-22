@@ -532,9 +532,8 @@ define([
         /**
          * Returns the current x, y position of the mouse cursor.
          * @return {Point} the mouse location
-         * @protected
          */
-        _currentLocation: function () {
+        location: function () {
             return this.input.mouseLocation;
         },
 
@@ -547,7 +546,7 @@ define([
          * @protected
          */
         _dragDelta: function () {
-            return this._currentLocation().difference(this._startLocation());
+            return this.location().difference(this._startLocation());
         },
 
         /**
@@ -875,7 +874,7 @@ define([
             if (this.getFlag(FLAG_PAST_THRESHOLD))
                 return true;
             var start = this._startLocation();
-            var end = this._currentLocation();
+            var end = this.location();
             if (Math.abs(start.x - end.x) > DRAG_THRESHOLD
                     || Math.abs(start.y - end.y) > DRAG_THRESHOLD) {
                 this.setFlag(FLAG_PAST_THRESHOLD, true);
@@ -891,7 +890,7 @@ define([
          * @return {Dimension} the drag delta
          */
         getDragMoveDelta: function () {
-            return this._currentLocation().difference(this._startLocation());
+            return this.location().difference(this._startLocation());
         },
 
         /**
