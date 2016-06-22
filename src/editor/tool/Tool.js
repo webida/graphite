@@ -539,6 +539,18 @@ define([
         },
 
         /**
+         * Return the number of pixels that the mouse has been moved
+         * since that drag was started. The drag start is determined by
+         * where the mouse button was first pressed.
+         * @see #_startLocation()
+         * @return {Dimension}
+         * @protected
+         */
+        _dragDelta: function () {
+            return this._currentLocation().difference(this._startLocation());
+        },
+
+        /**
          * Called when invalid input is encountered. The state does not change,
          * so the caller must set the state to Tool.STATE_INVALID.
          * @return {boolean}
