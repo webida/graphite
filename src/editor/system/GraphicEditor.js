@@ -23,11 +23,13 @@
 define([
     'external/genetic/genetic',
     'graphite/base/Base',
+    '../action/ActionRegistry',
     './Domain',
     './GraphicViewer'
 ], function (
     genetic,
     Base,
+    ActionRegistry,
     Domain,
     GraphicViewer
 ) {
@@ -43,6 +45,7 @@ define([
         Base.apply(this, arguments);
         this._viewer = null;
         this._model = null;
+        this._registry = new ActionRegistry();
         this.domain(new Domain(this));
     }
 
@@ -63,6 +66,7 @@ define([
          */
         create: function (option) {
             this.desc('create', arguments);
+            this._initActions();
             var viewer = option['viewer'];
             var palette = option['palette'];
             var ModelFactory = option['model-factory'];
@@ -88,6 +92,44 @@ define([
         },
 
         /**
+         * Initializes the ActionRegistry.
+         * @protected
+         */
+        _initActions: function () {
+            var editor = this;
+            this.desc('_initActions');
+            this._createActions();
+            this._updateActions('property');
+            this._updateActions('stack');
+            this.commandStack().on('postStackChange', function (e) {
+                editor._updateActions('stack');
+            });
+        },
+
+        /**
+         * Creates actions for this editor.
+         * Subclasses should override this to customize actions.
+         */
+        _createActions: function () {
+            this.desc('_createActions');
+            var action;
+            var reg = this._actionRegistry();
+            //TODO
+        },
+
+        _updateActions: function (cat) {
+            this.desc('_updateActions', cat);
+            //TODO
+        },
+
+        /**
+         * @return {ActionRegistry}
+         */
+        _actionRegistry: function () {
+            return this._registry;
+        },
+
+        /**
          * @param {Function} ModelFactory
          */
         createModelFactory: function (ModelFactory) {
@@ -103,8 +145,8 @@ define([
         /**
          * @param {HTMLElement} container
          * @param {Object} option
-         * @property {Function} 'factory' - Factory Class
-         * @property {Array} 'rule' - Factory Rule
+         * @property {Function} 'viewer-factory' - Factory Class
+         * @property {Array}    'viewer-factory-rule' - Factory Rule
          * @property {Function} 'root' - RootController Class
          * @property {Function} 'key-handler' - KeyHandler Class
          * @property {Function} 'context-menu' - ContextMenu Class

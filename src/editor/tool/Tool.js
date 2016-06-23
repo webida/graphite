@@ -137,7 +137,7 @@ define([
             this._accessibleBegin = -1;
             this._state(Tool.STATE_INITIAL);
             this.setFlag(FLAG_ACTIVE, true);
-            this._stackListener = function (command) {
+            this._stackListener = function (e) {
                 tool._onStackChange();
             };
             this.domain().commandStack().on(
