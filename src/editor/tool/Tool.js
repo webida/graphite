@@ -130,20 +130,18 @@ define([
          * @see #deactivate()
          */
         activate: function () {
-            var that = this;
+            var tool = this;
             this.desc('activate');
             this.input = new Input();
             this._resetFlags();
             this._accessibleBegin = -1;
             this._state(Tool.STATE_INITIAL);
             this.setFlag(FLAG_ACTIVE, true);
-            this._stackListener = function (e) {
-                if (e.isPreChange()) {
-                    that._onStackChange();
-                }
+            this._stackListener = function (command) {
+                tool._onStackChange();
             };
             this.domain().commandStack().on(
-                'stackChange', this._stackListener);
+                'preStackChange', this._stackListener);
         },
 
         /**
@@ -163,7 +161,7 @@ define([
             this._operationSet_ = null;
             this.input = null;
             this.domain().commandStack().off(
-                'stackChange', this._stackListener);
+                'preStackChange', this._stackListener);
         },
 
         /**
@@ -200,11 +198,11 @@ define([
         _executeCommand: function (command) {
             this.desc('_executeCommand', command);
             var commandStack = this.domain().commandStack();
-            commandStack.off('stackChange', this._stackListener);
+            commandStack.off('preStackChange', this._stackListener);
             try {
                 commandStack.execute(command);
             } finally {
-                commandStack.on('stackChange', this._stackListener);
+                commandStack.on('preStackChange', this._stackListener);
             }
         },
     
@@ -480,7 +478,7 @@ define([
         },
     
         /**
-         * Returns a new List of Controllers that this tool is operating on.
+         * Returns an Array of Controllers that this tool is operating on.
          * This method is called once during {@link #_operationSet()},
          * and its result is cached.
          * 
