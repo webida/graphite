@@ -101,11 +101,11 @@ define([
          * The method should rarely be overridden. Instead, Abilities that are
          * selection-aware listen for selectionChanged event.
          * 
-         * @see SelectionEditPolicy
+         * @see Selectable
          * @param {number} state
          *//**
-         * Returns the selected state of this EditPart. This method should only be
-         * called internally or by helpers such as EditPolicies.
+         * Returns the selected state of this Controller. This method should only be
+         * called internally or by helpers such as Abilities.
          * 
          * @return {number}
          * SELECTED
@@ -470,25 +470,25 @@ define([
         },
 
         /**
-         * Returns the <code>EditPart</code> which is the target of the
-         * <code>Request</code>. The default implementation delegates this method to
-         * the installed EditPolicies. The first non-<code>null</code> result
-         * returned by an EditPolicy is returned. Subclasses should rarely extend
+         * Returns the <code>Controller</code> which is the target of the
+         * Request. The default implementation delegates this method to
+         * the installed Abilities. The first non-<code>null</code> result
+         * returned by an Ability is returned. Subclasses should rarely extend
          * this method.
          * <P>
          * <table>
          * <tr>
          * <td><img src="../doc-files/important.gif"/>
-         * <td>It is recommended that targeting be handled by EditPolicies, and not
-         * directly by the EditPart.
+         * <td>It is recommended that targeting be handled by Abilities, and not
+         * directly by the Controller.
          * </tr>
          * </table>
          * 
          * @param {Request} request
          *            Describes the type of target desired.
-         * @return <code>null</code> or the <i>target</i> <code>EditPart</code>
-         * @see EditPart#getTargetEditPart(Request)
-         * @see EditPolicy#getTargetEditPart(Request)
+         * @return <code>null</code> or the <i>target</i> <code>Controller</code>
+         * @see Controller#getTargetController(Request)
+         * @see Ability#getTargetController(Request)
          */
         getTarget: function (request) {
             var check, controller;
@@ -637,6 +637,42 @@ define([
          */
         getDragTracker: function () {
             return new MoveTracker(this);
+        },
+
+        /**
+         * Shows or updates source feedback for the given Request.
+         * By default, this responsibility is delegated to this' Abilities.
+         * Subclasses should rarely extend this method.
+         * It is recommended that feedback be handled by Abilities,
+         * and not directly by the Controller.
+         * @see Ability#showSourceFeedback(Request)
+         * @see Controller#showSourceFeedback(Request)
+         * @param {Request} request
+         */
+        showSourceFeedback: function (request) {
+            if (!this.isActive())
+                return;
+            this._abilities.forEach(function (ability) {
+                ability.showSourceFeedback(request);
+            });
+        },
+    
+        /**
+         * Erases source feedback for the given Request. By default,
+         * this responsibility is delegated to this' Abilities.
+         * Subclasses should rarely extend this method.
+         * It is recommended that feedback be handled by Abilities,
+         * and not directly by the Controller.
+         * @param {Request} request
+         *  - identifies the type of feedback to erase.
+         * @see #showSourceFeedback(Request)
+         */
+        eraseSourceFeedback: function (request) {
+            if (this.isActive()) {
+                this._abilities.forEach(function (ability) {
+                    ability.eraseSourceFeedback(request);
+                });
+            }
         },
 
         /**
