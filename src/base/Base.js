@@ -61,7 +61,7 @@ define([
         desc: function (fnName, args, result, color) {
             args = filterArgs.call(this, args);
             var msgs = [this + '.' + fnName + '(' + args + ')'];
-            if (result) {
+            if (arguments[2]) {
                 msgs[0] += ' =>';
                 msgs.push(result);
             }
