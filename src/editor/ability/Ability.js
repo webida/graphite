@@ -111,7 +111,7 @@ define([
          * 
          * @see Controller#activate()
          * @see #deactivate()
-         * @see Controller#installAbility(Object, Ability)
+         * @see Controller#installAbility(string, Ability)
          */
         activate: function () {
             this.desc('activate', '', 'does nothing');
@@ -154,7 +154,7 @@ define([
          * return its host Controller if it understands the Request. Otherwise,
          * it will return null.
          * 
-         * This method is declared on Controller#getTargetController(Request),
+         * This method is declared on Controller#getTarget(Request),
          * and is redeclared here so that Controller can delegate its
          * implementation to each of its Abilities. The first non-
          * null result returned by an Ability is returned by the
@@ -163,7 +163,7 @@ define([
          * @param {Request} request
          * @return {Controller}
          */
-        getTargetController: function (request) {
+        getTarget: function (request) {
             return null;
         },
 
@@ -181,7 +181,6 @@ define([
          * @param {Request} request
          */
         showSourceFeedback: function (request) {
-            this.desc('showSourceFeedback', '', 'does nothing');
         },
 
         /**
@@ -198,7 +197,6 @@ define([
          * @param {Request} request
          */
         showTargetFeedback: function (request) {
-            this.desc('showTargetFeedback', '', 'does nothing');
         },
 
         /**
@@ -212,7 +210,6 @@ define([
          * @param {Request} request
          */
         eraseSourceFeedback: function (request) {
-            this.desc('eraseSourceFeedback', '', 'does nothing');
         },
 
         /**
@@ -226,7 +223,6 @@ define([
          * @param {Request} request
          */
         eraseTargetFeedback: function (request) {
-            this.desc('eraseTargetFeedback', '', 'does nothing');
         },
 
         toString: function () {
