@@ -144,7 +144,7 @@ define([
          * @return {boolean} - true if the Ability understands the request
          * @see Controller#understandsRequest(Request)
          */
-        understandsRequest: function (request) {
+        understands: function (request) {
             return false;
         },
 
