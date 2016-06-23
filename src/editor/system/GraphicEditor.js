@@ -66,25 +66,12 @@ define([
             var viewer = option['viewer'];
             var palette = option['palette'];
             var ModelFactory = option['model-factory'];
-            var ViewerFactory = option['viewer-factory'];
-            var RootController = option['root'];
-            var PaletteFactory = option['palette-factory'];
-            var KeyHandler = option['key-handler'];
-            var ContextMenu = option['context-menu'];
-            var viewerFactoryRule = option['viewer-factory-rule'];
-            var paletteFactoryRule = option['palette-factory-rule'];
             if (viewer) {
                 if (typeof viewer === 'string') {
                     viewer = document.getElementById(viewer);
                 }
                 if (viewer instanceof HTMLElement) {
-                    this.createViewer(viewer, {
-                        'factory': ViewerFactory,
-                        'rule': viewerFactoryRule,
-                        'root': RootController,
-                        'key-handler': KeyHandler,
-                        'context-menu': ContextMenu
-                    });
+                    this.createViewer(viewer, option);
                 }
             }
             if (palette) {
@@ -92,20 +79,25 @@ define([
                     palette = document.getElementById(palette);
                 }
                 if (palette instanceof HTMLElement) {
-                    this.createPalette(palette, {
-                        'factory': PaletteFactory,
-                        'rule': paletteFactoryRule
-                    });
+                    this.createPalette(palette, option);
                 }
             }
             if (ModelFactory) {
-                var editor = this;
-                var modelFactory = new ModelFactory(this);
-                modelFactory.create(function (model) {
-                    editor.setModel(model);
-                    editor.initViewer();
-                });
+                this.createModelFactory(ModelFactory);
             }
+        },
+
+        /**
+         * @param {Function} ModelFactory
+         */
+        createModelFactory: function (ModelFactory) {
+            this.desc('createModelFactory', arguments);
+            var editor = this;
+            var modelFactory = new ModelFactory(this);
+            modelFactory.create(function (model) {
+                editor.setModel(model);
+                editor.initViewer();
+            });
         },
 
         /**
@@ -199,6 +191,14 @@ define([
          */
         createPalette: function (container) {
             this.desc('createPalette', arguments);
+        },
+
+        /**
+         * Returns the command stack.
+         * @return {CommandStack}
+         */
+        commandStack: function () {
+            return this.domain().commandStack();
         }
     });
 

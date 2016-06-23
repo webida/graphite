@@ -98,8 +98,8 @@ define([
          */
         createControllerFactory: function (option) {
             this.desc('createControllerFactory', option);
-            var Factory = option['factory'];
-            var rule = option['rule'];
+            var Factory = option['viewer-factory'];
+            var rule = option['viewer-factory-rule'];
             if (Factory instanceof Function) {
                 this._factory = new Factory();
             } else {
@@ -412,7 +412,8 @@ define([
          * @return {Array}
          */
         selected: function () {
-            return Object.freeze(this._selectionModel.selected());
+            return Object.freeze(
+                Array.prototype.slice.call(this._selectionModel.selected()));
         },
 
         /**
