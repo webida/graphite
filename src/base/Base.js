@@ -61,11 +61,11 @@ define([
         desc: function (fnName, args, result, color) {
             args = filterArgs.call(this, args);
             var msgs = [this + '.' + fnName + '(' + args + ')'];
-            if (arguments[2]) {
+            if (typeof result !== 'undefined') {
                 msgs[0] += ' =>';
                 msgs.push(result);
             }
-            if ( typeof color === 'string') {
+            if (typeof color === 'string') {
                 msgs[0] = '%c' + msgs[0];
                 msgs.push('color:' + color);
             }
