@@ -112,7 +112,10 @@ define([
          * @param {HTMLElement} container
          * @param {Object} option
          * @property {Function} 'factory' - Factory Class
-         * @property {Function} 'rule' - Factory Rule
+         * @property {Array} 'rule' - Factory Rule
+         * @property {Function} 'root' - RootController Class
+         * @property {Function} 'key-handler' - KeyHandler Class
+         * @property {Function} 'context-menu' - ContextMenu Class
          * @return {GraphicViewer}
          */
         createViewer: function (container, option) {
