@@ -72,7 +72,7 @@ define([
                 this._viewer.focused(null);
             if (selLen !== 0) {
                 var primary = selected[selLen - 1];
-                primary.selectedState(Controller.SELECTED);
+                primary.selectedState('SELECTED');
             }
             // if the Controller is already in the array,
             // re-order it to be the last one
@@ -81,7 +81,7 @@ define([
                 selected.splice(index, 1);
             }
             selected.push(controller);
-            controller.selectedState(Controller.SELECTED_PRIMARY);
+            controller.selectedState('SELECTED_PRIMARY');
             this._onSelectionChanged();
         },
 
@@ -115,7 +115,7 @@ define([
             if (!controller) return;
             var selected = this._selected;
             var index = selected.indexOf(controller);
-            controller.selectedState(Controller.SELECTED_NONE);
+            controller.selectedState('SELECTED_NONE');
             if (index > -1) {
                 selected.splice(index, 1);
             }
@@ -140,7 +140,7 @@ define([
                 for (var i = selLen - 1; i >= 0; i--) {
                     primaryCandidate = selected[i];
                     if (primaryCandidate.isSelectable()) {
-                        primaryCandidate.selectedState(Controller.SELECTED_PRIMARY);
+                        primaryCandidate.selectedState('SELECTED_PRIMARY');
                         break;
                     }
                 }
@@ -154,7 +154,7 @@ define([
          */
         deselectAll: function (isQuiet) {
             this._selected.forEach(function (controller) {
-                controller.selectedState(Controller.SELECTED_NONE);
+                controller.selectedState('SELECTED_NONE');
             });
             this._selected = [];
             if (!isQuiet) {
@@ -178,7 +178,7 @@ define([
                 this.focused(null);
                 selected.forEach(function (ctrl) {
                     if (selections.indexOf(ctrl) === -1)
-                        ctrl.selectedState(Controller.SELECTED_NONE);
+                        ctrl.selectedState('SELECTED_NONE');
                 });
                 selected = this._selected = [];
                 var selectionLen = selections.length;
@@ -187,9 +187,9 @@ define([
                     selections.forEach(function (ctrl, i) {
                         selected.push(ctrl);
                         if (i === lastIndex) {
-                            ctrl.selectedState(Controller.SELECTED_PRIMARY);
+                            ctrl.selectedState('SELECTED_PRIMARY');
                         } else {
-                            ctrl.selectedState(Controller.SELECTED);
+                            ctrl.selectedState('SELECTED');
                         }
                     });
                 }

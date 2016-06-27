@@ -47,7 +47,7 @@ define([
         this._parent = null;
         this._children = [];
         this._abilities = new Map();
-        this._selectState = Controller.SELECTED_NONE;
+        this._selectState = 'SELECTED_NONE';
     }
 
     var proto = genetic.mixin(BaseEmitter.prototype, FlagSupport.prototype, {
@@ -91,31 +91,34 @@ define([
         /**
          * Sets the selected state for this Controller,
          * which may be one of:
-         * SELECTED
-         * SELECTED_NONE
-         * SELECTED_PRIMARY
+         * 'SELECTED' : Used to indicate non-primary selection
+         * 'SELECTED_NONE' : Used to indicate no selection
+         * 'SELECTED_PRIMARY' :
+         * Used to indicate primary selection, or "Anchor" selection.
+         * Primary selection is defined as the last object selected.
          * 
          * As only selectable {@link Controller}s may get selected,
          * the method may only be called with a selected value of
-         * SELECTED or SELECTED_PRIMARY in case the receiver is selectable.
+         * 'SELECTED' or 'SELECTED_PRIMARY' in case the receiver is selectable.
          * The method should rarely be overridden. Instead, Abilities that are
          * selection-aware listen for selectionChanged event.
          * 
          * @see Selectable
-         * @param {number} state
+         * @param {string} state
          *//**
          * Returns the selected state of this Controller. This method should only be
          * called internally or by helpers such as Abilities.
          * 
-         * @return {number}
-         * SELECTED
-         * SELECTED_NONE
-         * SELECTED_PRIMARY
+         * @return {string}
+         *  One of
+         * 'SELECTED'
+         * 'SELECTED_NONE'
+         * 'SELECTED_PRIMARY'
          */
         selectedState: function (state) {
             if (arguments.length) {
                 if (this.isSelectable()
-                    || state === Controller.SELECTED_NONE) {
+                    || state === 'SELECTED_NONE') {
                     if (this._selectState === state) return;
                     this._selectState = state;
                     this._onSelectionChanged();
@@ -765,22 +768,6 @@ define([
      * This flag indicates that the Controller has focus.
      */
     Controller.FLAG_FOCUS = 2;
-
-    /**
-     * Used to indicate no selection
-     */
-    Controller.SELECTED_NONE = 0;
-
-    /**
-     * Used to indicate non-primary selection
-     */
-    Controller.SELECTED = 1;
-
-    /**
-     * Used to indicate primary selection, or "Anchor" selection.
-     * Primary selection is defined as the last object selected.
-     */
-    Controller.SELECTED_PRIMARY = 2;
 
     return Controller;
 });

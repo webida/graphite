@@ -45,11 +45,6 @@ define([
 ) {
     'use strict';
 
-    var Controller = {
-        SELECTED_NONE: 0,
-        SELECTED: 1,
-        SELECTED_PRIMARY: 2
-    };
     var FLAG_SOURCE_FEEDBACK = SelectTracker.MAX_FLAG << 1;
 
     var privates = {
@@ -267,7 +262,7 @@ define([
             var source = this._source();
             while (source && source !== this._target()) {
                 if (source.parent() === this._target()
-                        && source.selectedState() !== Controller.SELECTED_NONE)
+                        && source.selectedState() !== 'SELECTED_NONE')
                     return true;
                 source = source.parent();
             }

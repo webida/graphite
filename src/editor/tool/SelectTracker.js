@@ -39,11 +39,6 @@ define([
 ) {
     'use strict';
 
-    var Controller = {
-        SELECTED_NONE: 0,
-        SELECTED: 1,
-        SELECTED_PRIMARY: 2
-    };
     var BUTTON = InternalMouseEvent.BUTTON;
     var FLAG_ENABLE_DIRECT_EDIT = TargetingTool.MAX_FLAG << 2;
 
@@ -143,7 +138,7 @@ define([
                 if (this.getFlag(FLAG_ENABLE_DIRECT_EDIT))
                     this._directEdit();
                 if (button === BUTTON.LEFT
-                        && source.selectedState() !== Controller.SELECTED_NONE)
+                        && source.selectedState() !== 'SELECTED_NONE')
                     this.viewer().reveal(source);
                 this._state(Tool.STATE_TERMINAL);
                 return true;
@@ -219,7 +214,7 @@ define([
          */
         _conditionalSelection: function () {
             this.desc('_conditionalSelection');
-            if (this._source().selectedState() === Controller.SELECTED_NONE)
+            if (this._source().selectedState() === 'SELECTED_NONE')
                 this._select();
             else if (this.input.modifiers === 0)
                 this.setFlag(FLAG_ENABLE_DIRECT_EDIT, true);
