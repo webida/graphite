@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2015 S-Core Co., Ltd.
+ * Copyright (c) 2012-2016 S-Core Co., Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 
 /**
- * @file Introduction
+ * @file Template
  * @since 1.0.0
  * @author hw.shim@samsung.com
  */
