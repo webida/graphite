@@ -196,14 +196,17 @@ define([
     };
 
     /**
-     * Returns true if the given mask contains the given modifier key.
-     * @param {number} mask
-     * @param {string} key
+     * Returns true if the given mask contains the given modifier key bit.
+     * @param {KeyboardEvent} e
+     * @param {number} bit
      * @static
      */
-    InternalKeyEvent.maskHasKey = function (mask, key) {
-        var bit = InternalKeyEvent[key];
-        return bit && (mask & bit) !== 0;
+    InternalKeyEvent.hasModKey = function (e, bit) {
+        if (typeof bit === 'string') {
+            bit = InternalKeyEvent[bit];
+        }
+        var mask = this.getMask(e);
+        return bit && ((mask & bit) !== 0);
     };
 
     /**
@@ -215,6 +218,17 @@ define([
     InternalKeyEvent.isTraverseKey = function (e) {
         var key = this.getKey(e);
         return traverseKeys.indexOf(key) > -1;
+    };
+
+    InternalKeyEvent.modToString = function (modKey) {
+        switch (modKey) {
+            case InternalKeyEvent.ALT:
+                return 'Alt';
+            case InternalKeyEvent.CTRL:
+                return 'Control';
+            case InternalKeyEvent.SHIFT:
+                return 'Shift';
+        }
     };
 
     InternalKeyEvent.ALT = 1 << 15;
