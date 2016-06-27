@@ -36,6 +36,7 @@ define([
     function Viewport() {
         DivLayer.apply(this, arguments);
         this._view = null;
+        this._useTranslate = false;
     }
 
     genetic.inherits(Viewport, DivLayer, {
@@ -72,6 +73,34 @@ define([
         _syncLocation: function () {
             this.desc('_syncLocation');
             //does nothing
+        },
+
+        /**
+         * @param {Rectangle} rect
+         * @return {Rectangle}
+         */
+        clientArea: function (rect) {
+            DivLayer.prototype.clientArea.call(this, rect);
+            if (this.useGraphicsTranslate())
+                rect.translate(this.viewLocation());
+            return rect;
+        },
+
+        viewLocation: function () {
+            //TODO
+            if (arguments.length) {
+                
+            } else {
+                
+            }
+        },
+
+        /**
+         * Returns true if this viewport uses graphics translation.
+         * @return {boolean}
+         */
+        useGraphicsTranslate: function () {
+            return this._useTranslate;
         }
     });
 
