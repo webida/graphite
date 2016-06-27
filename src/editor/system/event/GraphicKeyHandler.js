@@ -22,9 +22,13 @@
 
 define([
     'external/genetic/genetic',
+    'graphite/editor/controller/ConnectableController',
+    'graphite/view/system/event/InternalKeyEvent',
     './KeyHandler'
 ], function (
     genetic,
+    ConnectableController,
+    InternalKeyEvent,
     KeyHandler
 ) {
     'use strict';
@@ -50,7 +54,7 @@ define([
      */
     function GraphicKeyHandler(viewer) {
         KeyHandler.apply(this, arguments);
-        this._viewer = viewer;
+        this._viewer_ = viewer;
     }
 
     genetic.inherits(GraphicKeyHandler, KeyHandler, {
@@ -59,14 +63,22 @@ define([
          * Returns the viewer on which this key handler was created.
          * @return {GraphicViewer}
          */
-        viewer: function () {
-            return this._viewer;
+        _viewer: function () {
+            return this._viewer_;
+        },
+
+        /**
+         * @return the EditPart that has focus
+         * @protected
+         */
+        _focused: function () {
+            return this._viewer().focused();
         },
 
         /**
          * Extended to process key events described above.
          * whenever a key is pressed, and the Tool is in the proper state.
-         * Returns true if KeyEvent was handled in some way.
+         * Returns true if KeyboardEvent was handled in some way.
          * @param {KeyboardEvent} e
          * @return {boolean}
          * @override
@@ -123,6 +135,100 @@ define([
                 if (this.navigateJumpSibling(e, 'NORTH')) return true;
             }
             return KeyHandler.prototype.onKeyDown.call(this, e);
+        },
+
+        /**
+         * Returns true if key pressed indicates a connection
+         *         traversal/selection
+         * @param {KeyboardEvent} e
+         * @return {boolean}
+         */
+        acceptConnection: function (e) {
+            var key = InternalKeyEvent.getKey(e);
+            return key === '/' || key === '?'
+                    || key === '\\' || key === '|';
+        },
+
+        /**
+         * Returns true if the keys pressed indicate to traverse inside
+         *         a container
+         * @param {KeyboardEvent} e
+         * @return {boolean}
+         */
+        acceptIntoContainer: function (e) {
+            return (InternalKeyEvent.hasModKey(e, 'ALT'))
+                    && (InternalKeyEvent.getKey(e) === 'ArrowDown');
+        },
+
+        /**
+         * Returns true if the keys pressed indicate to stop
+         *         traversing/selecting connection
+         * @param {KeyboardEvent} e
+         * @return {boolean}
+         */
+        acceptLeaveConnection: function (e) {
+            var key = InternalKeyEvent.getKey(e);
+            if (this._focused() instanceof ConnectableController)
+                if ((key === 'ArrowUp') || (key === 'ArrowRight')
+                        || (key === 'ArrowDown') || (key === 'ArrowLeft'))
+                    return true;
+            return false;
+        },
+
+        /**
+         * @param {KeyboardEvent} e
+         * Returns true if the viewer's contents has focus and one of
+         *         the arrow keys is pressed
+         * @param {KeyboardEvent} e
+         * @return {boolean}
+         */
+        acceptLeaveContents: function (e) {
+            var key = InternalKeyEvent.getKey(e);
+            return this._focused() === this._viewer().contents()
+                    && ((key === 'ArrowUp') || (key === 'ArrowRight')
+                            || (key === 'ArrowDown') || (key === 'ArrowLeft'));
+        },
+
+        /**
+         * Returns true if the keys pressed indicate to traverse to the
+         *         parent of the currently focused EditPart
+         * @param {KeyboardEvent} e
+         * @return {boolean}
+         */
+        acceptOutOf: function (e) {
+            return (InternalKeyEvent.hasModKey(e, 'ALT'))
+                    && (InternalKeyEvent.getKey(e) === 'ArrowUp');
+        },
+
+        /**
+         * Returns true if the keys pressed indicate to traverse to the
+         *         parent of the currently focused EditPart
+         * @param {KeyboardEvent} e
+         * @return {boolean}
+         */
+        acceptScroll: function (e) {
+            var key = InternalKeyEvent.getKey(e);
+            var mask = InternalKeyEvent.getMask(e);
+            return (mask === (InternalKeyEvent.CTRL | InternalKeyEvent.SHIFT)
+                    && (key == 'ArrowDown'
+                    || key == 'ArrowLeft'
+                    || key == 'ArrowRight'
+                    || key == 'ArrowUp'));
+        },
+
+        /**
+         * Traverses to the next sibling in the given direction.
+         * 
+         * @param {KeyboardEvent} e
+         *            the KeyboardEvent for the keys that were pressed to trigger this
+         *            traversal
+         * @param {number} direction
+         *            PositionConstants.* indicating the direction in which to
+         *            traverse
+         * @return {boolean}
+         */
+        navigateNextSibling: function (e, direction) {
+            console.log('navigateNextSibling', e, direction);
         }
     });
 
