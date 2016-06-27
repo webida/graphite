@@ -470,25 +470,18 @@ define([
         },
 
         /**
-         * Returns the <code>Controller</code> which is the target of the
-         * Request. The default implementation delegates this method to
-         * the installed Abilities. The first non-<code>null</code> result
-         * returned by an Ability is returned. Subclasses should rarely extend
-         * this method.
-         * <P>
-         * <table>
-         * <tr>
-         * <td><img src="../doc-files/important.gif"/>
-         * <td>It is recommended that targeting be handled by Abilities, and not
-         * directly by the Controller.
-         * </tr>
-         * </table>
+         * Returns the Controller which is the target of the Request.
+         * The default implementation delegates this method to
+         * the installed Abilities. The first non-null result
+         * returned by an Ability is returned. Subclasses should rarely
+         * extend this method.
+         * It is recommended that targeting be handled by Abilities,
+         * and not directly by the Controller.
          * 
          * @param {Request} request
          *            Describes the type of target desired.
-         * @return <code>null</code> or the <i>target</i> <code>Controller</code>
-         * @see Controller#getTargetController(Request)
-         * @see Ability#getTargetController(Request)
+         * @return {Controller}
+         * @see Ability#getTarget(Request)
          */
         getTarget: function (request) {
             var check, controller;
@@ -581,6 +574,32 @@ define([
          * @param {Request} req 
          */
         request: function (req) {
+        },
+
+        /**
+         * Used to filter Controllers from the current selection. If an
+         * operation is going to be performed on the current selection, the
+         * selection can first be culled to remove Controllers
+         * that do not participate in the operation.
+         * For example, when aligning the left edges of Controllers,
+         * it makes sense to ignore any selected ConnectionControllers,
+         * as they cannot be aligned.
+         * 
+         * Returns true if this understand the given Request.
+         * By default, this responsibility is delegated
+         * to this part's installed Abilities.
+         * It is recommended that Abilities implement understands().
+         * 
+         * @param {Request} request
+         * @return {boolean}
+         */
+        understands: function (request) {
+            var result = false;
+            this._abilities.forEach(function (ability) {
+                if (ability.understands(request)) result = true;
+            });
+            this.desc('understands', request, result);
+            return result;
         },
 
         /**
@@ -706,6 +725,31 @@ define([
                     ability.eraseTargetFeedback(request);
                 });
             }
+        },
+
+        /**
+         * Returns the specified adapter if recognized.
+         * Additional adapter types may be added in the future.
+         * Subclasses should extend this method as needed. 
+         * @param {string} key
+         * @return {Object}
+         */
+        getAdapter: function (key) {
+            if (key === 'AccessibleController')
+                return this._accessibleController();
+            return null;
+        },
+
+        /**
+         * Returns the AccessibleController adapter for this.
+         * The same adapter instance must be used throughout the Controller's
+         * existance. Each adapter has a unique ID which is registered during
+         * {@link #register()}. Accessibility clients can only refer to this
+         * Controller via that ID.
+         * @return {AccessibleEditPart}
+         */
+        _accessibleController: function () {
+            return null;
         }
     });
 
