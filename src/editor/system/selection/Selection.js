@@ -15,7 +15,7 @@
  */
 
 /**
- * @file Template
+ * @file Selection
  * @since 1.0.0
  * @author hw.shim@samsung.com
  */
@@ -30,24 +30,36 @@ define([
     'use strict';
 
     /**
-     * A Template.
+     * A Selection.
      * @constructor
      */
-    function Template() {
+    function Selection(arg) {
         Base.apply(this, arguments);
+        this._elements = [];
+        if (arg instanceof Array) {
+            this._elements = arg;
+        } else if (arg) {
+            this._elements.push(arg);
+        }
     }
 
-    genetic.inherits(Template, Base, {
+    genetic.inherits(Selection, Base, {
 
         /**
-         * Explain
-         * @param {}
+         * Converts to Array
          * @return {Array}
          */
-        aaaa: function () {
-            return this.bbb;
+        toArray: function () {
+            return Array.prototype.slice.call(this._elements);
+        },
+
+        /**
+         * @return {boolean}
+         */
+        isEmpty: function () {
+            return this._elements.length === 0;
         }
     });
 
-    return Template;
+    return Selection;
 });

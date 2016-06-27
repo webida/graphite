@@ -188,7 +188,7 @@ define([
         },
 
         /**
-         * @inheritdoc
+         * Appends child dom element.
          * @override
          */
         append: function () {
@@ -206,6 +206,21 @@ define([
                 }
                 Widget.prototype.append.apply(this, arguments);
             }
+        },
+
+        /**
+         * Removes child dom element.
+         * @override
+         */
+        remove: function (child) {
+            var element = this.element();
+            var childElement = child.element();
+            if (element && childElement) {
+                if (childElement.parentNode === element) {
+                    element.removeChild(childElement);
+                }
+            }
+            Widget.prototype.remove.apply(this, arguments);
         }
     });
 

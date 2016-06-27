@@ -96,10 +96,10 @@ define([
         this._domain = null;
         this._viewer = null;
         this._command = null;
-        this._startLoc = null;
+        this._startLoc = new Point(0, 0);
         this._accessibleBegin = 0;
         this._stackListener = null;
-        this._operationSet = null;
+        this._operationSet_ = null;
         this._accessibleBegin = null;
         this._accessibleStep = null;
         this.setFlag(FLAG_UNLOAD, true);
@@ -130,23 +130,26 @@ define([
          * @see #deactivate()
          */
         activate: function () {
+            var tool = this;
             this.desc('activate');
             this.input = new Input();
             this._resetFlags();
             this._accessibleBegin = -1;
             this._state(Tool.STATE_INITIAL);
             this.setFlag(FLAG_ACTIVE, true);
-            this._stackListener = this._onStackChanged.bind(this);
+            this._stackListener = function (e) {
+                tool._onStackChange();
+            };
             this.domain().commandStack().on(
-                'stackChanged', this._stackListener);
+                'preStackChange', this._stackListener);
         },
 
         /**
-         * Deactivates the tool. This method is called whenever the user switches to
-         * another tool. Use this method to do some clean-up when the tool is
-         * switched. The abstract tool allows cursors for viewers to be changed.
-         * When the tool is deactivated it must revert to normal the cursor of the
-         * last tool it changed.
+         * Deactivates the tool. This method is called whenever the user
+         * switches to another tool. Use this method to do some clean-up
+         * when the tool is switched. The abstract tool allows cursors for
+         * viewers to be changed. When the tool is deactivated it must revert
+         * to normal the cursor of the last tool it changed.
          * @see #activate()
          */
         deactivate: function () {
@@ -155,10 +158,10 @@ define([
             this.viewer(null);
             this._currentCommand(null);
             this._state(Tool.STATE_TERMINAL);
-            this._operationSet = null;
+            this._operationSet_ = null;
             this.input = null;
             this.domain().commandStack().off(
-                'stackChanged', this._stackListener);
+                'preStackChange', this._stackListener);
         },
 
         /**
@@ -193,12 +196,13 @@ define([
          * @protected
          */
         _executeCommand: function (command) {
+            this.desc('_executeCommand', command);
             var commandStack = this.domain().commandStack();
-            commandStack.off('stackChanged', this._stackListener);
+            commandStack.off('preStackChange', this._stackListener);
             try {
                 commandStack.execute(command);
             } finally {
-                commandStack.on('stackChanged', this._stackListener);
+                commandStack.on('preStackChange', this._stackListener);
             }
         },
     
@@ -331,9 +335,9 @@ define([
          * Subclasses may override or extend this method to calculate the
          * appropriate cursor based on other conditions.
          * 
-         * @see #getDefaultCursor()
-         * @see #getDisabledCursor()
-         * @see #getCurrentCommand()
+         * @see #defaultCursor()
+         * @see #disabledCursor()
+         * @see #_currentCommand()
          * @return {string}
          * @protected
          */
@@ -382,7 +386,7 @@ define([
         },
 
         /**
-         * Called when the command stack has changed,
+         * Called just before the command stack has changed,
          * for instance, when a delete or undo command has been executed.
          * By default, state is set to STATE_INVALID and _onInvalidInput
          * is called. Subclasses may override this method to change
@@ -391,15 +395,13 @@ define([
          * @return {boolean}
          * @protected
          */
-        _onStackChanged: function (event) {
-            if (event.isPreChangeEvent()) {
-                if (!this._isInState(Tool.STATE_INITIAL | Tool.STATE_INVALID)) {
-                    this._state(Tool.STATE_INVALID);
-                    this._onInvalidInput();
-                    return true;
-                }
-                return false;
+        _onStackChange: function () {
+            if (!this._isInState(Tool.STATE_INITIAL | Tool.STATE_INVALID)) {
+                this._state(Tool.STATE_INVALID);
+                this._onInvalidInput();
+                return true;
             }
+            return false;
         },
 
         /**
@@ -412,7 +414,7 @@ define([
          * @protected
          */
         _state: function (state) {
-            if (state) {
+            if (arguments.length) {
                 this._state_ = state;
             } else {
                 return this._state_;
@@ -469,15 +471,15 @@ define([
          * @return {Array} the operation set.
          * @protected
          */
-        _getOperationSet: function () {
-            if (this._operationSet == null)
-                this._operationSet = this._createOperationSet();
-            return this._operationSet;
+        _operationSet: function () {
+            if (!this._operationSet_)
+                this._operationSet_ = this._createOperationSet();
+            return this._operationSet_;
         },
     
         /**
-         * Returns a new List of Controllers that this tool is operating on.
-         * This method is called once during {@link #_getOperationSet()},
+         * Returns an Array of Controllers that this tool is operating on.
+         * This method is called once during {@link #_operationSet()},
          * and its result is cached.
          * 
          * By default, the operations set is the current viewer's entire
@@ -488,7 +490,8 @@ define([
          * @protected
          */
         _createOperationSet: function () {
-            return this.viewer().selectedControllers().slice();
+            this.desc('_createOperationSet');
+            return this.viewer().selected().slice();
         },
 
         /**
@@ -528,10 +531,21 @@ define([
         /**
          * Returns the current x, y position of the mouse cursor.
          * @return {Point} the mouse location
+         */
+        location: function () {
+            return this.input.mouseLocation;
+        },
+
+        /**
+         * Return the number of pixels that the mouse has been moved
+         * since that drag was started. The drag start is determined by
+         * where the mouse button was first pressed.
+         * @see #_startLocation()
+         * @return {Dimension}
          * @protected
          */
-        _currentLocation: function () {
-            return this.input.mouseLocation;
+        _dragDelta: function () {
+            return this.location().difference(this._startLocation());
         },
 
         /**
@@ -859,7 +873,7 @@ define([
             if (this.getFlag(FLAG_PAST_THRESHOLD))
                 return true;
             var start = this._startLocation();
-            var end = this._currentLocation();
+            var end = this.location();
             if (Math.abs(start.x - end.x) > DRAG_THRESHOLD
                     || Math.abs(start.y - end.y) > DRAG_THRESHOLD) {
                 this.setFlag(FLAG_PAST_THRESHOLD, true);
@@ -875,7 +889,7 @@ define([
          * @return {Dimension} the drag delta
          */
         getDragMoveDelta: function () {
-            return this._currentLocation().difference(this._startLocation());
+            return this.location().difference(this._startLocation());
         },
 
         /**
@@ -1261,6 +1275,10 @@ define([
                     method.apply(this, args);
                 }
             }, this);
+        },
+
+        _placeMouse: function (point) {
+            console.warn('place mouse at ' + point);
         }
     });
 

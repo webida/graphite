@@ -15,29 +15,34 @@
  */
 
 /**
- * @file Template
+ * @file ActionRegistry
  * @since 1.0.0
  * @author hw.shim@samsung.com
  */
 
 define([
     'external/genetic/genetic',
+    'external/map/Map',
     'graphite/base/Base'
 ], function (
     genetic,
+    Map,
     Base
 ) {
     'use strict';
 
     /**
-     * A Template.
+     * An ActionRegistry is a container for editor actions.
+     * You must register the actions before they
+     * will be available to the editor.
      * @constructor
      */
-    function Template() {
+    function ActionRegistry() {
         Base.apply(this, arguments);
+        this._reg = new Map();
     }
 
-    genetic.inherits(Template, Base, {
+    genetic.inherits(ActionRegistry, Base, {
 
         /**
          * Explain
@@ -49,5 +54,5 @@ define([
         }
     });
 
-    return Template;
+    return ActionRegistry;
 });

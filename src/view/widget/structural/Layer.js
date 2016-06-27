@@ -76,15 +76,15 @@ define([
          * @return {Widget}
          * @override
          */
-        getWidgetAt: function (x, y, filter) {
-            this.desc('getWidgetAt', arguments);
+        findWidgetAt: function (x, y, filter) {
+            this.desc('findWidgetAt', arguments);
             if (!this.isEnabled()) {
                 return null;
             }
             if (this.isFillable()) {
-                return _super_.getWidgetAt.call(this, x, y, filter);
+                return _super_.findWidgetAt.call(this, x, y, filter);
             }
-            var w = _super_.getWidgetAt.call(this, x, y, filter);
+            var w = _super_.findWidgetAt.call(this, x, y, filter);
             if (w === this) return null;
             return w;
         },

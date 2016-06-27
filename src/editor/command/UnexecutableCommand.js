@@ -15,39 +15,48 @@
  */
 
 /**
- * @file Template
+ * @file UnexecutableCommand
  * @since 1.0.0
  * @author hw.shim@samsung.com
  */
 
 define([
     'external/genetic/genetic',
-    'graphite/base/Base'
+    './Command'
 ], function (
     genetic,
-    Base
+    Command
 ) {
     'use strict';
 
     /**
-     * A Template.
+     * The UnexecutableCommand is a Command which can never be executed.
      * @constructor
      */
-    function Template() {
-        Base.apply(this, arguments);
+    function UnexecutableCommand() {
+        Command.apply(this, arguments);
     }
 
-    genetic.inherits(Template, Base, {
+    genetic.inherits(UnexecutableCommand, Command, {
 
         /**
-         * Explain
-         * @param {}
-         * @return {Array}
+         * @return {boolean}
+         * @override
          */
-        aaaa: function () {
-            return this.bbb;
-        }
+        canUndo: function () {
+            return false;
+        },
+
+        /**
+         * @return {boolean}
+         * @override
+         */
+        canUndo: function () {
+            return false;
+        },
     });
 
-    return Template;
+    UnexecutableCommand.SINGLETON = new UnexecutableCommand();
+
+    return UnexecutableCommand;
 });

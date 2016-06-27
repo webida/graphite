@@ -15,39 +15,49 @@
  */
 
 /**
- * @file Template
+ * @file GroupRequest
  * @since 1.0.0
  * @author hw.shim@samsung.com
  */
 
 define([
     'external/genetic/genetic',
-    'graphite/base/Base'
+    './Request'
 ], function (
     genetic,
-    Base
+    Request
 ) {
     'use strict';
 
     /**
-     * A Template.
+     * A GroupRequest is a Request from multiple Controllers.
      * @constructor
      */
-    function Template() {
-        Base.apply(this, arguments);
+    function GroupRequest() {
+        Request.apply(this, arguments);
+        this._controllers = [];
     }
 
-    genetic.inherits(Template, Base, {
+    genetic.inherits(GroupRequest, Request, {
 
         /**
-         * Explain
-         * @param {}
+         * Sets the Controllers making this Request to the given Array.
+         * @param {Array} controllers
+         *//**
+         * Returns a Array containing the Controllers making this Request.
          * @return {Array}
          */
-        aaaa: function () {
-            return this.bbb;
+        controllers: function (controllers) {
+            if (arguments.length) {
+                if (!(controllers instanceof Array)) {
+                    controllers = [controllers];
+                }
+                this._controllers = controllers;
+            } else {
+                return this._controllers;
+            }
         }
     });
 
-    return Template;
+    return GroupRequest;
 });

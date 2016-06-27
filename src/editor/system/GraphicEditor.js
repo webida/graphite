@@ -23,11 +23,13 @@
 define([
     'external/genetic/genetic',
     'graphite/base/Base',
+    '../action/ActionRegistry',
     './Domain',
     './GraphicViewer'
 ], function (
     genetic,
     Base,
+    ActionRegistry,
     Domain,
     GraphicViewer
 ) {
@@ -43,6 +45,7 @@ define([
         Base.apply(this, arguments);
         this._viewer = null;
         this._model = null;
+        this._registry = new ActionRegistry();
         this.domain(new Domain(this));
     }
 
@@ -63,28 +66,16 @@ define([
          */
         create: function (option) {
             this.desc('create', arguments);
+            this._initActions();
             var viewer = option['viewer'];
             var palette = option['palette'];
             var ModelFactory = option['model-factory'];
-            var ViewerFactory = option['viewer-factory'];
-            var RootController = option['root'];
-            var PaletteFactory = option['palette-factory'];
-            var KeyHandler = option['key-handler'];
-            var ContextMenu = option['context-menu'];
-            var viewerFactoryRule = option['viewer-factory-rule'];
-            var paletteFactoryRule = option['palette-factory-rule'];
             if (viewer) {
                 if (typeof viewer === 'string') {
                     viewer = document.getElementById(viewer);
                 }
                 if (viewer instanceof HTMLElement) {
-                    this.createViewer(viewer, {
-                        'factory': ViewerFactory,
-                        'rule': viewerFactoryRule,
-                        'root': RootController,
-                        'key-handler': KeyHandler,
-                        'context-menu': ContextMenu
-                    });
+                    this.createViewer(viewer, option);
                 }
             }
             if (palette) {
@@ -92,27 +83,73 @@ define([
                     palette = document.getElementById(palette);
                 }
                 if (palette instanceof HTMLElement) {
-                    this.createPalette(palette, {
-                        'factory': PaletteFactory,
-                        'rule': paletteFactoryRule
-                    });
+                    this.createPalette(palette, option);
                 }
             }
             if (ModelFactory) {
-                var editor = this;
-                var modelFactory = new ModelFactory(this);
-                modelFactory.create(function (model) {
-                    editor.setModel(model);
-                    editor.initViewer();
-                });
+                this.createModelFactory(ModelFactory);
             }
+        },
+
+        /**
+         * Initializes the ActionRegistry.
+         * @protected
+         */
+        _initActions: function () {
+            var editor = this;
+            this.desc('_initActions');
+            this._createActions();
+            this._updateActions('property');
+            this._updateActions('stack');
+            this.commandStack().on('postStackChange', function (e) {
+                editor._updateActions('stack');
+            });
+        },
+
+        /**
+         * Creates actions for this editor.
+         * Subclasses should override this to customize actions.
+         */
+        _createActions: function () {
+            this.desc('_createActions');
+            var action;
+            var reg = this._actionRegistry();
+            //TODO
+        },
+
+        _updateActions: function (cat) {
+            this.desc('_updateActions', cat);
+            //TODO
+        },
+
+        /**
+         * @return {ActionRegistry}
+         */
+        _actionRegistry: function () {
+            return this._registry;
+        },
+
+        /**
+         * @param {Function} ModelFactory
+         */
+        createModelFactory: function (ModelFactory) {
+            this.desc('createModelFactory', arguments);
+            var editor = this;
+            var modelFactory = new ModelFactory(this);
+            modelFactory.create(function (model) {
+                editor.setModel(model);
+                editor.initViewer();
+            });
         },
 
         /**
          * @param {HTMLElement} container
          * @param {Object} option
-         * @property {Function} 'factory' - Factory Class
-         * @property {Function} 'rule' - Factory Rule
+         * @property {Function} 'viewer-factory' - Factory Class
+         * @property {Array}    'viewer-factory-rule' - Factory Rule
+         * @property {Function} 'root' - RootController Class
+         * @property {Function} 'key-handler' - KeyHandler Class
+         * @property {Function} 'context-menu' - ContextMenu Class
          * @return {GraphicViewer}
          */
         createViewer: function (container, option) {
@@ -196,6 +233,14 @@ define([
          */
         createPalette: function (container) {
             this.desc('createPalette', arguments);
+        },
+
+        /**
+         * Returns the command stack.
+         * @return {CommandStack}
+         */
+        commandStack: function () {
+            return this.domain().commandStack();
         }
     });
 

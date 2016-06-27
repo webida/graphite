@@ -25,13 +25,15 @@ define([
     'external/map/Map',
     'graphite/base/BaseEmitter',
     'graphite/base/FlagSupport',
-    'graphite/editor/ability/Ability'
+    '../ability/Ability',
+    '../tool/MoveTracker'
 ], function (
     genetic,
     Map,
     BaseEmitter,
     FlagSupport,
-    Ability
+    Ability,
+    MoveTracker
 ) {
     'use strict';
 
@@ -45,6 +47,7 @@ define([
         this._parent = null;
         this._children = [];
         this._abilities = new Map();
+        this._selectState = 'SELECTED_NONE';
     }
 
     var proto = genetic.mixin(BaseEmitter.prototype, FlagSupport.prototype, {
@@ -76,15 +79,105 @@ define([
         },
 
         /**
+         * A Controller is regarded to be selectable,
+         * if it is active and its view is showing.
+         * @return {boolean}
+         */
+        isSelectable: function () {
+            return this.isActive() && this.view()
+                    && this.view().isShowing();
+        },
+
+        /**
+         * Sets the selected state for this Controller,
+         * which may be one of:
+         * 'SELECTED' : Used to indicate non-primary selection
+         * 'SELECTED_NONE' : Used to indicate no selection
+         * 'SELECTED_PRIMARY' :
+         * Used to indicate primary selection, or "Anchor" selection.
+         * Primary selection is defined as the last object selected.
+         * 
+         * As only selectable {@link Controller}s may get selected,
+         * the method may only be called with a selected value of
+         * 'SELECTED' or 'SELECTED_PRIMARY' in case the receiver is selectable.
+         * The method should rarely be overridden. Instead, Abilities that are
+         * selection-aware listen for selectionChanged event.
+         * 
+         * @see Selectable
+         * @param {string} state
+         *//**
+         * Returns the selected state of this Controller. This method should only be
+         * called internally or by helpers such as Abilities.
+         * 
+         * @return {string}
+         *  One of
+         * 'SELECTED'
+         * 'SELECTED_NONE'
+         * 'SELECTED_PRIMARY'
+         */
+        selectedState: function (state) {
+            if (arguments.length) {
+                if (this.isSelectable()
+                    || state === 'SELECTED_NONE') {
+                    if (this._selectState === state) return;
+                    this._selectState = state;
+                    this._onSelectionChanged();
+                }
+            } else {
+                return this._selectState;
+            }
+        },
+
+        /**
+         * Only be called by GraphicViewer to indicate that
+         * the Controller has been focused or blured keyboard focus.
+         * Focus is considered to be part of the selected state.
+         * Therefore, only selectable Controllers are able to
+         * obtain focus, and the method may thus only be called with
+         * a value of true in case the receiver is selectable.
+         * 
+         * The method should rarely be overridden. Instead, Abilities that are
+         * selection-aware listen for notifications about the change of focus.
+         * 
+         * @param {boolean} value
+         * @see Selectable
+         *//**
+         * Returns true if this Controller has focus.
+         * The focused Controller is a property of the GraphicViewer.
+         * The Viewer keeps this property in sync with its focus.
+         * @see GraphicViewer#focused()
+         * @return {boolean}
+         */
+        isFocus: function (value) {
+            if (arguments.length) {
+                if (this.isSelectable() || !value) {
+                    if (this.isFocus() === value)
+                        return;
+                    this.setFlag(Controller.FLAG_FOCUS, value);
+                    this._onSelectionChanged();
+                }
+            } else {
+                return this.getFlag(Controller.FLAG_FOCUS);
+            }
+        },
+
+        /**
+         * Emits 'selectionChanged' event.
+         * @protected
+         */
+        _onSelectionChanged: function () {
+            this.emit('selectionChanged', this);
+        },
+
+        /**
          * Activates all Abilities installed on this Controller.
          * There is no reason to override this method.
+         * @protected
          */
         _activateAbilities: function () {
             this.desc('activateAbilities');
-            var abilities = this._abilities;
-            var props = Object.getOwnPropertyNames(abilities);
-            props.forEach(function (prop) {
-                abilities[prop].activate();
+            this._abilities.forEach(function (ability) {
+                ability.activate();
             });
         },
 
@@ -216,8 +309,8 @@ define([
             if (!(ability instanceof Ability)) {
                 throw new Error('ability should be an instanceof Ability');
             }
-            if (abilities.has(role)) {
-                abilities.abilities(role).deactivate();
+            if (abilities.has(role) && this.isActive()) {
+                abilities.get(role).deactivate();
             }
             abilities.set(role, ability);
             ability.host(this);
@@ -380,6 +473,34 @@ define([
         },
 
         /**
+         * Returns the Controller which is the target of the Request.
+         * The default implementation delegates this method to
+         * the installed Abilities. The first non-null result
+         * returned by an Ability is returned. Subclasses should rarely
+         * extend this method.
+         * It is recommended that targeting be handled by Abilities,
+         * and not directly by the Controller.
+         * 
+         * @param {Request} request
+         *            Describes the type of target desired.
+         * @return {Controller}
+         * @see Ability#getTarget(Request)
+         */
+        getTarget: function (request) {
+            var check, controller;
+            this._abilities.forEach(function (ability) {
+                check = ability.getTarget(request);
+                if (check) controller = check;
+            });
+            if (controller) return controller; 
+            if (request.type() === 'REQ_SELECTION') {
+                if (this.isSelectable())
+                    return this;
+            }
+            return null;
+        },
+
+        /**
          * @return {GraphicViewer}
          */
         viewer: function () {
@@ -446,6 +567,45 @@ define([
         },
 
         /**
+         * Performs the specified Request. This method can be used to
+         * send a generic message to an Controller. If the Controller
+         * interprets this request to mean make a change in the model,
+         * it should still use Commands and the CommandStack so that
+         * the change is undoable. The CommandStack is available from
+         * the Domain.
+         * Subclasses should extend this method to handle Requests.
+         * @param {Request} req 
+         */
+        request: function (req) {
+        },
+
+        /**
+         * Used to filter Controllers from the current selection. If an
+         * operation is going to be performed on the current selection, the
+         * selection can first be culled to remove Controllers
+         * that do not participate in the operation.
+         * For example, when aligning the left edges of Controllers,
+         * it makes sense to ignore any selected ConnectionControllers,
+         * as they cannot be aligned.
+         * 
+         * Returns true if this understand the given Request.
+         * By default, this responsibility is delegated
+         * to this part's installed Abilities.
+         * It is recommended that Abilities implement understands().
+         * 
+         * @param {Request} request
+         * @return {boolean}
+         */
+        understands: function (request) {
+            var result = false;
+            this._abilities.forEach(function (ability) {
+                if (ability.understands(request)) result = true;
+            });
+            this.desc('understands', request, result);
+            return result;
+        },
+
+        /**
          * Creates the Widget to be used as this Controller's view.
          * This is called from view() if the view has not been created.
          * @return {Widget}
@@ -492,6 +652,107 @@ define([
          */
         _registerView: function () {
             this.viewer().viewControllerMap().set(this.view(), this);
+        },
+
+        /**
+         * Returns default DragTracker.
+         */
+        getDragTracker: function () {
+            return new MoveTracker(this);
+        },
+
+        /**
+         * Shows or updates source feedback for the given Request.
+         * By default, this responsibility is delegated to this' Abilities.
+         * Subclasses should rarely extend this method.
+         * It is recommended that feedback be handled by Abilities,
+         * and not directly by the Controller.
+         * @see Ability#showSourceFeedback(Request)
+         * @see Controller#showSourceFeedback(Request)
+         * @param {Request} request
+         */
+        showSourceFeedback: function (request) {
+            if (!this.isActive())
+                return;
+            this._abilities.forEach(function (ability) {
+                ability.showSourceFeedback(request);
+            });
+        },
+    
+        /**
+         * Erases source feedback for the given Request. By default,
+         * this responsibility is delegated to this' Abilities.
+         * Subclasses should rarely extend this method.
+         * It is recommended that feedback be handled by Abilities,
+         * and not directly by the Controller.
+         * @param {Request} request
+         *  - identifies the type of feedback to erase.
+         * @see #showSourceFeedback(Request)
+         */
+        eraseSourceFeedback: function (request) {
+            if (this.isActive()) {
+                this._abilities.forEach(function (ability) {
+                    ability.eraseSourceFeedback(request);
+                });
+            }
+        },
+
+        /**
+         * Shows or updates target feedback for the given Request.
+         * By default, this responsibility is delegated to this' Abilities.
+         * Subclasses should rarely extend this method.
+         * It is recommended that feedback be handled by Abilities,
+         * and not directly by the Controller.
+         * @param {Request} request
+         * @see Ability#showTargetFeedback(Request)
+         */
+        showTargetFeedback: function(request) {
+            if (!this.isActive()) return;
+            this._abilities.forEach(function (ability) {
+                ability.showTargetFeedback(request);
+            });
+        },
+
+        /**
+         * Erases or updates target feedback for the given Request.
+         * By default, this responsibility is delegated to this' Abilities.
+         * Subclasses should rarely extend this method.
+         * It is recommended that feedback be handled by Abilities,
+         * and not directly by the Controller.
+         * @param {Request} request
+         * @see #showTargetFeedback(Request)
+         */
+        eraseTargetFeedback: function (request) {
+            if (this.isActive()) {
+                this._abilities.forEach(function (ability) {
+                    ability.eraseTargetFeedback(request);
+                });
+            }
+        },
+
+        /**
+         * Returns the specified adapter if recognized.
+         * Additional adapter types may be added in the future.
+         * Subclasses should extend this method as needed. 
+         * @param {string} key
+         * @return {Object}
+         */
+        getAdapter: function (key) {
+            if (key === 'AccessibleController')
+                return this._accessibleController();
+            return null;
+        },
+
+        /**
+         * Returns the AccessibleController adapter for this.
+         * The same adapter instance must be used throughout the Controller's
+         * existance. Each adapter has a unique ID which is registered during
+         * {@link #register()}. Accessibility clients can only refer to this
+         * Controller via that ID.
+         * @return {AccessibleEditPart}
+         */
+        _accessibleController: function () {
+            return null;
         }
     });
 
@@ -502,6 +763,11 @@ define([
      * @constant {number}
      */
     Controller.FLAG_ACTIVE = 1;
+
+    /**
+     * This flag indicates that the Controller has focus.
+     */
+    Controller.FLAG_FOCUS = 2;
 
     return Controller;
 });

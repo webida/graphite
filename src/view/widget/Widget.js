@@ -319,7 +319,7 @@ define([
          */
         setParent: function (parent) {
             this.desc('setParent', arguments);
-            if (!parent.isContainer()) {
+            if (parent && !parent.isContainer()) {
                 throw new Error('parent is not a container widget');
             }
             var old = this.getParent();
@@ -972,8 +972,8 @@ define([
          * @param {Object} filter
          * @return {Widget}
          */
-        getWidgetAt: function (x, y, filter) {
-            this.desc('getWidgetAt', arguments);
+        findWidgetAt: function (x, y, filter) {
+            this.desc('findWidgetAt', arguments);
             var child;
             var noFilter = {
                 prune: function (widget) {
@@ -992,7 +992,7 @@ define([
             if (filter.prune(this)) {
                 return null;
             }
-            child = this._getDescendantAt(x, y, filter);
+            child = this._findDescendantAt(x, y, filter);
             if (child !== null) {
                 return child;
             }
@@ -1010,8 +1010,8 @@ define([
          * @param {Array} except
          * @return {Widget}
          */
-        getWidgetAtExcept: function (x, y, except) {
-            return this.getWidgetAt(x, y, {
+        findWidgetAtExcept: function (x, y, except) {
+            return this.findWidgetAt(x, y, {
                 prune: function (widget) {
                     return except.indexOf(widget) > -1;
                 },
@@ -1029,8 +1029,8 @@ define([
          * @return {Widget}
          * @protected
          */
-        _getDescendantAt: function (x, y, filter) {
-            this.desc('_getDescendantAt', arguments);
+        _findDescendantAt: function (x, y, filter) {
+            this.desc('_findDescendantAt', arguments);
             var child, children = this.getChildren();
             Point.SINGLETON.location(x, y);
             this.translateFromParent(Point.SINGLETON);
@@ -1042,7 +1042,7 @@ define([
             for (var i = children.length - 1; i >= 0; i--) {
                 child = children[i];
                 if (child.isVisible()) {
-                    child = child.getWidgetAt(x, y, filter);
+                    child = child.findWidgetAt(x, y, filter);
                     if (child !== null) {
                         return child;
                     }
