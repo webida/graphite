@@ -490,6 +490,7 @@ define([
          * @protected
          */
         _createOperationSet: function () {
+            this.desc('_createOperationSet');
             return this.viewer().selected().slice();
         },
 
@@ -1274,6 +1275,10 @@ define([
                     method.apply(this, args);
                 }
             }, this);
+        },
+
+        _placeMouse: function (point) {
+            console.warn('place mouse at ' + point);
         }
     });
 
