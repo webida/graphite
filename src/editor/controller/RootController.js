@@ -26,6 +26,7 @@ define([
     'graphite/view/widget/structural/LayeredPane',
     'graphite/view/widget/structural/Viewport',
     'graphite/view/widget/Widget',
+    './AutoexposeHelper',
     './Controller',
     './LayerManager'
 ], function (
@@ -34,6 +35,7 @@ define([
     LayeredPane,
     Viewport,
     Widget,
+    AutoexposeHelper,
     Controller,
     LayerManager
 ) {
@@ -134,6 +136,16 @@ define([
         root: function () {
             return this;
         },
+
+        /**
+         * @param {string} key
+         * @return {Object}
+         */
+        getAdapter: function (key) {
+            if (key === 'AutoexposeHelper')
+                return new AutoexposeHelper(this);
+            return Controller.prototype.getAdapter.call(this, key);
+        }
     });
 
     return RootController;
