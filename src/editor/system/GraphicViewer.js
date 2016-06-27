@@ -316,6 +316,13 @@ define([
         },
 
         /**
+         * Flushes all pending updates to the Viewer.
+         */
+        flush: function () {
+            this.shell().getUpdateManager().update();
+        },
+
+        /**
          * Returns the Controller at the specified location,
          * using the given exclusion set and conditional.
          * This method behaves similarly to {@link #findObjectAt(Point)}.
