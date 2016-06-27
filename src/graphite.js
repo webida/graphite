@@ -30,6 +30,8 @@ define([
     'graphite/editor/system/Domain',
     'graphite/editor/system/GraphicEditor',
     'graphite/editor/system/GraphicViewer',
+    'graphite/editor/system/event/GraphicKeyHandler',
+    'graphite/editor/system/event/KeyHandler',
     'graphite/editor/tool/Tool',
     'graphite/env/Debugger',
     'graphite/view/geometry/Geometry',
@@ -75,6 +77,8 @@ define([
     Domain,
     GraphicEditor,
     GraphicViewer,
+    GraphicKeyHandler,
+    KeyHandler,
     Tool,
     Debugger,
     Geometry,
@@ -132,7 +136,11 @@ define([
             system: {
                 Domain: Domain,
                 GraphicEditor: GraphicEditor,
-                GraphicViewer: GraphicViewer
+                GraphicViewer: GraphicViewer,
+                event: {
+                    GraphicKeyHandler: GraphicKeyHandler,
+                    KeyHandler: KeyHandler
+                }
             },
             tool: {
                 Tool: Tool
