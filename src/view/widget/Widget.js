@@ -319,7 +319,7 @@ define([
          */
         setParent: function (parent) {
             this.desc('setParent', arguments);
-            if (!parent.isContainer()) {
+            if (parent && !parent.isContainer()) {
                 throw new Error('parent is not a container widget');
             }
             var old = this.getParent();
