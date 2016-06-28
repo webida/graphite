@@ -71,7 +71,7 @@ define([
             return this._isInState(
                     Tool.STATE_DRAG_IN_PROGRESS |
                     Tool.STATE_ACCESSIBLE_DRAG |
-                    STATE_ACCESSIBLE_DRAG_IN_PROGRESS)
+                    Tool.STATE_ACCESSIBLE_DRAG_IN_PROGRESS)
                     && InternalKeyEvent.getKey(e) === 'Shift';
         }
     };
