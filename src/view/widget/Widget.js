@@ -201,7 +201,7 @@ define([
             if (this.getFlag(Widget.FLAG_REALIZED)) {
                 widget.onRemoved();
             }
-            if (layout !== null) {
+            if (layout) {
                 layout.remove(widget);
             }
             widget.erase();
