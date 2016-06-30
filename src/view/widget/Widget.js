@@ -299,7 +299,12 @@ define([
          * @param {number} dy
          */
         _onMoved: function (dx, dy) {
+            //console.log(this+'._onMoved');
             this.desc('_onMoved', arguments);
+            var delta = {
+                dx: dx,
+                dy: dy
+            };
             /**
              * moved event.
              * @event Widget#moved
@@ -307,9 +312,20 @@ define([
              * @dx {number} dx
              * @dy {number} dy
              */
-            this.emit('moved', {
-                dx: dx,
-                dy: dy
+            this.emit('moved', delta);
+            this.emitDescendant('ancestorMoved', delta, this);
+        },
+
+        /**
+         * Propagates event to all descendants of this Widget.
+         * @param {string} eventName
+         * @param {Object} delta
+         * @param {Widget} source - emitter
+         */
+        emitDescendant: function (eventName, delta, source) {
+            this.getChildren().forEach(function (child) {
+                child.emit(eventName, delta, source);
+                child.emitDescendant(eventName, delta, source);
             });
         },
 
