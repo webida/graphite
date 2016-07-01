@@ -27,6 +27,7 @@ define([
     'graphite/base/BaseEmitter',
     'graphite/base/Color',
     'graphite/base/FlagSupport',
+    'graphite/view/geometry/Dimension',
     'graphite/view/geometry/Point',
     'graphite/view/geometry/Rectangle',
     'graphite/view/geometry/Spaces'
@@ -37,6 +38,7 @@ define([
     BaseEmitter,
     Color,
     FlagSupport,
+    Dimension,
     Point,
     Rectangle,
     Spaces
@@ -632,6 +634,32 @@ define([
                     w: bounds.w,
                     h: bounds.h
                 };
+            }
+        },
+
+        /**
+         * Sets this Widget's default size.
+         * @param {number} w
+         * @param {number} h
+         *//**
+         * Sets this Widget's default size.
+         * @param {Dimension} dim
+         *//**
+         * Returns this Widget's default size.
+         * @return {Dimension}
+         */
+        defaultSize: function () {
+            var dim;
+            var args = ([]).slice.call(arguments);
+            var argLen = args.length;
+            if (argLen) {
+                if (argLen === 2 && math.isAllNumber(args)) {
+                    this._defaultSize = new Dimension(args[0], args[1]);
+                } else if (args[0] instanceof Dimension) {
+                    this._defaultSize = args[0];
+                }
+            } else {
+                return this._defaultSize;
             }
         },
 
