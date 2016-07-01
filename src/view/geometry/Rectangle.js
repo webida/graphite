@@ -235,6 +235,48 @@ define([
         },
 
         /**
+         * Resizes this Rectangle by the Dimension provided as input
+         * and returns this for convenience. This Rectange's width will
+         * become this.width + sizeDelta.width. Likewise for height.
+         * @param {Dimension} d
+         * @return {Rectangle}
+         *//**
+         * Resizes this Rectangle by the values supplied as input
+         * and returns this for convenience. This Rectangle's width will
+         * become this.width + dw. This Rectangle's height will become
+         * this.height + dh.
+         * @param {number} w - Width to be resized
+         * @param {number} h - Height to be resized
+         * @return {Rectangle}
+         */
+        resize: function () {
+            var w, h;
+            var args = arguments;
+            var argLen = args.length;
+            if (argLen === 1 && args[0] instanceof Dimension) {
+                this.w += args[0].w;
+                this.h += args[0].h;
+            } else if (argLen === 2) {
+                this.w += args[0];
+                this.h += args[1];
+            }
+            return this;
+        },
+
+        /**
+         * Returns a new Rectangle which is equivalent to this Rectangle
+         * with its dimensions modified by the passed Dimension.
+         * @param {Dimension} d
+         *  - Dimensions by which the rectangle's size should be modified
+         * @return {Rectangle}
+         */
+        getResized: function () {
+            var copy = this.copy();
+            copy.resize.apply(copy, arguments);
+            return copy;
+        },
+
+        /**
          * Returns a new Rectangle which is translated along each axis
          * by the passed values.
          * @param {number} dx - Displacement along X axis
@@ -397,6 +439,60 @@ define([
          */
         bottom: function () {
             return this.y + this.h;
+        },
+
+        /**
+         * Returns a new Point representing the middle point of
+         * the left hand side of this Rectangle.
+         * @return {Point}
+         */
+        left: function () {
+            return new Point(this.x, this.y + this.h / 2);
+        },
+
+        /**
+         * Returns a new Point representing the middle point of
+         * the top side of this Rectangle.
+         * @return {Point}
+         */
+        top: function () {
+            return new Point(this.x + this.w / 2, this.y);
+        },
+
+        /**
+         * Returns a new Point representing the top left point
+         * of this Rectangle.
+         * @return {Point}
+         */
+        topLeft: function () {
+            return new Point(this.x, this.y);
+        },
+
+        /**
+         * Returns a new Point representing the top right point
+         * of this Rectangle.
+         * @return {Point}
+         */
+        topRight: function () {
+            return new Point(this.x + this.w, this.y);
+        },
+
+        /**
+         * Returns a new Point representing the bottom left point
+         * of this Rectangle.
+         * @return {Point}
+         */
+        bottomLeft: function () {
+            return new Point(this.x, this.y + this.h);
+        },
+
+        /**
+         * Returns a new Point representing the bottom right point
+         * of this Rectangle.
+         * @return {Point}
+         */
+        bottomRight: function () {
+            return new Point(this.x + this.w, this.y + this.h);
         },
 
         /**
