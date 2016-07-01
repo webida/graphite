@@ -86,4 +86,4 @@ define([], function () {
     Position.NSEW = Position.NORTH_SOUTH | Position.EAST_WEST;
 
     return Position;
-}),
+});
