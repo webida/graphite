@@ -567,6 +567,22 @@ define([
         },
 
         /**
+         * Returns whether the input object is equivalent to this or not.
+         * @param {Rectangle} rect
+         * @return {boolean}
+         */
+        equals: function (rect) {
+            if (rect === this) return true;
+            if (rect instanceof Rectangle) {
+                return this.x === rect.x
+                        && this.y === rect.y
+                        && this.w === rect.w
+                        && this.h === rect.h
+            }
+            return false;
+        },
+
+        /**
          * For convenience, this tells position for
          * x,y,w,h of this Rectangle.
          * @return {string}
