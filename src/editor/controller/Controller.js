@@ -774,7 +774,7 @@ define([
          * existance. Each adapter has a unique ID which is registered during
          * {@link #register()}. Accessibility clients can only refer to this
          * Controller via that ID.
-         * @return {AccessibleEditPart}
+         * @return {AccessibleController}
          */
         _accessibleController: function () {
             return null;

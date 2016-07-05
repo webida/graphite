@@ -95,9 +95,29 @@ define([
         host: function (host) {
             if (arguments.length) {
                 this._host = host;
+                this._graphicContext(host);
                 return this;
             } else {
                 return this._host;
+            }
+        },
+
+        /**
+         * @param {Controller} host
+         *//**
+         * @return {GraphicContext}
+         */
+        _graphicContext: function (host) {
+            if (arguments.length) {
+                var viewer = host.viewer();
+                if (host && viewer) {
+                    this._context = viewer.shell()
+                            .container().graphicContext();
+                } else {
+                    this._context = null;
+                }
+            } else {
+                return this._context;
             }
         },
 
@@ -223,6 +243,47 @@ define([
          * @param {Request} request
          */
         eraseTargetFeedback: function (request) {
+        },
+
+        /**
+         * Adds the specified widget to the FEEDBACK_LAYER.
+         * @param {Widget} widget - the feedback to add
+         * @protected
+         */
+        _addFeedback: function (widget) {
+            this._getFeedbackLayer().append(widget);
+        },
+
+        /**
+         * Removes the specified widget from the FEEDBACK_LAYER.
+         * @param {Widget} widget - the feedback to remove
+         * @protected
+         */
+        _removeFeedback: function (widget) {
+            this._getFeedbackLayer().remove(widget);
+        },
+
+        /**
+         * Returns the layer used for displaying feedback.
+         * @return {Layer} the feedback layer
+         * @protected
+         */
+        _getFeedbackLayer: function () {
+            return this._getLayer('FEEDBACK_LAYER');
+        },
+
+        /**
+         * Obtains the specified layer.
+         * @param {string} key - the key identifying the layer
+         * @return {Layer} the requested layer
+         * @protected
+         */
+        _getLayer: function (key) {
+            var context = this._graphicContext();
+            if (context) {
+                return context.getLayer(key);
+            }
+            return null;
         },
 
         toString: function () {
