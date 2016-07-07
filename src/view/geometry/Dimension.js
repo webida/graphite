@@ -57,12 +57,24 @@ define([
         h: 0,
 
         /**
-         * Explain
-         * @param {}
-         * @return {Array}
+         * Returns true if either dimension is
+         * less than or equal to 0.
+         * @return {boolean}
          */
-        aaaa: function () {
-            return this.bbb;
+        isEmpty: function () {
+            return (this.w <= 0) || (this.h <= 0);
+        },
+
+        /**
+         * Returns whether the given Object is equivalent to this Dimension.
+         * @param {Dimension} dim
+         * @return {boolean}
+         */
+        equals: function (dim) {
+            if (dim instanceof Dimension) {
+                return (dim.w === this.w && dim.h == this.h);
+            }
+            return false;
         }
     });
 

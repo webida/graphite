@@ -68,7 +68,7 @@ define([
         },
 
         /**
-         * @return the EditPart that has focus
+         * @return the Controller that has focus
          * @protected
          */
         _focused: function () {
@@ -191,7 +191,7 @@ define([
 
         /**
          * Returns true if the keys pressed indicate to traverse to the
-         *         parent of the currently focused EditPart
+         *         parent of the currently focused Controller
          * @param {KeyboardEvent} e
          * @return {boolean}
          */
@@ -202,7 +202,7 @@ define([
 
         /**
          * Returns true if the keys pressed indicate to traverse to the
-         *         parent of the currently focused EditPart
+         *         parent of the currently focused Controller
          * @param {KeyboardEvent} e
          * @return {boolean}
          */

@@ -27,6 +27,7 @@ define([
     'graphite/base/BaseEmitter',
     'graphite/base/Color',
     'graphite/base/FlagSupport',
+    'graphite/view/geometry/Dimension',
     'graphite/view/geometry/Point',
     'graphite/view/geometry/Rectangle',
     'graphite/view/geometry/Spaces'
@@ -37,6 +38,7 @@ define([
     BaseEmitter,
     Color,
     FlagSupport,
+    Dimension,
     Point,
     Rectangle,
     Spaces
@@ -201,7 +203,7 @@ define([
             if (this.getFlag(Widget.FLAG_REALIZED)) {
                 widget.onRemoved();
             }
-            if (layout !== null) {
+            if (layout) {
                 layout.remove(widget);
             }
             widget.erase();
@@ -299,7 +301,12 @@ define([
          * @param {number} dy
          */
         _onMoved: function (dx, dy) {
+            //console.log(this+'._onMoved');
             this.desc('_onMoved', arguments);
+            var delta = {
+                dx: dx,
+                dy: dy
+            };
             /**
              * moved event.
              * @event Widget#moved
@@ -307,9 +314,20 @@ define([
              * @dx {number} dx
              * @dy {number} dy
              */
-            this.emit('moved', {
-                dx: dx,
-                dy: dy
+            this.emit('moved', delta);
+            this.emitDescendant('ancestorMoved', delta, this);
+        },
+
+        /**
+         * Propagates event to all descendants of this Widget.
+         * @param {string} eventName
+         * @param {Object} delta
+         * @param {Widget} source - emitter
+         */
+        emitDescendant: function (eventName, delta, source) {
+            this.getChildren().forEach(function (child) {
+                child.emit(eventName, delta, source);
+                child.emitDescendant(eventName, delta, source);
             });
         },
 
@@ -616,6 +634,32 @@ define([
                     w: bounds.w,
                     h: bounds.h
                 };
+            }
+        },
+
+        /**
+         * Sets this Widget's default size.
+         * @param {number} w
+         * @param {number} h
+         *//**
+         * Sets this Widget's default size.
+         * @param {Dimension} dim
+         *//**
+         * Returns this Widget's default size.
+         * @return {Dimension}
+         */
+        defaultSize: function () {
+            var dim;
+            var args = ([]).slice.call(arguments);
+            var argLen = args.length;
+            if (argLen) {
+                if (argLen === 2 && math.isAllNumber(args)) {
+                    this._defaultSize = new Dimension(args[0], args[1]);
+                } else if (args[0] instanceof Dimension) {
+                    this._defaultSize = args[0];
+                }
+            } else {
+                return this._defaultSize;
             }
         },
 

@@ -229,6 +229,7 @@ define([
          */
         _currentCommand: function (c) {
             if (arguments.length) {
+                this.desc('_currentCommand', c);
                 this._command = c;
                 this._refreshCursor();
             } else {
@@ -1018,9 +1019,9 @@ define([
         },
 
         /**
-         * Called when the mouse enters an EditPartViewer. By default, does nothing
-         * and returns <code>false</code>. Subclasses may extend this method to
-         * process the viewer enter. Returns <code>true</code> to indicate if the
+         * Called when the mouse enters an GraphicViewer. By default,
+         * does nothing and returns false. Subclasses may extend this method
+         * to process the viewer enter. Returns true to indicate if the
          * viewer entered was process in some way.
          * @return {boolean}
          * @protected
@@ -1045,7 +1046,7 @@ define([
         },
 
         /**
-         * Called when the mouse exits an EditPartViewer.
+         * Called when the mouse exits an GraphicViewer.
          * By default, does nothing and returns false.
          * Subclasses may extend this method to process viewer exits.
          * Returns true to indicate if the viewer

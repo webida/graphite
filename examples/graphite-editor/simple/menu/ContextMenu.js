@@ -21,23 +21,24 @@
  */
 
 define([
-    'external/genetic/genetic',
-    './ConstrainedLayoutable'
+    'graphite/graphite'
 ], function (
-    genetic,
-    ConstrainedLayoutable
+    graphite
 ) {
     'use strict';
 
+    var Base = graphite.base.Base;
+    var genetic = graphite.util.genetic;
+
     /**
-     * A XYLayoutable.
+     * A Template.
      * @constructor
      */
-    function XYLayoutable() {
-        ConstrainedLayoutable.apply(this, arguments);
+    function Template() {
+        Base.apply(this, arguments);
     }
 
-    genetic.inherits(XYLayoutable, ConstrainedLayoutable, {
+    genetic.inherits(Template, Base, {
 
         /**
          * Explain
@@ -46,17 +47,8 @@ define([
          */
         aaaa: function () {
             return this.bbb;
-        },
-
-        /**
-         * Returns a new Rectangle equivalent to the passed Rectangle.
-         * @param {Rectangle} r
-         * @return {Rectangle} 
-         */
-        _getConstraintForRectangle: function (r) {
-            return r.copy();
         }
     });
 
-    return XYLayoutable;
+    return Template;
 });

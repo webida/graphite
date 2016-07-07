@@ -31,39 +31,39 @@ define([], function () {
         /** None */
         NONE: 0,
         /** Left */
-        LEFT: 1,
+        LEFT: 1 << 0,
         /** Center (Horizontal) */
-        CENTER: 2,
+        CENTER: 1 << 1,
         /** Right */
-        RIGHT: 4,
+        RIGHT: 1 << 2,
+        /** Top */
+        TOP: 1 << 3,
+        /** Middle (Vertical) */
+        MIDDLE: 1 << 4,
+        /** Bottom */
+        BOTTOM: 1 << 5,
+        /** North */
+        NORTH: 1 << 6,
+        /** South */
+        SOUTH: 1 << 7,
+        /** West */
+        WEST: 1 << 8,
+        /** East */
+        EAST: 1 << 9,
+        /** A constant indicating horizontal direction */
+        HORIZONTAL: 1 << 10,
+        /** A constant indicating vertical direction */
+        VERTICAL: 1 << 11,
         /**
          * Used to signify left alignment regardless of orientation
          * (i.e., LTR or RTL)
          */
-        ALWAYS_LEFT: 64,
+        ALWAYS_LEFT: 1 << 12,
         /**
          * Used to signify right alignment regardless of orientation
          * (i.e., LTR or RTL)
          */
-        ALWAYS_RIGHT: 128,
-        /** Top */
-        TOP: 8,
-        /** Middle (Vertical) */
-        MIDDLE: 16,
-        /** Bottom */
-        BOTTOM: 32,
-        /** North */
-        NORTH: 1,
-        /** South */
-        SOUTH: 4,
-        /** West */
-        WEST: 8,
-        /** East */
-        EAST: 16,
-        /** A constant indicating horizontal direction */
-        HORIZONTAL: 64,
-        /** A constant indicating vertical direction */
-        VERTICAL: 128
+        ALWAYS_RIGHT: 1 << 13
     };
 
     /** Bit-wise OR of LEFT; CENTER; and RIGHT */
@@ -86,4 +86,4 @@ define([], function () {
     Position.NSEW = Position.NORTH_SOUTH | Position.EAST_WEST;
 
     return Position;
-}),
+});

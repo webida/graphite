@@ -171,8 +171,8 @@ define([
          * Performs the appropriate selection action based on the selection state of
          * the source and the modifiers (CTRL and SHIFT). If no modifier key is
          * pressed, the source will be set as the only selection. If the CTRL key is
-         * pressed and the edit part is already selected, it will be deselected. If
-         * the CTRL key is pressed and the edit part is not selected, it will be
+         * pressed and the Controller is already selected, it will be deselected. If
+         * the CTRL key is pressed and the Controller is not selected, it will be
          * appended to the selection set. If the SHIFT key is pressed, the source
          * will be appended to the selection.
          * @protected
@@ -205,11 +205,11 @@ define([
         },
 
         /**
-         * Calls {@link #performSelection()} if the source is not selected. If the
-         * source is selected and there are no modifier keys pressed (i.e. the user
-         * isn't selecting multiple edit parts or deselecting edit parts), sets the
-         * direct edit flag so that when the mouse is released, a direct edit will
-         * be performed.
+         * Calls {@link #_select()} if the source is not selected.
+         * If the source is selected and there are no modifier keys pressed
+         * (i.e. the user isn't selecting multiple Controllers or
+         * deselecting Controllers), sets the direct edit flag so that
+         * when the mouse is released, a direct edit will be performed.
          * @protected
          */
         _conditionalSelection: function () {

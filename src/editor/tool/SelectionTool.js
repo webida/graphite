@@ -578,7 +578,7 @@ define([
 
         /**
          * Erases the hover feedback by calling
-         * {@link EditPart#eraseTargetFeedback(Request)}.
+         * {@link Controller#eraseTargetFeedback(Request)}.
          * @protected
          */
         _eraseHoverFeedback: function () {
@@ -652,7 +652,7 @@ define([
                     Tool.STATE_DRAG |
                     Tool.STATE_DRAG_IN_PROGRESS)) {
                 if (this._dragTracker())
-                    this.dragTracker(null);
+                    this._dragTracker(null);
                 this._state(Tool.STATE_INITIAL);
             }
             return TargetingTool.prototype._onMouseLeave.call(this);

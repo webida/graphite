@@ -87,7 +87,7 @@ define([
          */
         setParent: function (parent) {
             this.desc('setParent', parent);
-            if (!(parent instanceof Structural)) {
+            if (parent && !(parent instanceof Structural)) {
                 throw new Error('Only Structural can be a parent for Shape');
             }
             SvgWidget.prototype.setParent.call(this, parent);

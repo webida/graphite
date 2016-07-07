@@ -151,12 +151,32 @@ define([
         },
 
         /**
+         * Creates a Point with negated x and y values
+         * @return {Point}
+         */
+        getNegated: function () {
+            return this.copy().negate();
+        },
+
+        /**
          * Calculaates the difference in between this Point and the one specified
          * @param {Point} point
          * @return {Dimension}
          */
         difference: function (point) {
             return new Dimension(this.x - point.x, this.y - point.y);
+        },
+
+        /**
+         * Returns whether the given Object is equivalent to this Point.
+         * @param {Point} p
+         * @return {boolean}
+         */
+        equals: function (p) {
+            if (p instanceof Point) {
+                return p.x === this.x && p.y === this.y;
+            }
+            return false;
         },
 
         /**

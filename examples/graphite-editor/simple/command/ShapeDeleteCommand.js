@@ -21,23 +21,24 @@
  */
 
 define([
-    'external/genetic/genetic',
-    './ConstrainedLayoutable'
+    'graphite/graphite'
 ], function (
-    genetic,
-    ConstrainedLayoutable
+    graphite
 ) {
     'use strict';
 
+    var Command = graphite.editor.command.Command;
+    var genetic = graphite.util.genetic;
+
     /**
-     * A XYLayoutable.
+     * A ShapeDeleteCommand.
      * @constructor
      */
-    function XYLayoutable() {
-        ConstrainedLayoutable.apply(this, arguments);
+    function ShapeDeleteCommand() {
+        Command.apply(this, arguments);
     }
 
-    genetic.inherits(XYLayoutable, ConstrainedLayoutable, {
+    genetic.inherits(ShapeDeleteCommand, Command, {
 
         /**
          * Explain
@@ -46,17 +47,8 @@ define([
          */
         aaaa: function () {
             return this.bbb;
-        },
-
-        /**
-         * Returns a new Rectangle equivalent to the passed Rectangle.
-         * @param {Rectangle} r
-         * @return {Rectangle} 
-         */
-        _getConstraintForRectangle: function (r) {
-            return r.copy();
         }
     });
 
-    return XYLayoutable;
+    return ShapeDeleteCommand;
 });

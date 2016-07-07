@@ -45,18 +45,20 @@ define([
     genetic.inherits(ToolTipHelper, Base, {
 
         /**
+         * Updates target widget.
          * @param {Widget} widget
          */
         update: function (widget) {
-            if (widget && widget.toolTip()) {
-                this._current = widget.toolTip();
-                this._target = widget;
-                this.show();
-            } else if (this._isShow) {
+            if (this._isShow) {
                 this.hide();
                 this._current = null;
                 this._target = null;
             }
+            if (widget && widget.toolTip()) {
+                this._current = widget.toolTip();
+                this._target = widget;
+                this.show();
+            } 
         },
 
         /**

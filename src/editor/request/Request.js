@@ -76,6 +76,10 @@ define([
             } else {
                 return this._data;
             }
+        },
+
+        toString: function () {
+            return Base.prototype.toString.call(this) + ':' + this._type;
         }
     });
 

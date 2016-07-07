@@ -65,12 +65,7 @@ define([
     genetic.inherits(TargetingTool, Tool, {
 
         /**
-         * Explain
-         * @param {}
-         * @return {Array}
-         */
-        /**
-         * @see org.eclipse.gef.Tool#deactivate()
+         * @see Tool#deactivate()
          */
         deactivate: function () {
             if (this._isHoverActive())

@@ -46,6 +46,21 @@ define([
          */
         relocate: function (widget) {
             this.isInterface('relocate', widget);
+        },
+
+        /**
+         * Sets the reference widget.
+         * @param {Widget} reference
+         *//**
+         * Returns the reference widget.
+         * @return {Widget}
+         */
+        reference: function (reference) {
+            if (arguments.length) {
+                this._reference = reference;
+            } else {
+                return this._reference;
+            }
         }
     });
 

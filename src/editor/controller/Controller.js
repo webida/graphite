@@ -580,6 +580,31 @@ define([
         },
 
         /**
+         * Subclasses should rarely extend this method.
+         * The default implementation combines the contributions from
+         * each installed Ability.
+         * This method is implemented indirectly using Abilities.
+         * 
+         * It is recommended that Command creation be handled by Abilities,
+         * and not directly by the Controller.
+         * 
+         * @see Controller#getCommand(Request)
+         * @see Ability#getCommand(Request)
+         * @param {Request} request
+         * @return {Command}
+         */
+        getCommand: function (request) {
+            var command = null;
+            this._abilities.forEach(function (ability) {
+                if (command)
+                    command = command.chain(ability.getCommand(request));
+                else
+                    command = ability.getCommand(request);
+            });
+            return command;
+        },
+
+        /**
          * Used to filter Controllers from the current selection. If an
          * operation is going to be performed on the current selection, the
          * selection can first be culled to remove Controllers
@@ -749,7 +774,7 @@ define([
          * existance. Each adapter has a unique ID which is registered during
          * {@link #register()}. Accessibility clients can only refer to this
          * Controller via that ID.
-         * @return {AccessibleEditPart}
+         * @return {AccessibleController}
          */
         _accessibleController: function () {
             return null;

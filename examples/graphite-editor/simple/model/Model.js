@@ -21,42 +21,44 @@
  */
 
 define([
-    'external/genetic/genetic',
-    './ConstrainedLayoutable'
+    'graphite/graphite'
 ], function (
-    genetic,
-    ConstrainedLayoutable
+    graphite
 ) {
     'use strict';
 
+    var BaseModel = graphite.editor.model.BaseModel;
+    var genetic = graphite.util.genetic;
+
     /**
-     * A XYLayoutable.
+     * A Model.
      * @constructor
      */
-    function XYLayoutable() {
-        ConstrainedLayoutable.apply(this, arguments);
+    function Model() {
+        BaseModel.apply(this, arguments);
+        this.children = [];
+        this.styles = {};
     }
 
-    genetic.inherits(XYLayoutable, ConstrainedLayoutable, {
+    genetic.inherits(Model, BaseModel, {
 
         /**
-         * Explain
-         * @param {}
-         * @return {Array}
+         * @param {Model} child
          */
-        aaaa: function () {
-            return this.bbb;
+        append: function (child) {
+            this.children.push(child);
         },
 
         /**
-         * Returns a new Rectangle equivalent to the passed Rectangle.
-         * @param {Rectangle} r
-         * @return {Rectangle} 
+         * @param {Object} styles
          */
-        _getConstraintForRectangle: function (r) {
-            return r.copy();
+        style: function (styles) {
+            var props = Object.getOwnPropertyNames(styles);
+            props.forEach(function (prop) {
+                this.styles[prop] = styles[prop];
+            }, this);
         }
     });
 
-    return XYLayoutable;
+    return Model;
 });
