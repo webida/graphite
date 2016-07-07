@@ -153,5 +153,80 @@ http://localhost/examples/intersection/main.html#mode=debug
 
 ### Graphite Editor
 
-This module is for WYSIWYG edit for graphical model. now working ...
+This module is for WYSIWYG editor for graphical model. (now working ...)
+```html
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset=utf-8 />
+		<title>graphite</title>
+		<style>
+			body {
+				margin: 20px;
+				padding: 20px;
+			}
+			#palette {
+				background-color: #eee;
+				border-radius: 5px;
+				width: 500px;
+				height: 50px;
+			}
+			#viewer {
+				border: 1px solid #ccc;
+				width: 500px;
+				height: 500px;
+				margin-top: 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<div id='palette'></div>
+		<div id='viewer'></div>
+		<script src="../../../external/requirejs/require.js"></script>
+		<script src="configs/requirejs-config.js"></script>
+		<script src="main.js"></script>
+	</body>
+</html>
+```
+
+```js
+require([
+    'graphite/graphite',
+    './controller/DiagramController',
+    './controller/ShapeController',
+    './menu/ContextMenu',
+    './model/Diagram',
+    './model/DiagramModelFactory',
+    './model/Shape'
+], function(
+    graphite,
+    DiagramController,
+    ShapeController,
+    ContextMenu,
+    Diagram,
+    DiagramModelFactory,
+    Shape
+) {
+
+    var Domain = graphite.editor.system.Domain;
+    var Tool = graphite.editor.tool.Tool;
+    var GraphicEditor = graphite.editor.system.GraphicEditor;
+    var GraphicViewer = graphite.editor.system.GraphicViewer;
+    var GraphiteShell = graphite.view.system.GraphiteShell;
+
+    var editor = new GraphicEditor();
+    editor.create({
+        'viewer': 'viewer',
+        'palette': 'palette',
+        'model-factory': DiagramModelFactory,
+        'viewer-factory-rule': [
+            [Diagram, DiagramController],
+            [Shape, ShapeController]
+        ],
+        'context-menu': ContextMenu
+    });
+});
+```
+![image](https://cloud.githubusercontent.com/assets/7447396/16645929/53cdcfda-4462-11e6-957a-9ed11e1e0f9d.png)
+
 
