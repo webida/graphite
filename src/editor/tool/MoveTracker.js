@@ -296,8 +296,7 @@ define([
 
         /**
          * Returns a Array of all the Controllers in the
-         * {@link Tool#_operationSet()}, plus the
-         * {@link org.eclipse.draw2d.ConnectionLayer}.
+         * {@link Tool#_operationSet()}, and ConnectionLayer.
          * @see TargetingTool#_getExclusionSet()
          * @protected
          */
@@ -437,7 +436,7 @@ define([
         },
 
         /**
-         * Asks the edit parts in the {@link Tool#_operationSet()
+         * Asks the Controllers in the {@link Tool#_operationSet()
          * operation set} to show source feedback.
          * @protected
          */
@@ -449,7 +448,7 @@ define([
         },
 
         /**
-         * Asks the edit parts in the {@link Tool#_operationSet()
+         * Asks the Controllers in the {@link Tool#_operationSet()
          * operation set} to erase their source feedback.
          * @protected
          */
@@ -463,7 +462,7 @@ define([
         },
 
         /**
-         * Processes arrow keys used to move edit parts.
+         * Processes arrow keys used to move Controllers.
          * @param {KeyboardEvent} e
          * @return {boolean}
          * @see Tool#_onKeyDown(KeyboardEvent)
