@@ -22,10 +22,10 @@
 
 define([
     'external/genetic/genetic',
-    './Ability'
+    './ConstrainedLayoutable'
 ], function (
     genetic,
-    Ability
+    ConstrainedLayoutable
 ) {
     'use strict';
 
@@ -34,10 +34,10 @@ define([
      * @constructor
      */
     function XYLayoutable() {
-        Ability.apply(this, arguments);
+        ConstrainedLayoutable.apply(this, arguments);
     }
 
-    genetic.inherits(XYLayoutable, Ability, {
+    genetic.inherits(XYLayoutable, ConstrainedLayoutable, {
 
         /**
          * Explain
@@ -46,6 +46,15 @@ define([
          */
         aaaa: function () {
             return this.bbb;
+        },
+
+        /**
+         * Returns a new Rectangle equivalent to the passed Rectangle.
+         * @param {Rectangle} r
+         * @return {Rectangle} 
+         */
+        _getConstraintForRectangle: function (r) {
+            return r.copy();
         }
     });
 
