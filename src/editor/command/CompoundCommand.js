@@ -22,10 +22,12 @@
 
 define([
     'external/genetic/genetic',
-    './Command'
+    './Command',
+    './UnexecutableCommand'
 ], function (
     genetic,
-    Command
+    Command,
+    UnexecutableCommand
 ) {
     'use strict';
 
