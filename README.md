@@ -227,6 +227,7 @@ require([
     });
 });
 ```
-![image](https://cloud.githubusercontent.com/assets/7447396/16645929/53cdcfda-4462-11e6-957a-9ed11e1e0f9d.png)
+![image](https://cloud.githubusercontent.com/assets/7447396/16713432/7e47ba78-46e2-11e6-9788-3446176e156d.png)
+
 
 
