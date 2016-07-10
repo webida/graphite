@@ -580,7 +580,6 @@ define([
          * @protected
          */
         _dragEnd: function () {
-            this.desc('_drag');
             this._executeCurrentCommand();
         },
 
