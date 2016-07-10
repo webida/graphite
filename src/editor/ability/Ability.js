@@ -85,11 +85,11 @@ define([
         },
 
         /**
-         * Sets the host Controller on which this policy is installed.
+         * Sets the host Controller on which this ability is installed.
          * @param {Controller} host
          * @return {Ability}
          *//**
-         * Returns the host Controller on which this policy is installed.
+         * Returns the host Controller on which this ability is installed.
          * @return {Controller}
          */
         host: function (host) {

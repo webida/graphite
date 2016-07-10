@@ -42,6 +42,7 @@ define([
     'graphite/editor/system/GraphicViewer',
     'graphite/editor/system/event/GraphicKeyHandler',
     'graphite/editor/system/event/KeyHandler',
+    'graphite/editor/tool/ResizeTracker',
     'graphite/editor/tool/Tool',
     'graphite/env/Debugger',
     'graphite/view/geometry/Geometry',
@@ -99,6 +100,7 @@ define([
     GraphicViewer,
     GraphicKeyHandler,
     KeyHandler,
+    ResizeTracker,
     Tool,
     Debugger,
     Geometry,
@@ -175,6 +177,7 @@ define([
                 }
             },
             tool: {
+                ResizeTracker: ResizeTracker,
                 Tool: Tool
             }
         },

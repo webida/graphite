@@ -57,6 +57,14 @@ define([
         h: 0,
 
         /**
+         * Creates and returns a copy of this Dimension.
+         * @return {Dimension}
+         */
+        copy: function () {
+            return new Dimension(this);
+        },
+
+        /**
          * Returns true if either dimension is
          * less than or equal to 0.
          * @return {boolean}
@@ -75,8 +83,73 @@ define([
                 return (dim.w === this.w && dim.h == this.h);
             }
             return false;
+        },
+
+        /**
+         * Creates and returns a new Dimension whose size will be
+         * reduced by the width and height of the given Dimension.
+         * @param {Dimension} d
+         * @return {Dimension}
+         *//**
+         * Creates and returns a new Dimension whose size will be
+         * reduced by the width and height of the given Dimension.
+         * @param {number} w
+         * @param {number} h
+         * @return {Dimension}
+         */
+        getShrinked: function () {
+            var len = arguments.length;
+            if (len === 1) {
+                return this.copy().shrink(arguments[0]);
+            } else if (len === 2) {
+                return this.copy().shrink(arguments[0], arguments[1]);
+            }
+        },
+
+        /**
+         * Shrinks the size of this Dimension by the width and height
+         * values of the given Dimension.
+         * @param {Dimension} d
+         * @return {Dimension}
+         *//**
+         * Reduces the width of this Dimension by w, and reduces the height
+         * of this Dimension by h. Returns this for convenience.
+         * @param {number} w
+         * @param {number} h
+         * @return {Dimension}
+         */
+        shrink: function () {
+            var len = arguments.length;
+            if (len === 1 && arguments[0] instanceof Dimension) {
+                this.w -= arguments[0].w;
+                this.h -= arguments[0].h;
+            } else if (len === 2 && math.isAllNumber(arguments)) {
+                this.w -= arguments[0];
+                this.h -= arguments[1];
+            }
+            return this;
         }
     });
+
+    /**
+     * Creates a new Dimension representing the MAX of two provided Dimensions.
+     * @param {Dimension} d1
+     * @param {Dimension} d2
+     * @return {Dimension}
+     */
+    Dimension.max = function (d1, d2) {
+        return new Dimension(Math.max(d1.w, d2.w), Math.max(d1.h, d2.h));
+    };
+
+    /**
+     * Creates a new Dimension representing the MIN of two provided Dimensions.
+     * @param {Dimension} d1
+     * @param {Dimension} d2
+     * @return {Dimension}
+     */
+    Dimension.min = function (d1, d2) {
+        return new Dimension(Math.min(d1.w, d2.w), Math.min(d1.h, d2.h));
+    };
 
     Dimension.SINGLETON = new Dimension();
 

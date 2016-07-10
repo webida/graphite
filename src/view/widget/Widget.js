@@ -1233,5 +1233,9 @@ define([
     Widget.FLAG_REALIZED = 1 << 31;
     Widget.FLAG_MAX = FLAG_FILL_PARENT;
 
+    var MAX_INT = 2147483647;
+    Widget.MAX_DIMENSION = new Dimension(MAX_INT, MAX_INT);
+    Widget.MIN_DIMENSION = new Dimension(5, 5);
+
     return Widget;
 });

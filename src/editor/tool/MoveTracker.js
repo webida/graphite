@@ -228,7 +228,7 @@ define([
         commitDrag: function () {
             this._eraseSourceFeedback();
             this._eraseTargetFeedback();
-            this._drag();
+            this._dragEnd();
             this._state(Tool.STATE_TERMINAL);
         },
 
@@ -558,7 +558,7 @@ define([
         },
 
         /**
-         * Erases feedback and calls {@link #_drag()}.
+         * Erases feedback and calls {@link #_dragEnd()}.
          * @return {boolean}
          * @see Tool#_onMouseUp(number)
          * @protected
@@ -569,7 +569,7 @@ define([
                     Tool.STATE_TERMINAL)) {
                 this._eraseSourceFeedback();
                 this._eraseTargetFeedback();
-                this._drag();
+                this._dragEnd();
                 return true;
             }
             return SelectTracker.prototype._onMouseUp.call(this, button);
@@ -579,8 +579,7 @@ define([
          * Calls {@link Tool#_executeCurrentCommand()}.
          * @protected
          */
-        _drag: function () {
-            this.desc('_drag');
+        _dragEnd: function () {
             this._executeCurrentCommand();
         },
 

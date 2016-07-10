@@ -65,6 +65,21 @@ define([
         },
 
         /**
+         * Factors out RESIZE and ALIGN requests, otherwise calls super.
+         * @param {Request} request
+         * @return {Command}
+         * @see Ability#getCommand(Request)
+         */
+        getCommand: function (request) {
+            var type = request.type();
+            if (type === 'REQ_RESIZE_CHILDREN')
+                return this._getResizeChildrenCommand(request);
+            if (type === 'REQ_ALIGN_CHILDREN')
+                return this._getAlignChildrenCommand(request);
+            return Layoutable.prototype.getCommand.call(this, request);
+        },
+
+        /**
          * Returns the Command to move a group of children.
          * By default, move and resize are treated
          * as the same for constrained layouts.
