@@ -424,6 +424,15 @@ define([
         },
 
         /**
+         * Returns true if the w and h property
+         * is more than 0.
+         * @return {boolean}
+         */
+        hasSpace: function () {
+            return this.w > 0 && this.h > 0;
+        },
+
+        /**
          * Returns the x-coordinate of the right side
          * of this Rectangle.
          * @return {number}
