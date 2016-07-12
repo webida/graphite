@@ -155,7 +155,7 @@ define([
         createViewer: function (container, option) {
             this.desc('createViewer', arguments);
             var viewer = new GraphicViewer(container, option);
-            this.setViewer(viewer);
+            this.viewer(viewer);
             this.hookViewer();
             return viewer;
         },
@@ -163,18 +163,17 @@ define([
         /**
          * Sets the GraphicViewer for this editor.
          * @param {GraphicViewer} viewer
-         */
-        setViewer: function (viewer) {
-            this.domain().addViewer(viewer);
-            this._viewer = viewer;
-        },
-
-        /**
-         * Returns the GraphicViewer for this editor.
+         *//**
+         * Returns the GraphicViewer of this editor.
          * @return {GraphicViewer}
          */
-        getViewer: function () {
-            return this._viewer;
+        viewer: function (viewer) {
+            if (arguments.length) {
+                this.domain().addViewer(viewer);
+                this._viewer = viewer;
+            } else {
+                return this._viewer;
+            }
         },
 
         /**
@@ -194,7 +193,7 @@ define([
          */
         initViewer: function () {
             this.desc('initViewer');
-            var viewer = this.getViewer();
+            var viewer = this.viewer();
             viewer.contents(this.getModel());
             //TODO listen for dropped controllers
         },
