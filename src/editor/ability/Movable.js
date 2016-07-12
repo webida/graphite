@@ -279,7 +279,7 @@ define([
             if (type === 'REQ_MOVE' && this.isDragAllowed())
                 return this._getMoveCommand(request);
             if (type === 'REQ_ORPHAN')
-                return getOrphanCommand(request);
+                return this._getOrphanCommand(request);
             if (type === 'REQ_ALIGN')
                 return getAlignCommand(request);
     
@@ -304,6 +304,22 @@ define([
             req.location(request.location());
             req.data(request.data());
             return this.host().parent().getCommand(req);
+        },
+
+        /**
+         * Subclasses may override to contribute to the orphan request.
+         * By default, null is returned to indicate no participation.
+         * Orphan requests are not forwarded to the host's parent here.
+         * That is done in {@link Nestable}.
+         * So, if the host has a Nestable ability,
+         * then the parent will already have a chance to contribute.
+         * 
+         * @param {Request} req - the orphan request
+         * @return {Command}
+         * @protected
+         */
+        _getOrphanCommand: function (req) {
+            return null;
         }
     });
 

@@ -359,7 +359,7 @@ define([
 
                 if (delta.w !== 0)
                     ratio = parseFloat(delta.h) / parseFloat(delta.w);
-    
+
                 ratio = Math.abs(ratio);
                 if (ratio > 0.5 && ratio < 1.5) {
                     if (Math.abs(delta.h) > Math.abs(delta.w)) {
@@ -380,7 +380,7 @@ define([
                         delta.w = 0;
                 }
             }
-    
+
             var moveDelta = new Point(delta.w, delta.h);
             request.data({});
             request.moveDelta(moveDelta);
