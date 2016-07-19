@@ -25,8 +25,7 @@ define([
     'graphite/view/geometry/Point',
     'graphite/view/geometry/Rectangle',
     'graphite/view/system/event/InternalKeyEvent',
-    '../command/CompoundCommand',
-    '../command/UnexecutableCommand',
+    '../command/Command',
     '../request/ChangeBoundsRequest',
     './SelectTracker',
     './Tool',
@@ -36,8 +35,7 @@ define([
     Point,
     Rectangle,
     InternalKeyEvent,
-    CompoundCommand,
-    UnexecutableCommand,
+    Command,
     ChangeBoundsRequest,
     SelectTracker,
     Tool,
@@ -604,14 +602,14 @@ define([
 
         /**
          * Asks each Controller in the {@link Tool#_operationSet()
-         * operation set} to contribute to a {@link CompoundCommand}
+         * operation set} to contribute to a {@link Command.CompoundCommand}
          * after first setting the request type to either 'REQ_MOVE' or
          * 'REQ_ORPHAN', depending on the result of {@link #_isMove()}.
          * @return {Command} 
          * @see Tool#_getCommand()
          */
         _getCommand: function () {
-            var command = new CompoundCommand();
+            var command = new Command.CompoundCommand();
             var request = this._targetRequest();
 
             if (this._isCloneActive())
@@ -631,7 +629,7 @@ define([
                 if (!this._isCloneActive())
                     request.type('REQ_ADD');
                 if (!target)
-                    command.add(UnexecutableCommand.SINGLETON);
+                    command.add(Command.UNEXECUTABLE);
                 else
                     command.add(target.getCommand(request));
             }

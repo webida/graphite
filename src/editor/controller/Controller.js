@@ -596,10 +596,11 @@ define([
         getCommand: function (request) {
             var command = null;
             this._abilities.forEach(function (ability) {
-                if (command)
+                if (command) {
                     command = command.chain(ability.getCommand(request));
-                else
+                } else {
                     command = ability.getCommand(request);
+                }
             });
             return command;
         },

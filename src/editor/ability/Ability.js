@@ -66,13 +66,13 @@ define([
         /**
          * Returns the Command contribution for the given Request, or null.
          * null is treated as a no-op by the caller, or an empty contribution.
-         * The Ability must return an UnexecutableCommand if it wishes to
+         * The Ability must return an Command.UNEXECUTABLE if it wishes to
          * disallow the Request.
          * 
          * This method is declared on Controller#getCommand(Request),
          * and is redeclared here so that Controller can delegate its implementation
          * to each of its Abilities. The Controller will combine each Ability's
-         * contribution into a CompoundCommand.
+         * contribution into a Command.CompoundCommand.
          * 
          * Returns null by default. null is used to indicate that
          * the Ability does not contribute to the specified Request.

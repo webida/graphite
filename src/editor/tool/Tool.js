@@ -27,7 +27,8 @@ define([
     'graphite/base/FlagSupport',
     'graphite/view/geometry/Point',
     'graphite/view/system/event/InternalKeyEvent',
-    'graphite/view/system/event/InternalMouseEvent'
+    'graphite/view/system/event/InternalMouseEvent',
+    '../command/Command'
 ], function (
     dom,
     genetic,
@@ -35,7 +36,8 @@ define([
     FlagSupport,
     Point,
     InternalKeyEvent,
-    InternalMouseEvent
+    InternalMouseEvent,
+    Command
 ) {
     'use strict';
 
@@ -247,7 +249,7 @@ define([
          * @protected
          */
         _getCommand: function () {
-            return UnexecutableCommand.SINGLETON;
+            return Command.UNEXECUTABLE;
         },
     
         /**

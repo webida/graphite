@@ -22,9 +22,11 @@
 
 define([
     'external/genetic/genetic',
+    '../command/Command',
     './Nestable'
 ], function (
     genetic,
+    Command,
     Nestable
 ) {
     'use strict';
@@ -47,7 +49,7 @@ define([
          * @override
          */
         _createDeleteCommand: function (request) {
-            return UnexecutableCommand.SINGLETON;
+            return Command.UNEXECUTABLE;
         }
     });
 
