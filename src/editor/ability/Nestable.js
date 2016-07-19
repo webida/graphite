@@ -70,10 +70,10 @@ define([
          * Factors the incoming Request into ORPHANs and DELETEs.
          */
         getCommand: function (request) {
-            if (request.type === 'REQ_ORPHAN') {
+            if (request.type() === 'REQ_ORPHAN') {
                 return this._getOrphanCommand();
             }
-            if (request.type === 'REQ_DELETE') {
+            if (request.type() === 'REQ_DELETE') {
                 return this._getDeleteCommand(request);
             }
             return null;
