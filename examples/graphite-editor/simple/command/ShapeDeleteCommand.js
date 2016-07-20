@@ -55,7 +55,21 @@ define([
          */
         redo: function () {
             this._childRemoved = this._parent.remove(this._child);
-        }
+        },
+
+        /*
+         * @inheritdoc
+         */
+        undo: function () {
+            this._parent.append(this._child);
+        },
+
+        /**
+         * @inheritdoc
+         */
+        canUndo: function () {
+            return this._childRemoved;
+        },
     });
 
     return ShapeDeleteCommand;

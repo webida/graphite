@@ -99,9 +99,10 @@ define([
          */
         getActions: function () {
             var result = [];
-            var ids = Object.getOwnPropertyNames(this._actions);
+            var actions = this._actions;
+            var ids = Object.getOwnPropertyNames(actions);
             ids.forEach(function (id) {
-                result.push(this._actions[id]);
+                result.push(actions[id]);
             });
             return result;
         }
