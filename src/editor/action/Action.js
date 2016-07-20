@@ -22,10 +22,12 @@
 
 define([
     'external/genetic/genetic',
-    'graphite/base/BaseEmitter'
+    'graphite/base/BaseEmitter',
+    '../system/event/KeyStroke'
 ], function (
     genetic,
-    BaseEmitter
+    BaseEmitter,
+    KeyStroke
 ) {
     'use strict';
 
@@ -37,6 +39,11 @@ define([
         BaseEmitter.apply(this, arguments);
         this._editor = cfg.editor ? cfg.editor : null;
         this.id = cfg.id ? cfg.id : null;
+        
+        this._label = cfg.label ? cfg.label : '';
+        this._toolTip = cfg.toolTip ? cfg.toolTip : '';
+        this._accKey = cfg.accKey ? new KeyStroke(cfg.accKey) : null;
+        
         this._lazyEnabled = true;
         this._enabled = true;
     }
@@ -141,6 +148,57 @@ define([
          */
         _commandStack: function () {
             return this.editor().commandStack();
+        },
+
+        /**
+         * Sets label for this Action.
+         * @param {string} label
+         * @return {Action}
+         *//**
+         * Returns label for this Action.
+         * @return {string}
+         */
+        label: function (label) {
+            if (arguments.length) {
+                this._label = label;
+                return this;
+            } else {
+                return this._label;
+            }
+        },
+
+        /**
+         * Sets toolTip for this Action.
+         * @param {string} toolTip
+         * @return {Action}
+         *//**
+         * Returns toolTip for this Action.
+         * @return {string}
+         */
+        toolTip: function (toolTip) {
+            if (arguments.length) {
+                this._toolTip = toolTip;
+                return this;
+            } else {
+                return this._toolTip;
+            }
+        },
+
+        /**
+         * Sets accKey for this Action.
+         * @param {Object} accKey
+         * @return {Action}
+         *//**
+         * Returns accKey for this Action.
+         * @return {KeyStroke}
+         */
+        accKey: function (accKey) {
+            if (arguments.length) {
+                this._accKey = new KeyStroke(accKey);
+                return this;
+            } else {
+                return this._accKey;
+            }
         }
     });
 

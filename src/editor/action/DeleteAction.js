@@ -82,7 +82,7 @@ define([
             var deleteReq = new GroupRequest('REQ_DELETE');
             deleteReq.controllers(objects);
 
-            var compoundCmd = new Command.CompoundCommand('DeleteAction');
+            var compoundCmd = new Command.CompoundCommand('Delete Widget');
             objects.forEach(function (controller) {
                 var cmd = controller.getCommand(deleteReq);
                 if (cmd)

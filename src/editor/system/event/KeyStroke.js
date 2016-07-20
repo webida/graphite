@@ -86,7 +86,7 @@ define([
 
         mask : 0,
 
-        type : 'keydown',
+        type : 'keyup',
 
         /**
          * Returns serialized properties.

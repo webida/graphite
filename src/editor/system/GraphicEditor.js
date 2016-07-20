@@ -25,7 +25,7 @@ define([
     'graphite/base/Base',
     '../action/ActionRegistry',
     '../action/DeleteAction',
-    '../system/event/KeyStroke',
+    '../action/UndoAction',
     './Domain',
     './GraphicViewer'
 ], function (
@@ -33,7 +33,7 @@ define([
     Base,
     ActionRegistry,
     DeleteAction,
-    KeyStroke,
+    UndoAction,
     Domain,
     GraphicViewer
 ) {
@@ -103,10 +103,23 @@ define([
         _createActions: function () {
             this.desc('_createActions');
             var reg = this._actionRegistry();
-            //reg.register(new UndoAction(this), 'stack');
+            reg.register(
+                new UndoAction({
+                    'editor': this,
+                    'accKey': {
+                        ctrlKey: true,
+                        key: 'z'
+                    }
+                }), 'stack');
             //reg.register(new RedoAction(this), 'stack');
             //reg.register(new SelectAllAction(this), 'selection');
-            reg.register(new DeleteAction({'editor': this}), 'selection');
+            reg.register(
+                new DeleteAction({
+                    'editor': this,
+                    'accKey': {
+                        key: 'Delete'
+                    }
+                }), 'selection');
             //reg.register(new SaveAction(this), 'property');
         },
 
@@ -202,10 +215,12 @@ define([
             this.desc('hookViewer');
             var reg = this._actionRegistry();
             var keyHandler = this.viewer().getKeyHandler();
-            keyHandler.put(new KeyStroke({
-                key: 'Delete',
-                type: 'keyup'
-            }), reg.getActionById('DELETE'));
+            reg.getActions().forEach(function (action) {
+                var accKey = action.accKey();
+                if (accKey) {
+                    keyHandler.put(accKey, action);
+                }
+            });
         },
 
         /**

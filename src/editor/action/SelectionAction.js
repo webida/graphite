@@ -44,15 +44,6 @@ define([
     genetic.inherits(SelectionAction, Action, {
 
         /**
-         * Explain
-         * @param {}
-         * @return {Array}
-         */
-        aaaa: function () {
-            return this.bbb;
-        },
-
-        /**
          * Sets the current selection and emits selectionChanged event.
          * @param {Selection} selection
          *//**
