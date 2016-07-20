@@ -35,7 +35,7 @@ define([
     'graphite/view/resource/Cursor',
     'graphite/view/system/event/InternalKeyEvent',
     'graphite/view/widget/Widget',
-    '../command/CompoundCommand',
+    '../command/Command',
     '../request/ChangeBoundsRequest',
     './NonTargetTracker',
     './Tool',
@@ -49,7 +49,7 @@ define([
     Cursor,
     InternalKeyEvent,
     Widget,
-    CompoundCommand,
+    Command,
     ChangeBoundsRequest,
     NonTargetTracker,
     Tool,
@@ -151,7 +151,7 @@ define([
          * @see Tool#getCommand()
          */
         getCommand: function () {
-            var command = new CompoundCommand();
+            var command = new Command.CompoundCommand();
             this._operationSet().forEach(function (controller) {
                 command.add(controller.getCommand(this._getSourceRequest()));
             }, this);

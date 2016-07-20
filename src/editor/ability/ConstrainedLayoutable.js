@@ -24,14 +24,14 @@ define([
     'external/genetic/genetic',
     'graphite/view/geometry/Dimension',
     'graphite/view/geometry/Rectangle',
-    '../command/CompoundCommand',
+    '../command/Command',
     './Layoutable',
     './Resizable'
 ], function (
     genetic,
     Dimension,
     Rectangle,
-    CompoundCommand,
+    Command,
     Layoutable,
     Resizable
 ) {
@@ -109,7 +109,7 @@ define([
          * @protected
          */
         _getChangeConstraintCommand: function (request) {
-            var compoundCmd = new CompoundCommand();
+            var compoundCmd = new Command.CompoundCommand();
             var command;
             request.controllers().forEach(function (child) {
                 command = this._createChangeConstraintCommand(

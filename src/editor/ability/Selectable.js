@@ -175,7 +175,7 @@ define([
          * @see Ability#deactivate()
          */
         deactivate: function () {
-            removeSelectionListener();
+            this._removeSelectionListener();
             this._selectedState('SELECTED_NONE');
             this._setFocus(false);
             Ability.prototype.deactivate.call(this);

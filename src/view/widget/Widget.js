@@ -1215,6 +1215,20 @@ define([
         },
 
         /**
+         * @param {Widget} child
+         * @param {Object} constraint
+         */
+        setConstraint: function (child, constraint) {
+            var layout = this.getLayout();
+            if (child.getParent() !== this)
+                throw new Error('Figure must be a child');
+
+            if (layout)
+                layout.setConstraint(child, constraint);
+            this.revalidate();
+        },
+
+        /**
          * For convenience, returns position for
          * x,y,w,h of this Widget.
          * @return {string}

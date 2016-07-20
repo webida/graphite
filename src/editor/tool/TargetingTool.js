@@ -22,11 +22,13 @@
 
 define([
     'external/genetic/genetic',
+    '../command/Command',
     '../controller/AutoexposeHelper',
     '../request/Request',
     './Tool'
 ], function (
     genetic,
+    Command,
     AutoexposeHelper,
     Request,
     Tool
@@ -362,7 +364,7 @@ define([
          */
         _onInvalidInput: function () {
             this._eraseTargetFeedback();
-            this._currentCommand(UnexecutableCommand.SINGLETON);
+            this._currentCommand(Command.UNEXECUTABLE);
             return true;
         },
 

@@ -27,7 +27,8 @@ define([
     'graphite/base/FlagSupport',
     'graphite/view/geometry/Point',
     'graphite/view/system/event/InternalKeyEvent',
-    'graphite/view/system/event/InternalMouseEvent'
+    'graphite/view/system/event/InternalMouseEvent',
+    '../command/Command'
 ], function (
     dom,
     genetic,
@@ -35,7 +36,8 @@ define([
     FlagSupport,
     Point,
     InternalKeyEvent,
-    InternalMouseEvent
+    InternalMouseEvent,
+    Command
 ) {
     'use strict';
 
@@ -247,7 +249,7 @@ define([
          * @protected
          */
         _getCommand: function () {
-            return UnexecutableCommand.SINGLETON;
+            return Command.UNEXECUTABLE;
         },
     
         /**
@@ -1312,9 +1314,11 @@ define([
             this._setModifier('ALT', e.altKey ? true : false);
             this._setModifier('CTRL', e.ctrlKey ? true : false);
             this._setModifier('SHIFT', e.shiftKey ? true : false);
-            var p = dom.getEventPos(e);
-            this.mouseLocation.location(p.x, p.y);
-            this.buttons = e.buttons;
+            if (e instanceof MouseEvent) {
+                var p = dom.getEventPos(e);
+                this.mouseLocation.location(p.x, p.y);
+                this.buttons = e.buttons;
+            }
         },
 
         resetButtons: function () {

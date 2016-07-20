@@ -24,12 +24,14 @@ define([
     'external/genetic/genetic',
     'graphite/view/system/event/InternalKeyEvent',
     'graphite/view/system/event/InternalMouseEvent',
+    '../command/Command',
     '../request/Request',
     './Tool'
 ], function (
     genetic,
     InternalKeyEvent,
     InternalMouseEvent,
+    Command,
     Request,
     Tool
 ) {
@@ -199,7 +201,7 @@ define([
          */
         _onInvalidInput: function () {
             this._eraseSourceFeedback();
-            this._currentCommand(UnexecutableCommand.SINGLETON);
+            this._currentCommand(Command.UNEXECUTABLE);
             return true;
         },
 
