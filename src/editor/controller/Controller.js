@@ -57,7 +57,6 @@ define([
          * Abilities. Activation indicates that the Controller is realized
          * in an GraphicViewer. deactivate() is the inverse,
          * and is eventually called on all Controllers.
-         * 
          * @see #deactivate()
          */
         activate: function () {
@@ -68,6 +67,21 @@ define([
                 child.activate();
             });
             this.emit('activated', this);
+        },
+
+        /**
+         * Deactivates this Controller, and in turn deactivates its children
+         * and Abilities. Subclasses should extend this method to remove any
+         * listeners established in {@link #activate()}
+         * @see #activate()
+         */
+        deactivate: function () {
+            this.children().forEach(function (child) {
+                child.deactivate();
+            });
+            this._deactivateAbilities();
+            this.setFlag(Controller.FLAG_ACTIVE, false);
+            this.emit('deactivated', this);
         },
 
         /**
@@ -182,6 +196,18 @@ define([
         },
 
         /**
+         * Activates all Abilities installed on this Controller.
+         * There is no reason to override this method.
+         * @protected
+         */
+        _deactivateAbilities: function () {
+            this.desc('_deactivateAbilities');
+            this._abilities.forEach(function (ability) {
+                ability.deactivate();
+            });
+        },
+
+        /**
          * Adds a child Controller to this Controller. This method is
          * called from _refreshChildren(). The followings occur
          * 
@@ -228,7 +254,7 @@ define([
          * 1. ControllerListeners are notified that the child is being removed
          * 2. deactivate() is called if the child is active
          * 3. {@link Controller#removeNotify()} is called on the child.
-         * 4. {@link #removeChildVisual(Controller)} is called to remove the child's
+         * 4. {@link #_removeChildView(Controller)} is called to remove the child's
          * visual object.
          * 5. The child's parent is set to null
          * 
@@ -236,7 +262,7 @@ define([
          * 
          * @protected
          * @param {Controller} child
-         * @see #addChild(Controller, index)
+         * @see #_addChild(Controller, index)
          */
         _removeChild: function (child) {
             var children = this.children();
@@ -248,7 +274,7 @@ define([
                 }
                 child.removeNotify();
                 this._removeChildView(child);
-                child.setParent(null);
+                child.parent(null);
                 children.splice(index, 1);
             }
         },
@@ -265,6 +291,16 @@ define([
         },
 
         /**
+         * Removes the child's view from the contentPane.
+         * @param {Controller} child
+         * @param {number} index
+         */
+        _removeChildView: function (child) {
+            this.desc('_removeChildView', arguments);
+            this.contentPane().remove(child.view());
+        },
+
+        /**
          * Called after the Controller has been added to its parent.
          * This is used to indicate to the Controller that
          * it should refresh itself for the first time.
@@ -277,6 +313,29 @@ define([
                 child.addNotify();
             });
             this.refresh();
+        },
+
+        /**
+         * Removes all references from the GraphicViewer to this Controller.
+         * This includes:
+         * 
+         * 1. deselecting this Controller if selected
+         * 2. setting the Viewer's focus to null if this Controller has focus
+         * 3. {@link #_unregister()} this Controller
+         * 
+         * In addition, removeNotify() is called recursively on all children.
+         * Subclasses should extend this method to
+         * perform any additional cleanup.
+         */
+        removeNotify: function () {
+            if (this.selectedState() !== 'SELECTED_NONE')
+                this.viewer().deselect(this);
+            if (this.isFocus())
+                this.viewer().focused(null);
+            this.children().forEach(function (child) {
+                child.removeNotify();
+            });
+            this._unregister();
         },
 
         /**
@@ -396,9 +455,47 @@ define([
                 trashLen = trash.length;
                 for (i = 0; i < trashLen; i++) {
                     ctrl = trash[i];
-                    this.removeChild(ctrl);
+                    this._removeChild(ctrl);
                 }
             }
+        },
+
+        /**
+         * This preserves a LayoutManager constraint if one exists.
+         * Moves a child into a lower index than it currently
+         * occupies. This method is called from {@link #_refreshChildren()}.
+         * @param {Controller} child
+         * @param {number} index
+         * @protected
+         */
+        _reorderChild: function (child, index) {
+            // Save the constraint of the child so that it does not
+            // get lost during the remove and re-add.
+            var childView = child.view();
+            var layout = this.contentPane().getLayout();
+            var constraint = null;
+            if (layout)
+                constraint = layout.getConstraint(childView);
+
+            this._removeChildView(child);
+            var children = this.children();
+            var currentIndex = children.indexOf(child);
+            if (currentIndex > -1) {
+                children.splice(currentIndex, 1);
+                children.splice(index, 0, child);
+                this._addChildView(child, index);
+            }
+
+            this.setLayoutConstraint(child, childView, constraint);
+        },
+
+        /**
+         * @param {Controller} child
+         * @param {Widget} view
+         * @param {Object} constraint
+         */
+        setLayoutConstraint: function (child, view, constraint) {
+            view.getParent().setConstraint(view, constraint);
         },
 
         /**
@@ -678,6 +775,37 @@ define([
          */
         _registerView: function () {
             this.viewer().viewControllerMap().set(this.view(), this);
+        },
+
+        /**
+         * Undoes any registration performed by {@link #_register()}.
+         * The provided base classes will correctly unregister their views.
+         * @protected
+         */
+        _unregister: function () {
+            //TODO this._unregisterAccessibility();
+            this._unregisterView();
+            this._unregisterModel();
+        },
+
+        /**
+         * Unregisters the model in the
+         * {@link GraphicViewer#controllerRegistry()}.
+         * @protected
+         */
+        _unregisterModel: function () {
+            var reg = this.viewer().controllerRegistry();
+            if (reg.get(this.model()) === this)
+                reg['delete'](this.model());
+        },
+    
+        /**
+         * Unregisters the view in the
+         * {@link GraphicViewer#viewControllerMap()}.
+         * @protected
+         */
+        _unregisterView: function () {
+            this.viewer().viewControllerMap()['delete'](this.view());
         },
 
         /**

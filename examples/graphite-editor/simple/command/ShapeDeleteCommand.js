@@ -34,19 +34,27 @@ define([
      * A ShapeDeleteCommand.
      * @constructor
      */
-    function ShapeDeleteCommand() {
+    function ShapeDeleteCommand(parent, child) {
         Command.apply(this, arguments);
+        this._parent = parent;
+        this._child = child;
+        this._childRemoved = false;
     }
 
     genetic.inherits(ShapeDeleteCommand, Command, {
 
         /**
-         * Explain
-         * @param {}
-         * @return {Array}
+         * @inheritdoc
          */
-        aaaa: function () {
-            return this.bbb;
+        execute: function () {
+            this.redo();
+        },
+
+        /*
+         * @inheritdoc
+         */
+        redo: function () {
+            this._childRemoved = this._parent.remove(this._child);
         }
     });
 

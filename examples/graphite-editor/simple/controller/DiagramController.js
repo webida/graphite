@@ -41,9 +41,9 @@ define([
     function DiagramController() {
         var that = this;
         Controller.apply(this, arguments);
-        this._listener = function (event) {
-            if (event.type === 'CHILD_ADDED'
-                    || event.type === 'CHILD_REMOVED') {
+        this._listener = function (data) {
+            if (data.type === 'child-append'
+                    || data.type === 'child-remove') {
                 that._refreshChildren();
             }
         };
@@ -58,7 +58,7 @@ define([
         activate: function () {
             if (!this.isActive()) {
                 Controller.prototype.activate.call(this);
-                this.model().on('propertyChnage', this._listener);
+                this.model().on('change', this._listener);
             }
         },
 
@@ -69,7 +69,7 @@ define([
         deactivate: function () {
             if (this.isActive()) {
                 Controller.prototype.deactivate.call(this);
-                this.model().off('propertyChnage', this._listener);
+                this.model().off('change', this._listener);
             }
         },
 

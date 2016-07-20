@@ -47,6 +47,28 @@ define([
          */
         append: function (child) {
             this.children.push(child);
+            this.emit('change', {
+                type: 'child-append'
+            });
+        },
+
+        /**
+         * Removes the given child from this then return true,
+         * if the child has been deleted otherwise false.
+         * @param {Model} child
+         * @return {boolean}
+         */
+        remove: function (child) {
+            var index = this.children.indexOf(child);
+            if (index > -1) {
+                this.children.splice(index, 1);
+                this.emit('change', {
+                    type: 'child-remove'
+                });
+                return true;
+            } else {
+                return false;
+            }
         },
 
         /**

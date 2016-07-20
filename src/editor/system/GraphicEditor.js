@@ -24,12 +24,16 @@ define([
     'external/genetic/genetic',
     'graphite/base/Base',
     '../action/ActionRegistry',
+    '../action/DeleteAction',
+    '../system/event/KeyStroke',
     './Domain',
     './GraphicViewer'
 ], function (
     genetic,
     Base,
     ActionRegistry,
+    DeleteAction,
+    KeyStroke,
     Domain,
     GraphicViewer
 ) {
@@ -66,10 +70,10 @@ define([
          */
         create: function (option) {
             this.desc('create', arguments);
-            this._initActions();
             var viewer = option['viewer'];
             var palette = option['palette'];
             var ModelFactory = option['model-factory'];
+            this._createActions();
             if (viewer) {
                 if (typeof viewer === 'string') {
                     viewer = document.getElementById(viewer);
@@ -89,6 +93,21 @@ define([
             if (ModelFactory) {
                 this.createModelFactory(ModelFactory);
             }
+            this._initActions();
+        },
+
+        /**
+         * Creates actions for this editor.
+         * Subclasses should override this to customize actions.
+         */
+        _createActions: function () {
+            this.desc('_createActions');
+            var reg = this._actionRegistry();
+            //reg.register(new UndoAction(this), 'stack');
+            //reg.register(new RedoAction(this), 'stack');
+            //reg.register(new SelectAllAction(this), 'selection');
+            reg.register(new DeleteAction({'editor': this}), 'selection');
+            //reg.register(new SaveAction(this), 'property');
         },
 
         /**
@@ -98,28 +117,24 @@ define([
         _initActions: function () {
             var editor = this;
             this.desc('_initActions');
-            this._createActions();
             this._updateActions('property');
-            this._updateActions('stack');
+            this._updateActions('stack'); 
             this.commandStack().on('postStackChange', function (e) {
                 editor._updateActions('stack');
             });
-        },
-
-        /**
-         * Creates actions for this editor.
-         * Subclasses should override this to customize actions.
-         */
-        _createActions: function () {
-            this.desc('_createActions');
-            var action;
-            var reg = this._actionRegistry();
-            //TODO
+            this.viewer().on('selectionChanged', function (e) {
+                editor._updateActions('selection');
+            });
         },
 
         _updateActions: function (cat) {
             this.desc('_updateActions', cat);
-            //TODO
+            var reg = this._actionRegistry();
+            reg.getActionsByCategory(cat).forEach(function (action) {
+                if (typeof action.update === 'function') {
+                    action.update();
+                }
+            });
         },
 
         /**
@@ -185,7 +200,12 @@ define([
          */
         hookViewer: function () {
             this.desc('hookViewer');
-            //Basically, does nothing
+            var reg = this._actionRegistry();
+            var keyHandler = this.viewer().getKeyHandler();
+            keyHandler.put(new KeyStroke({
+                key: 'Delete',
+                type: 'keyup'
+            }), reg.getActionById('DELETE'));
         },
 
         /**

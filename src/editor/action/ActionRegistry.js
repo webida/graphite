@@ -39,18 +39,71 @@ define([
      */
     function ActionRegistry() {
         Base.apply(this, arguments);
-        this._reg = new Map();
+        this._actions = {};
+        this._actionsByCat = {};
     }
 
     genetic.inherits(ActionRegistry, Base, {
 
         /**
-         * Explain
-         * @param {}
+         * Registers new Action with the given category name.
+         * @param {Action} action
+         * @param {string} category
+         */
+        register: function (action, category) {
+            if (!this._actionsByCat[category]) {
+                this._actionsByCat[category] = [];
+            }
+            this._actionsByCat[category].push(action);
+            this._actions[action.id] = action;
+        },
+
+        /**
+         * Unregisters Action.
+         * @param {Action} action
+         * @return {boolean}
+         */
+        unregister: function (action) {
+            delete this._actions[action];
+            var cats = Object.getOwnPropertyNames(this._actionsByCat);
+            return cats.some(function (cat) {
+                var actions = this._actions[cat];
+                var index = actions.indexOf(action);
+                var result = index > -1;
+                if (result) actions.splice(index, 1);
+                return result;
+            });
+        },
+
+        /**
+         * Returns Action By it's id.
+         * @param {string} id
+         * @return {Action}
+         */
+        getActionById: function (id) {
+            return this._actions[id];
+        },
+
+        /**
+         * Returns Array of Actions by the given category name.
+         * @param {string} category
          * @return {Array}
          */
-        aaaa: function () {
-            return this.bbb;
+        getActionsByCategory: function (category) {
+            return this._actionsByCat[category] || [];
+        },
+
+        /**
+         * Returns all Actions.
+         * @return {Array}
+         */
+        getActions: function () {
+            var result = [];
+            var ids = Object.getOwnPropertyNames(this._actions);
+            ids.forEach(function (id) {
+                result.push(this._actions[id]);
+            });
+            return result;
         }
     });
 
