@@ -15,7 +15,7 @@
  */
 
 /**
- * @file UndoAction
+ * @file RedoAction
  * @since 1.0.0
  * @author hw.shim@samsung.com
  */
@@ -30,21 +30,21 @@ define([
     'use strict';
 
     /**
-     * A UndoAction.
+     * A RedoAction.
      * @constructor
      */
-    function UndoAction() {
+    function RedoAction() {
         Action.apply(this, arguments);
-        this.id = 'UNDO';
+        this.id = 'REDO';
     }
 
-    genetic.inherits(UndoAction, Action, {
+    genetic.inherits(RedoAction, Action, {
 
         /**
-         * Undoes the last command.
+         * Redoes the last command.
          */
         run: function () {
-            this._commandStack().undo();
+            this._commandStack().redo();
         },
 
         /**
@@ -52,7 +52,7 @@ define([
          * @protected
          */
         _calculateEnabled: function () {
-            return this._commandStack().canUndo();
+            return this._commandStack().canRedo();
         },
 
         /**
@@ -61,9 +61,9 @@ define([
          * @protected
          */
         _refresh: function () {
-            var undoCmd = this._commandStack().getUndoCommand();
-            if (undoCmd) {
-                var label = undoCmd.label();
+            var redoCmd = this._commandStack().getRedoCommand();
+            if (redoCmd) {
+                var label = redoCmd.label();
                 this.label(label);
                 this.toolTip(label);
             }
@@ -71,5 +71,5 @@ define([
         }
     });
 
-    return UndoAction;
+    return RedoAction;
 });
