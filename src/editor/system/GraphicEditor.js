@@ -25,6 +25,7 @@ define([
     'graphite/base/Base',
     '../action/ActionRegistry',
     '../action/DeleteAction',
+    '../action/RedoAction',
     '../action/UndoAction',
     './Domain',
     './GraphicViewer'
@@ -33,6 +34,7 @@ define([
     Base,
     ActionRegistry,
     DeleteAction,
+    RedoAction,
     UndoAction,
     Domain,
     GraphicViewer
@@ -111,7 +113,14 @@ define([
                         key: 'z'
                     }
                 }), 'stack');
-            //reg.register(new RedoAction(this), 'stack');
+            reg.register(
+                new RedoAction({
+                    'editor': this,
+                    'accKey': {
+                        ctrlKey: true,
+                        key: 'y'
+                    }
+                }), 'stack');
             //reg.register(new SelectAllAction(this), 'selection');
             reg.register(
                 new DeleteAction({
