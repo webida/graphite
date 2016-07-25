@@ -304,15 +304,7 @@ define([
          */
         canUndo: function () {
             return false;
-        },
-
-        /**
-         * @return {boolean}
-         * @override
-         */
-        canUndo: function () {
-            return false;
-        },
+        }
     });
 
     Command.CompoundCommand = CompoundCommand;

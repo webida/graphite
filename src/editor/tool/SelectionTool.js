@@ -113,17 +113,6 @@ define([
         },
 
         /**
-         * Creates the target request that will be used with the target Controller.
-         * This request will be cached and updated as needed.
-         * @return {Request} the new target request
-         * @protected
-         */
-        _createTargetRequest: function () {
-            var request = new SelectionRequest(this._getCommandName());
-            return request;
-        },
-
-        /**
          * @inheritdoc
          */
         _onStackChange: function () {
