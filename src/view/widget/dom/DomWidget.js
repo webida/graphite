@@ -199,7 +199,9 @@ define([
                 element = this.element();
                 childElement = child.element();
                 if (typeof index === 'number' && index > -1) {
-                    children = element.children;
+                    //TODO: for element.childNodes,
+                    //check blank node case and filter ELEMENT_NODE type
+                    children = element.childNodes;
                     element.insertBefore(childElement, children[index]);
                 } else {
                     element.appendChild(childElement);
