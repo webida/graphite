@@ -27,6 +27,7 @@ define([
     '../action/DeleteAction',
     '../action/RedoAction',
     '../action/UndoAction',
+    './palette/Palette',
     './Domain',
     './GraphicViewer'
 ], function (
@@ -36,6 +37,7 @@ define([
     DeleteAction,
     RedoAction,
     UndoAction,
+    Palette,
     Domain,
     GraphicViewer
 ) {
@@ -81,7 +83,7 @@ define([
                     viewer = document.getElementById(viewer);
                 }
                 if (viewer instanceof HTMLElement) {
-                    this.createViewer(viewer, option);
+                    this._createViewer(viewer, option);
                 }
             }
             if (palette) {
@@ -89,11 +91,11 @@ define([
                     palette = document.getElementById(palette);
                 }
                 if (palette instanceof HTMLElement) {
-                    this.createPalette(palette, option);
+                    this._createPalette(palette, option);
                 }
             }
             if (ModelFactory) {
-                this.createModelFactory(ModelFactory);
+                this._createModelFactory(ModelFactory);
             }
             this._initActions();
         },
@@ -101,6 +103,7 @@ define([
         /**
          * Creates actions for this editor.
          * Subclasses should override this to customize actions.
+         * @protected
          */
         _createActions: function () {
             this.desc('_createActions');
@@ -161,6 +164,7 @@ define([
 
         /**
          * @return {ActionRegistry}
+         * @protected
          */
         _actionRegistry: function () {
             return this._registry;
@@ -168,14 +172,15 @@ define([
 
         /**
          * @param {Function} ModelFactory
+         * @protected
          */
-        createModelFactory: function (ModelFactory) {
-            this.desc('createModelFactory', arguments);
+        _createModelFactory: function (ModelFactory) {
+            this.desc('_createModelFactory', arguments);
             var editor = this;
             var modelFactory = new ModelFactory(this);
             modelFactory.create(function (model) {
                 editor.setModel(model);
-                editor.initViewer();
+                editor._initViewer();
             });
         },
 
@@ -188,12 +193,13 @@ define([
          * @property {Function} 'key-handler' - KeyHandler Class
          * @property {Function} 'context-menu' - ContextMenu Class
          * @return {GraphicViewer}
+         * @protected
          */
-        createViewer: function (container, option) {
-            this.desc('createViewer', arguments);
+        _createViewer: function (container, option) {
+            this.desc('_createViewer', arguments);
             var viewer = new GraphicViewer(container, option);
             this.viewer(viewer);
-            this.hookViewer();
+            this._hookViewer();
             return viewer;
         },
 
@@ -219,9 +225,10 @@ define([
          * For example, developers could add the GraphicViewer
          * as a Selection Provider or Selection Synchronizer
          * if they needs.
+         * @protected
          */
-        hookViewer: function () {
-            this.desc('hookViewer');
+        _hookViewer: function () {
+            this.desc('_hookViewer');
             var reg = this._actionRegistry();
             var keyHandler = this.viewer().getKeyHandler();
             reg.getActions().forEach(function (action) {
@@ -234,9 +241,10 @@ define([
 
         /**
          * Set up the editor's inital content (after creation).
+         * @protected
          */
-        initViewer: function () {
-            this.desc('initViewer');
+        _initViewer: function () {
+            this.desc('_initViewer');
             var viewer = this.viewer();
             viewer.contents(this.getModel());
             //TODO listen for dropped controllers
@@ -273,9 +281,37 @@ define([
 
         /**
          * @param {HTMLElement} container
+         * @param {Object} option
+         * @protected
          */
-        createPalette: function (container) {
-            this.desc('createPalette', arguments);
+        _createPalette: function (container, option) {
+            this.desc('_createPalette', arguments);
+            var palette = new Palette(container, option);
+            this.palette(palette);
+            this._hookPalette();
+        },
+
+        /**
+         * @param {Palette} palette
+         * @return {GraphicEditor}
+         *//**
+         * @return {Palette}
+         */
+        palette: function (palette) {
+            if (arguments.length) {
+                this._palette = palette;
+                return this;
+            } else {
+                return this._palette;
+            }
+        },
+
+        /**
+         * @protected
+         */
+        _hookPalette: function () {
+            this.desc('_hookPalette');
+            this.domain().palette(this._palette);
         },
 
         /**
